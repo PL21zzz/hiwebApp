@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   const VietmadeHeader({super.key});
@@ -35,7 +36,9 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
         statusBarBrightness: Brightness.dark,
       ),
       child: Container(
-        color: Colors.transparent,
+        decoration: const BoxDecoration(
+          gradient: AppColors.headerGradient,
+        ),
         child: SafeArea(
           bottom: false,
           child: Container(
@@ -61,7 +64,7 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.w900, // Siêu đậm dày chuẩn mẫu
+                              fontWeight: FontWeight.w900,
                               fontStyle: FontStyle.italic,
                               letterSpacing: -0.5,
                             ),

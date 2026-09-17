@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../models/banner_model.dart';
 
 class BannerSlider extends StatefulWidget {
   const BannerSlider({super.key});
@@ -13,12 +14,7 @@ class _BannerSliderState extends State<BannerSlider> {
   int _currentPage = 0;
   Timer? _timer;
 
-  // 3 ảnh slider từ Cloudinary do người dùng cung cấp
-  final List<String> _bannerUrls = const [
-    'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide1_dhs27i.webp',
-    'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide2_cjt32o.webp',
-    'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide3_navayf.webp',
-  ];
+  final List<BannerModel> _banners = BannerModel.mockBanners;
 
   @override
   void initState() {
@@ -26,7 +22,7 @@ class _BannerSliderState extends State<BannerSlider> {
     // Tự động cuộn nhanh hơn (mỗi 2.0 giây chuyển 1 slide)
     _timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       if (_pageController.hasClients) {
-        int nextPage = (_currentPage + 1) % _bannerUrls.length;
+        int nextPage = (_currentPage + 1) % _banners.length;
         _pageController.animateToPage(
           nextPage,
           duration: const Duration(milliseconds: 350),
@@ -58,7 +54,7 @@ class _BannerSliderState extends State<BannerSlider> {
                 _currentPage = index;
               });
             },
-            itemCount: _bannerUrls.length,
+            itemCount: _banners.length,
             itemBuilder: (context, index) {
               return Container(
                 decoration: BoxDecoration(
@@ -74,7 +70,7 @@ class _BannerSliderState extends State<BannerSlider> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    _bannerUrls[index],
+                    _banners[index].imageUrl,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
@@ -112,7 +108,7 @@ class _BannerSliderState extends State<BannerSlider> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _bannerUrls.length,
+                _banners.length,
                 (index) => AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 3),

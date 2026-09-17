@@ -10,22 +10,21 @@ class AppColors {
   static const Color background = Color(0xFFF5F7FA);
   static const Color cardBg = Colors.white;
   static const Color flashSaleRed = Color(0xFFFF3B30);
+  static const Color productBoxBg = Color(0xFFBCEDF4); // Màu nền xanh nhạt chuẩn mã Hex #BCEDF4
 
-  // Seamless Top-to-Bottom Background Gradient (Xanh đậm -> Xanh nhạt -> Trắng/Xám)
-  static const LinearGradient topBackgroundGradient = LinearGradient(
+  // Top Section Scrollable Background Gradient
+  static const LinearGradient topSectionGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Color(0xFF0088CC), // Đỉnh Header: Xanh đậm
-      Color(0xFF00A8E8), // Header đến Banner: Cyan rực rỡ
-      Color(0xFF80D8FF), // Dưới Banner: Xanh nhạt
-      Color(0xFFE0F7FA), // Dưới Category: Xanh phớt nhẹ
-      Color(0xFFF5F7FA), // Khối Flash Sale: Xám nhạt/trắng
+      Color(0xFF00A8E8), // Cyan dưới Header
+      Color(0xFF80D8FF), // Xanh nhạt qua Slider
+      Color(0xFFE0F7FA), // Xanh phớt qua Category & Flash Sale
+      Color(0xFFF5F7FA), // Chuyển hẳn sang nền trang
     ],
-    stops: [0.0, 0.20, 0.40, 0.55, 0.75],
   );
 
-  // Header Gradient
+  // Header Bar Gradient
   static const LinearGradient headerGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
