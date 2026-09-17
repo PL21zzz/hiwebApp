@@ -26,7 +26,7 @@ class _BannerSliderState extends State<BannerSlider> {
 
   void _startAutoSlide() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 2500), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       if (_pageController.hasClients && _banners.isNotEmpty) {
         int nextPage = (_currentPage + 1) % _banners.length;
         _pageController.animateToPage(
