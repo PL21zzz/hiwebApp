@@ -35,8 +35,6 @@ class TopSearchesSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-
-          // Hàng 3 sản phẩm tìm kiếm hàng đầu với 3 ảnh Cloudinary
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: _topSearches.map((item) {

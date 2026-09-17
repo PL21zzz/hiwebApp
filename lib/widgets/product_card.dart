@@ -80,7 +80,6 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. ẢNH SẢN PHẨM KHUNG HÌNH VUÔNG 1:1
             AspectRatio(
               aspectRatio: 1.0,
               child: Stack(
@@ -118,14 +117,11 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
             ),
-
-            // 2. NỘI DUNG SẢN PHẨM
             Padding(
               padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tên sản phẩm: Chỉnh letterSpacing & fontSize chuẩn để từ không bị ngắt dở chừng kiểu "vi..."
                   SizedBox(
                     height: 32,
                     child: Text(
@@ -142,8 +138,6 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-
-                  // Giá tiền hiện tại & Giá gốc gạch ngang chính giữa
                   Row(
                     children: [
                       Text(
@@ -178,8 +172,6 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 2),
-
-                  // Đánh giá ⭐
                   Row(
                     children: [
                       const Icon(Icons.star_rounded, size: 12, color: Color(0xFFFF9500)),
@@ -203,8 +195,6 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 3),
-
-                  // Địa điểm + Nút giỏ hàng viên thuốc
                   Row(
                     children: [
                       const Icon(LucideIcons.mapPin, size: 11, color: Color(0xFF94A3B8)),

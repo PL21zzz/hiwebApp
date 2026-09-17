@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/banner_model.dart';
+import '../theme/app_colors.dart';
 
 class BannerSlider extends StatefulWidget {
   const BannerSlider({super.key});
@@ -10,7 +11,7 @@ class BannerSlider extends StatefulWidget {
 }
 
 class _BannerSliderState extends State<BannerSlider> {
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   int _currentPage = 0;
   Timer? _timer;
 
@@ -19,13 +20,18 @@ class _BannerSliderState extends State<BannerSlider> {
   @override
   void initState() {
     super.initState();
-    // Tự động cuộn nhanh hơn (mỗi 2.0 giây chuyển 1 slide)
-    _timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-      if (_pageController.hasClients) {
+    _pageController = PageController();
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 2500), (timer) {
+      if (_pageController.hasClients && _banners.isNotEmpty) {
         int nextPage = (_currentPage + 1) % _banners.length;
         _pageController.animateToPage(
           nextPage,
-          duration: const Duration(milliseconds: 350),
+          duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
         );
       }
@@ -46,7 +52,6 @@ class _BannerSliderState extends State<BannerSlider> {
       height: 160,
       child: Stack(
         children: [
-          // Slider hiển thị ảnh từ Cloudinary
           PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -77,7 +82,7 @@ class _BannerSliderState extends State<BannerSlider> {
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Container(
-                        color: const Color(0xFF0077B6),
+                        color: AppColors.primary,
                         child: const Center(
                           child: CircularProgressIndicator(
                             color: Colors.white,
@@ -88,7 +93,7 @@ class _BannerSliderState extends State<BannerSlider> {
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: const Color(0xFF0077B6),
+                        color: AppColors.primary,
                         child: const Center(
                           child: Icon(Icons.image_not_supported, color: Colors.white),
                         ),
@@ -99,8 +104,6 @@ class _BannerSliderState extends State<BannerSlider> {
               );
             },
           ),
-
-          // 3 Dấu chấm / Thanh ngang chỉ số nhảy theo slide
           Positioned(
             bottom: 10,
             left: 0,

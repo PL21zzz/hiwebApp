@@ -53,7 +53,9 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     _buildIconButton(
                       icon: LucideIcons.menu,
-                      onTap: () {},
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
                     ),
                     const SizedBox(width: 6),
                     RichText(

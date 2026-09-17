@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class FlashSaleSection extends StatefulWidget {
   const FlashSaleSection({super.key});
@@ -203,12 +204,12 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
                     height: 24,
                     child: Row(
                       children: [
-                        Icon(Icons.play_circle_fill_rounded, color: Color(0xFF00A8E8), size: 18),
+                        Icon(Icons.play_circle_fill_rounded, color: AppColors.primary, size: 18),
                         SizedBox(width: 4),
                         Text(
                           'VietMade VIDEO',
                           style: TextStyle(
-                            color: Color(0xFF00A8E8),
+                            color: AppColors.primary,
                             fontSize: 13,
                             fontWeight: FontWeight.w900,
                           ),

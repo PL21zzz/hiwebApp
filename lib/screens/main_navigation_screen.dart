@@ -19,6 +19,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     CategoriesScreen(),
+    Center(child: Text('Video Screen', style: TextStyle(fontSize: 16))),
     CartScreen(),
     AccountScreen(),
   ];
@@ -61,6 +62,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.layoutGrid, size: 22),
               label: 'Danh mục',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(LucideIcons.video, size: 22),
+              label: 'Video',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.shoppingCart, size: 22),
