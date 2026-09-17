@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../models/search_model.dart';
 import '../theme/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -13,31 +14,9 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  final List<String> _quickTags = [
-    'Kem Dưỡng Ẩm',
-    'Kem Chống Nắng',
-    'Toner',
-    'Tẩy Trang',
-    'Sữa Rửa Mặt',
-    'Son Môi',
-    'Serum',
-  ];
-
-  final List<Map<String, String>> _suggestions = [
-    {'emoji': '🤖', 'title': 'chatgpt'},
-    {'emoji': '💊', 'title': 'Collagen Peptide'},
-  ];
-
-  final List<Map<String, String>> _popularCategories = [
-    {'emoji': '📦', 'title': 'Thực phẩm chức năng'},
-    {'emoji': '🧴', 'title': 'Kem trị nám lẫn nhanh'},
-    {'emoji': '🐾', 'title': 'Chăm sóc thư cưng'},
-    {'emoji': '💊', 'title': 'Viên uống trắng da'},
-    {'emoji': '🧴', 'title': 'Dầu xoa bóp'},
-    {'emoji': '🌿', 'title': 'Ginkgo Biloba'},
-    {'emoji': '✨', 'title': 'Tẩy da chết'},
-    {'emoji': '🍳', 'title': 'Đồ gia dụng nhà bếp'},
-  ];
+  final List<String> _quickTags = SearchQuickTagModel.mockQuickTags;
+  final List<SearchSuggestionModel> _suggestions = SearchSuggestionModel.mockSuggestions;
+  final List<SearchPopularCategoryModel> _popularCategories = SearchPopularCategoryModel.mockPopularCategories;
 
   @override
   void dispose() {
@@ -196,14 +175,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
-                                    item['emoji']!,
+                                    item.emoji,
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    item['title']!,
+                                    item.title,
                                     style: const TextStyle(
                                       fontSize: 12.5,
                                       fontWeight: FontWeight.w600,
@@ -268,7 +247,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    item['emoji']!,
+                                    item.emoji,
                                     style: const TextStyle(fontSize: 15),
                                   ),
                                 ),
@@ -276,7 +255,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  item['title']!,
+                                  item.title,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
