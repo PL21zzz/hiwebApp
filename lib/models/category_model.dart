@@ -18,10 +18,10 @@ class CategoryModel {
   });
 
   static const List<CategoryModel> mockCategories = [
-    CategoryModel(id: 'c1', emoji: '💊', title: 'Y tế'),
-    CategoryModel(id: 'c2', emoji: '✨', title: 'Làm đẹp'),
+    CategoryModel(id: 'c1', emoji: '💊', title: 'Thực phẩm chức năng'),
+    CategoryModel(id: 'c2', emoji: '✨', title: 'Collagen'),
     CategoryModel(id: 'c3', emoji: '💄', title: 'Mỹ phẩm'),
-    CategoryModel(id: 'c4', emoji: '👶', title: 'Mẹ & bé'),
+    CategoryModel(id: 'c4', emoji: '👶', title: 'Mẹ và bé'),
     CategoryModel(id: 'c5', emoji: '👕', title: 'Thời trang'),
   ];
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../screens/flash_sale_screen.dart';
 import '../../theme/app_colors.dart';
 
 class FlashSaleSection extends StatefulWidget {
@@ -25,10 +26,23 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
   }
 
   void _updateRemainingTime() {
-    final nowInSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    const cycleSeconds = 4 * 3600; // 4 tiếng
+    final now = DateTime.now();
+    final hour = now.hour;
+    DateTime targetTime;
+
+    if (hour >= 12 && hour < 15) {
+      targetTime = DateTime(now.year, now.month, now.day, 15, 0, 0);
+    } else if (hour >= 15 && hour < 19) {
+      targetTime = DateTime(now.year, now.month, now.day, 19, 0, 0);
+    } else if (hour >= 19) {
+      targetTime = DateTime(now.year, now.month, now.day + 1, 0, 0, 0);
+    } else {
+      targetTime = DateTime(now.year, now.month, now.day, 12, 0, 0);
+    }
+
+    final diff = targetTime.difference(now).inSeconds;
     setState(() {
-      _remainingSeconds = cycleSeconds - (nowInSeconds % cycleSeconds);
+      _remainingSeconds = diff > 0 ? diff : 0;
     });
   }
 
@@ -117,65 +131,85 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
         children: [
           // 1. KHỐI BÊN TRÁI: Flash Sale
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        const FlashSaleScreen(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 24,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.bolt_rounded, color: Color(0xFFFF6D00), size: 18),
-                          const SizedBox(width: 2),
-                          const Text(
-                            'Flash Sale',
-                            style: TextStyle(
-                              color: Color(0xFFD50000),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w900,
-                              fontStyle: FontStyle.italic,
+                );
+              },
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 24,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.bolt_rounded,
+                                color: Color(0xFFFF6D00), size: 18),
+                            const SizedBox(width: 2),
+                            const Text(
+                              'Flash Sale',
+                              style: TextStyle(
+                                color: Color(0xFFD50000),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          _buildTimeBox(hours),
-                          const Text(' : ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                          _buildTimeBox(minutes),
-                          const Text(' : ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                          _buildTimeBox(seconds),
-                        ],
+                            const SizedBox(width: 8),
+                            _buildTimeBox(hours),
+                            const Text(' : ',
+                                style: TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.bold)),
+                            _buildTimeBox(minutes),
+                            const Text(' : ',
+                                style: TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.bold)),
+                            _buildTimeBox(seconds),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _buildImageTile(
-                        imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
-                        badgeText: 'ĐÃ BÁN 4100',
-                      ),
-                      const SizedBox(width: 6),
-                      _buildImageTile(
-                        imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
-                        badgeText: 'ĐÃ BÁN 2800',
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _buildImageTile(
+                          imageUrl:
+                              'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+                          badgeText: 'ĐÃ BÁN 4100',
+                        ),
+                        const SizedBox(width: 6),
+                        _buildImageTile(
+                          imageUrl:
+                              'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+                          badgeText: 'ĐÃ BÁN 2800',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -203,7 +237,8 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
                     height: 24,
                     child: Row(
                       children: [
-                        Icon(Icons.play_circle_fill_rounded, color: AppColors.primary, size: 18),
+                        Icon(Icons.play_circle_fill_rounded,
+                            color: AppColors.primary, size: 18),
                         SizedBox(width: 4),
                         Text(
                           'VietMade VIDEO',
@@ -220,11 +255,13 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
                   Row(
                     children: [
                       _buildImageTile(
-                        imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+                        imageUrl:
+                            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
                       ),
                       const SizedBox(width: 6),
                       _buildImageTile(
-                        imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video2_mazns1.webp',
+                        imageUrl:
+                            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video2_mazns1.webp',
                       ),
                     ],
                   ),

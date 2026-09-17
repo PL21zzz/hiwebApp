@@ -4,6 +4,7 @@ import '../models/category_model.dart';
 import '../theme/app_colors.dart';
 import '../widgets/common/vietmade_header.dart';
 import '../widgets/common/category_drawer.dart';
+import 'category_product_list_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -132,7 +133,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         if (index == 0) {
                           // First Item: "Xem Tất Cả"
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) =>
+                                      CategoryProductListScreen(
+                                    categoryTitle: selectedCategory.title,
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -171,7 +183,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
                         final item = subcategories[index - 1];
                         return InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) =>
+                                    CategoryProductListScreen(
+                                  categoryTitle: item.title,
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [

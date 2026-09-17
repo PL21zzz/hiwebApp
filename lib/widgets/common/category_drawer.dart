@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/category_model.dart';
 import '../../theme/app_colors.dart';
+import '../../screens/category_product_list_screen.dart';
 
 class CategoryDrawer extends StatefulWidget {
   const CategoryDrawer({super.key});
@@ -154,10 +155,20 @@ class _CategoryDrawerState extends State<CategoryDrawer> {
                               });
                             } else {
                               Navigator.of(context).pop();
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) =>
+                                      CategoryProductListScreen(
+                                    categoryTitle: item.title,
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                             child: Row(
                               children: [
                                 Text(
