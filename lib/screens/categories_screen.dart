@@ -23,7 +23,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const VietmadeHeader(),
+      appBar: const VietmadeHeader(showMenu: false),
       drawer: const CategoryDrawer(),
       body: Row(
         children: [

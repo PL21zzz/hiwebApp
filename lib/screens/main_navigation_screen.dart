@@ -43,9 +43,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+            if (index == 3) {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const CartScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,

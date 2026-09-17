@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../screens/messages_screen.dart';
 import '../../screens/search_screen.dart';
+import '../../screens/cart_screen.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
-  const VietmadeHeader({super.key});
+  final bool showMenu;
+
+  const VietmadeHeader({
+    super.key,
+    this.showMenu = true,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(52);
@@ -52,13 +59,15 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildIconButton(
-                      icon: LucideIcons.menu,
-                      onTap: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                    const SizedBox(width: 6),
+                    if (showMenu) ...[
+                      _buildIconButton(
+                        icon: LucideIcons.menu,
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      ),
+                      const SizedBox(width: 6),
+                    ],
                     RichText(
                       text: const TextSpan(
                         children: [
@@ -106,11 +115,29 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     _buildIconButton(
                       icon: LucideIcons.messageCircle,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                const MessagesScreen(),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
                     ),
                     _buildIconButton(
                       icon: LucideIcons.shoppingCart,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                const CartScreen(),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
                     ),
                     _buildIconButton(
                       icon: LucideIcons.user,
