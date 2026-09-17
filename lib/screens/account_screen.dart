@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'auth/login_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tài khoản')),
-      body: const Center(
-        child: Text('Màn hình Tài khoản'),
-      ),
-    );
+    return const LoginScreen();
   }
 }

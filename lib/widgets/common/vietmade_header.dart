@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../screens/messages_screen.dart';
 import '../../screens/search_screen.dart';
 import '../../screens/cart_screen.dart';
+import '../../screens/auth/login_screen.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -141,7 +142,16 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     _buildIconButton(
                       icon: LucideIcons.user,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                const LoginScreen(),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

@@ -4,6 +4,7 @@ import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'account_screen.dart';
+import 'auth/login_screen.dart';
 import '../theme/app_colors.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -48,6 +49,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       const CartScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else if (index == 4) {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const LoginScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
