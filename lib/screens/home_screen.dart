@@ -106,8 +106,8 @@ class HomeScreen extends StatelessWidget {
               child: const ProductGrid(itemCount: 6),
             ),
 
-            // 7. Khoảng đệm (spacer) để lộ nền xám nhạt trước khi xuống Footer
-            const SizedBox(height: 16),
+            // 7. Khoảng đệm (spacer) rộng ~120px để lộ nền xám nhạt trước khi xuống Footer
+            const SizedBox(height: 120),
 
             // 8. Chân trang (Footer) đen sẫm
             const VietmadeFooter(),
