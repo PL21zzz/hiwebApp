@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/top_search_model.dart';
+import '../../models/top_search_model.dart';
+import '../../screens/search_screen.dart';
 
 class TopSearchesSection extends StatelessWidget {
   const TopSearchesSection({super.key});
@@ -38,33 +39,42 @@ class TopSearchesSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: _topSearches.map((item) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      item.imageUrl,
-                      width: 64,
-                      height: 64,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        item.imageUrl,
                         width: 64,
                         height: 64,
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.image, color: Colors.grey),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 64,
+                          height: 64,
+                          color: Colors.grey.shade200,
+                          child: const Icon(Icons.image, color: Colors.grey),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    item.label,
-                    style: const TextStyle(
-                      fontSize: 10.5,
-                      color: Color(0xFF64748B),
+                    const SizedBox(height: 6),
+                    Text(
+                      item.label,
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFF64748B),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }).toList(),
           ),

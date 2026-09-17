@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/category_model.dart';
-import '../theme/app_colors.dart';
+import '../../models/category_model.dart';
+import '../../theme/app_colors.dart';
 
 class CategoryDrawer extends StatefulWidget {
   const CategoryDrawer({super.key});

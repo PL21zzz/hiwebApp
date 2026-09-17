@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../widgets/vietmade_header.dart';
-import '../widgets/banner_slider.dart';
-import '../widgets/category_grid.dart';
-import '../widgets/flash_sale_section.dart';
-import '../widgets/top_searches_section.dart';
-import '../widgets/product_grid.dart';
-import '../widgets/vietmade_footer.dart';
-import '../widgets/category_drawer.dart';
+import '../widgets/common/vietmade_header.dart';
+import '../widgets/common/vietmade_footer.dart';
+import '../widgets/common/category_drawer.dart';
+import '../widgets/common/product_grid.dart';
+import '../widgets/home/banner_slider.dart';
+import '../widgets/home/category_grid.dart';
+import '../widgets/home/flash_sale_section.dart';
+import '../widgets/home/top_searches_section.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

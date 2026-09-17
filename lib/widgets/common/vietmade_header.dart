@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../theme/app_colors.dart';
+import '../../screens/search_screen.dart';
+import '../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   const VietmadeHeader({super.key});
@@ -92,7 +93,13 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     _buildIconButton(
                       icon: LucideIcons.search,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SearchScreen(),
+                          ),
+                        );
+                      },
                     ),
                     _buildIconButton(
                       icon: LucideIcons.messageCircle,

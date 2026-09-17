@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/category_model.dart';
+import '../../models/category_model.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key});

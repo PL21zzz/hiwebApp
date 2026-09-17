@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../theme/app_colors.dart';
 
 class FlashSaleSection extends StatefulWidget {
   const FlashSaleSection({super.key});
@@ -79,7 +79,6 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
               ),
             ),
           ),
-          // Nhãn ĐÃ BÁN có padding 4px ở phía trên và trái ra 1 chút
           if (badgeText != null)
             Positioned(
               top: 4,
@@ -182,7 +181,7 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
           ),
           const SizedBox(width: 8),
 
-          // 2. KHỐI BÊN PHẢI: VietMade VIDEO (Đã xóa icon Play giả)
+          // 2. KHỐI BÊN PHẢI: VietMade VIDEO
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(8),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../models/banner_model.dart';
-import '../theme/app_colors.dart';
+import '../../models/banner_model.dart';
+import '../../theme/app_colors.dart';
 
 class BannerSlider extends StatefulWidget {
   const BannerSlider({super.key});
