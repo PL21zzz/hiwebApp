@@ -3,61 +3,41 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product_model.dart';
 import '../../screens/product_detail_screen.dart';
 
-class ProductCard extends StatelessWidget {
+class SimilarProductCard extends StatelessWidget {
   final ProductModel product;
 
-  const ProductCard({
+  const SimilarProductCard({
     super.key,
     required this.product,
   });
 
+  String get _brandName {
+    if (product.name.contains('Cetaphil')) return 'Cetaphil';
+    if (product.name.contains('Healthy Care')) return 'Healthy Care';
+    if (product.name.contains('Kirkland')) return 'Kirkland';
+    if (product.name.contains('Obagi')) return 'Obagi';
+    if (product.name.contains('Anessa')) return 'Anessa';
+    if (product.name.contains('Ostelin')) return 'Ostelin';
+    return product.category;
+  }
+
+  String get _brandInitial =>
+      _brandName.isNotEmpty ? _brandName[0].toUpperCase() : 'P';
+
   Widget _buildCartButton() {
-    return SizedBox(
-      width: 46,
-      height: 30,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: 46,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: const Color(0xFF1E293B), width: 1.1),
-            ),
-            child: const Center(
-              child: Icon(
-                LucideIcons.shoppingCart,
-                size: 16,
-                color: Color(0xFF1E293B),
-              ),
-            ),
-          ),
-          Positioned(
-            right: -1,
-            bottom: 3,
-            child: Container(
-              width: 13,
-              height: 13,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Text(
-                  '+',
-                  style: TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
-                    height: 1.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: const BoxDecoration(
+        color: Color(0xFFE0F2FE),
+        shape: BoxShape.circle,
+      ),
+      child: const Center(
+        child: Icon(
+          LucideIcons.shoppingCart,
+          size: 13,
+          color: Color(0xFF0284C7),
+        ),
       ),
     );
   }
@@ -92,6 +72,7 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Product Image with Discount Badge Overlay
               AspectRatio(
                 aspectRatio: 1.0,
                 child: Stack(
@@ -116,8 +97,15 @@ class ProductCard extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE53935),
-                            borderRadius: BorderRadius.circular(4),
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Color(0xFFFF5200),
+                                Color(0xFFEF0078),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             '-${product.discountPercent}%',
@@ -132,34 +120,73 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // Product Info Area
               Padding(
-                padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+                padding: const EdgeInsets.all(7),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Brand Logo Avatar & Brand Name Row
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 8,
+                          backgroundColor: const Color(0xFF0284C7),
+                          child: Text(
+                            _brandInitial,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            _brandName,
+                            style: const TextStyle(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF475569),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 3),
+
+                    // Product Title (2 lines max)
                     SizedBox(
-                      height: 32,
+                      height: 30,
                       child: Text(
                         product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 11,
-                          letterSpacing: -0.15,
                           fontWeight: FontWeight.normal,
-                          color: Color(0xFF334155),
-                          height: 1.2,
+                          color: Color(0xFF1E293B),
+                          height: 1.25,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2),
+
+                    const SizedBox(height: 3),
+
+                    // Price Row (Current Red Price + Original Strikethrough Price)
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
                           style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.bold,
                             color: Color(0xFFE53935),
                           ),
                         ),
@@ -171,7 +198,7 @@ class ProductCard extends StatelessWidget {
                               '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
                               style: const TextStyle(
                                 fontSize: 9.5,
-                                color: Color(0xFFA1A1AA),
+                                color: Color(0xFF94A3B8),
                               ),
                             ),
                             Positioned(
@@ -179,33 +206,36 @@ class ProductCard extends StatelessWidget {
                               right: 0,
                               child: Container(
                                 height: 1.0,
-                                color: const Color(0xFFA1A1AA),
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+
+                    const SizedBox(height: 3),
+
+                    // Rating & Sold Row
                     Row(
                       children: [
                         const Icon(
                           Icons.star_rounded,
                           size: 12,
-                          color: Color(0xFFFF9500),
+                          color: Color(0xFFEAB308),
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          '${product.rating}',
+                          product.rating.toStringAsFixed(1),
                           style: const TextStyle(
                             fontSize: 10,
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xFF475569),
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF334155),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 3),
                         Text(
-                          '| Đã bán ${product.soldCount}',
+                          '| ${product.soldCount} Đã bán',
                           style: const TextStyle(
                             fontSize: 9.5,
                             color: Color(0xFF64748B),
@@ -213,20 +243,31 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 3),
+
+                    const SizedBox(height: 4),
+
+                    // Bottom Row: Trong ngay image badge + Location + Cart Button
                     Row(
                       children: [
+                        Image.network(
+                          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789702201/badge_trong_ngay_taqn2t.webp',
+                          height: 14,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const SizedBox.shrink(),
+                        ),
+                        const SizedBox(width: 3),
                         const Icon(
                           LucideIcons.mapPin,
-                          size: 11,
+                          size: 9,
                           color: Color(0xFF94A3B8),
                         ),
-                        const SizedBox(width: 2),
+                        const SizedBox(width: 1),
                         Expanded(
                           child: Text(
                             product.location,
                             style: const TextStyle(
-                              fontSize: 9.5,
+                              fontSize: 8.5,
                               color: Color(0xFF64748B),
                             ),
                             maxLines: 1,

@@ -10,6 +10,7 @@ class ProductModel {
   final String imageUrl;
   final String category;
   final bool isFlashSale;
+  final bool isFavorite;
 
   const ProductModel({
     required this.id,
@@ -23,6 +24,7 @@ class ProductModel {
     required this.imageUrl,
     required this.category,
     this.isFlashSale = false,
+    this.isFavorite = false,
   });
 
   static const List<ProductModel> mockProducts = [
