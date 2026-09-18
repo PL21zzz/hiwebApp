@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'home_screen.dart';
-import 'categories_screen.dart';
-import 'cart_screen.dart';
-import 'account_screen.dart';
+import 'category/categories_screen.dart';
+import 'cart/cart_screen.dart';
+import 'auth/account_screen.dart';
 import 'auth/login_screen.dart';
 import '../theme/app_colors.dart';
 

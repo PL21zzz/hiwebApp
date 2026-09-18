@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../screens/messages_screen.dart';
-import '../../screens/search_screen.dart';
-import '../../screens/cart_screen.dart';
+import '../../screens/chat/messages_screen.dart';
+import '../../screens/search/search_screen.dart';
+import '../../screens/cart/cart_screen.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../theme/app_colors.dart';
 

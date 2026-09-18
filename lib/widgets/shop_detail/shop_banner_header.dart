@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/message_model.dart';
-import '../../models/product_detail_model.dart';
-import '../../screens/chat_detail_screen.dart';
+import '../../models/chat/message_model.dart';
+import '../../models/product/product_detail_model.dart';
+import '../../screens/chat/chat_detail_screen.dart';
 
 class ShopBannerHeader extends StatefulWidget {
   final ShopProfileModel shop;

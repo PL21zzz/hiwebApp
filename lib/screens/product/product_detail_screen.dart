@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/product_detail_model.dart';
-import '../theme/app_colors.dart';
-import '../widgets/product_detail/product_details_tab.dart';
-import '../widgets/product_detail/product_overview_tab.dart';
-import '../widgets/product_detail/product_reviews_tab.dart';
-import 'cart_screen.dart';
+import '../../models/product/product_detail_model.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/product_detail/product_details_tab.dart';
+import '../../widgets/product_detail/product_overview_tab.dart';
+import '../../widgets/product_detail/product_reviews_tab.dart';
+import '../cart/cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;

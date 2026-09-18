@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../theme/app_colors.dart';
+import '../../theme/app_colors.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});

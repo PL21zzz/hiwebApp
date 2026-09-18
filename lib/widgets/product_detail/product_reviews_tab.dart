@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/product_detail_model.dart';
-import '../../models/product_model.dart';
-import '../../screens/shop_detail_screen.dart';
+import '../../models/product/product_detail_model.dart';
+import '../../models/product/product_model.dart';
+import '../../screens/product/shop_detail_screen.dart';
 import 'fullscreen_video_modal.dart';
 import 'horizontal_product_list_section.dart';
 

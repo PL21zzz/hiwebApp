@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/product_detail_model.dart';
-import '../models/product_model.dart';
-import '../widgets/common/vietmade_footer.dart';
-import '../widgets/shop_detail/shop_banner_header.dart';
-import '../widgets/shop_detail/shop_product_card.dart';
+import '../../models/product/product_detail_model.dart';
+import '../../models/product/product_model.dart';
+import '../../widgets/common/vietmade_footer.dart';
+import '../../widgets/shop_detail/shop_banner_header.dart';
+import '../../widgets/shop_detail/shop_product_card.dart';
 
 class ShopDetailScreen extends StatefulWidget {
   final ShopProfileModel shop;

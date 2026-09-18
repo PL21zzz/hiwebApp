@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/message_model.dart';
-import '../theme/app_colors.dart';
+import '../../models/chat/message_model.dart';
+import '../../theme/app_colors.dart';
 import 'chat_detail_screen.dart';
 
 class MessagesScreen extends StatefulWidget {

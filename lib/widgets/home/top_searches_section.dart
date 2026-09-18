@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/top_search_model.dart';
-import '../../screens/search_screen.dart';
+import '../../models/search/top_search_model.dart';
+import '../../screens/search/search_screen.dart';
 
 class TopSearchesSection extends StatelessWidget {
   const TopSearchesSection({super.key});

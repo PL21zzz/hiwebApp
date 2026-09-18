@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/category_model.dart';
+import '../../models/home/category_model.dart';
 import '../../theme/app_colors.dart';
-import '../../screens/category_product_list_screen.dart';
+import '../../screens/product/category_product_list_screen.dart';
 
 class CategoryDrawer extends StatefulWidget {
   const CategoryDrawer({super.key});

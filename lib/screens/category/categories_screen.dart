@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/category_model.dart';
-import '../theme/app_colors.dart';
-import '../widgets/common/vietmade_header.dart';
-import '../widgets/common/category_drawer.dart';
-import 'category_product_list_screen.dart';
+import '../../models/home/category_model.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/common/vietmade_header.dart';
+import '../../widgets/common/category_drawer.dart';
+import '../product/category_product_list_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});

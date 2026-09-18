@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../screens/auth/login_screen.dart';
-import '../../screens/cart_screen.dart';
+import '../../screens/cart/cart_screen.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeBottomNavBar extends StatelessWidget {

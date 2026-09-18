@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../screens/flash_sale_screen.dart';
+import '../../screens/product/flash_sale_screen.dart';
 import '../../theme/app_colors.dart';
 
 class FlashSaleSection extends StatefulWidget {

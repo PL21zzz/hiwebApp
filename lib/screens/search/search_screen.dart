@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/search_model.dart';
-import '../theme/app_colors.dart';
+import '../../models/search/search_model.dart';
+import '../../theme/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

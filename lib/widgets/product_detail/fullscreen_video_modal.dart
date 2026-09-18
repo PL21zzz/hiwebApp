@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:video_player/video_player.dart';
-import '../../models/product_detail_model.dart';
+import '../../models/product/product_detail_model.dart';
 
 class FullscreenVideoModal extends StatefulWidget {
   final List<ProductMediaModel> mediaList;

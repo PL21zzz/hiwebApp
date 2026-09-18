@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../models/product_model.dart';
-import '../theme/app_colors.dart';
-import '../widgets/common/vietmade_footer.dart';
+import '../../models/product/product_model.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/common/vietmade_footer.dart';
 
 class FlashSaleSlotInfo {
   final String label;
