@@ -71,6 +71,11 @@ class ShopProfileModel {
   final int followerCount;
   final String totalSold;
   final String joinedDuration;
+  final bool isFavorite;
+  final String coverUrl;
+  final int videoCount;
+  final int productCount;
+  final String welcomeMessage;
 
   const ShopProfileModel({
     required this.name,
@@ -81,6 +86,11 @@ class ShopProfileModel {
     this.followerCount = 50,
     this.totalSold = '2.3K',
     this.joinedDuration = '1 năm trước',
+    this.isFavorite = true,
+    this.coverUrl = 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+    this.videoCount = 1,
+    this.productCount = 18,
+    this.welcomeMessage = 'Chào bạn, shop có thể giúp gì cho bạn?',
   });
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product_detail_model.dart';
 import '../../models/product_model.dart';
+import '../../screens/shop_detail_screen.dart';
 import 'fullscreen_video_modal.dart';
 import 'horizontal_product_list_section.dart';
 
@@ -448,125 +449,146 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
         const SizedBox(height: 8),
 
         // 3. Shop Profile Card
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: const Color(0xFF0284C7),
-                child: Text(
-                  shop.name.isNotEmpty ? shop.name[0].toUpperCase() : 'P',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, anim1, anim2) =>
+                    ShopDetailScreen(shop: shop),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
+          },
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: const Color(0xFF0284C7),
+                  child: Text(
+                    shop.name.isNotEmpty ? shop.name[0].toUpperCase() : 'P',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      shop.name,
-                      style: const TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        shop.name,
+                        style: const TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 3),
-                    Row(
-                      children: [
-                        Text(
-                          '${shop.followerCount} ',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF1E293B),
-                            fontWeight: FontWeight.bold,
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Text(
+                            '${shop.followerCount} ',
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              color: Color(0xFF1E293B),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const Text(
-                          'Theo dõi  •  ',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF64748B),
+                          const Text(
+                            'Theo dõi  •  ',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              color: Color(0xFF64748B),
+                            ),
                           ),
-                        ),
-                        Text(
-                          '${shop.totalSold} ',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF1E293B),
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            '${shop.totalSold} ',
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              color: Color(0xFF1E293B),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const Text(
-                          'Đã bán  •  ',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF64748B),
+                          const Text(
+                            'Đã bán  •  ',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              color: Color(0xFF64748B),
+                            ),
                           ),
-                        ),
-                        const Icon(Icons.star, size: 12, color: Color(0xFFEAB308)),
-                        const SizedBox(width: 2),
-                        Text(
-                          '${shop.rating.toInt()}',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF1E293B),
-                            fontWeight: FontWeight.bold,
+                          const Icon(Icons.star, size: 12, color: Color(0xFFEAB308)),
+                          const SizedBox(width: 2),
+                          Text(
+                            '${shop.rating.toInt()}',
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              color: Color(0xFF1E293B),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.clock,
-                          size: 12,
-                          color: Color(0xFF94A3B8),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Tham gia: ${shop.joinedDuration}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF64748B),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          const Icon(
+                            LucideIcons.clock,
+                            size: 12,
+                            color: Color(0xFF94A3B8),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF0284C7)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 4,
+                          const SizedBox(width: 4),
+                          Text(
+                            'Tham gia: ${shop.joinedDuration}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF64748B),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                child: const Text(
-                  'Xem Shop',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0284C7),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, anim1, anim2) =>
+                            ShopDetailScreen(shop: shop),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFF0284C7)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 4,
+                    ),
+                  ),
+                  child: const Text(
+                    'Xem Shop',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0284C7),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
