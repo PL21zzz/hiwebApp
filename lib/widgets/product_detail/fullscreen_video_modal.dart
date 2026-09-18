@@ -23,7 +23,10 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
   bool _isInitialized = false;
   bool _isPlaying = false;
   bool _isMuted = false;
-  double _zoomLevel = 1.0;
+
+  final TransformationController _transformationController =
+      TransformationController();
+  TapDownDetails? _doubleTapDetails;
 
   @override
   void initState() {
@@ -33,6 +36,8 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
   }
 
   void _setupMedia() {
+    _transformationController.value = Matrix4.identity();
+    _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     _videoController = null;
     _isInitialized = false;
@@ -40,26 +45,33 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
 
     final item = widget.mediaList[_currentIndex];
     if (item.isVideo) {
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(item.url))
-        ..initialize().then((_) {
-          if (mounted) {
-            setState(() {
-              _isInitialized = true;
-            });
-            _videoController?.setLooping(true);
-            _videoController?.setVolume(_isMuted ? 0.0 : 1.0);
-            _videoController?.play();
-            setState(() => _isPlaying = true);
-          }
-        });
-      _videoController?.addListener(() {
-        if (mounted) setState(() {});
+      final controller = VideoPlayerController.networkUrl(Uri.parse(item.url));
+      _videoController = controller;
+      controller.addListener(_videoListener);
+      controller.initialize().then((_) {
+        if (mounted && _videoController == controller) {
+          setState(() {
+            _isInitialized = true;
+          });
+          controller.setLooping(true);
+          controller.setVolume(_isMuted ? 0.0 : 1.0);
+          controller.play();
+          setState(() => _isPlaying = true);
+        }
       });
+    }
+  }
+
+  void _videoListener() {
+    if (mounted) {
+      setState(() {});
     }
   }
 
   @override
   void dispose() {
+    _videoController?.removeListener(_videoListener);
+    _transformationController.dispose();
     _videoController?.dispose();
     super.dispose();
   }
@@ -75,6 +87,33 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
         _isPlaying = true;
       }
     });
+  }
+
+  void _handleDoubleTap() {
+    if (_transformationController.value != Matrix4.identity()) {
+      _transformationController.value = Matrix4.identity();
+    } else {
+      final position = _doubleTapDetails?.localPosition ?? Offset.zero;
+      _transformationController.value = Matrix4.identity()
+        ..translate(-position.dx * 1.2, -position.dy * 1.2)
+        ..scale(2.5);
+    }
+  }
+
+  void _zoomIn() {
+    final currentScale = _transformationController.value.getMaxScaleOnAxis();
+    if (currentScale < 4.0) {
+      final newScale = (currentScale + 0.5).clamp(0.8, 4.0);
+      _transformationController.value = Matrix4.identity()..scale(newScale);
+    }
+  }
+
+  void _zoomOut() {
+    final currentScale = _transformationController.value.getMaxScaleOnAxis();
+    if (currentScale > 0.8) {
+      final newScale = (currentScale - 0.5).clamp(0.8, 4.0);
+      _transformationController.value = Matrix4.identity()..scale(newScale);
+    }
   }
 
   String _formatDuration(Duration duration) {
@@ -121,27 +160,25 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
                     children: [
                       IconButton(
                         icon: const Icon(LucideIcons.minus, color: Colors.white, size: 18),
-                        onPressed: () {
-                          if (_zoomLevel > 0.8) {
-                            setState(() => _zoomLevel -= 0.1);
-                          }
-                        },
+                        onPressed: _zoomOut,
                       ),
-                      Text(
-                        '${(_zoomLevel * 100).toInt()}%',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      ValueListenableBuilder<Matrix4>(
+                        valueListenable: _transformationController,
+                        builder: (context, value, child) {
+                          final scale = value.getMaxScaleOnAxis();
+                          return Text(
+                            '${(scale * 100).toInt()}%',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
                       IconButton(
                         icon: const Icon(LucideIcons.plus, color: Colors.white, size: 18),
-                        onPressed: () {
-                          if (_zoomLevel < 2.0) {
-                            setState(() => _zoomLevel += 0.1);
-                          }
-                        },
+                        onPressed: _zoomIn,
                       ),
                     ],
                   ),
@@ -151,55 +188,64 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
 
             // Main Media Display Area
             Expanded(
-              child: Transform.scale(
-                scale: _zoomLevel,
-                child: Center(
-                  child: item.isVideo
-                      ? GestureDetector(
-                          onTap: _togglePlay,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              if (_isInitialized && _videoController != null)
-                                AspectRatio(
-                                  aspectRatio: _videoController!.value.aspectRatio,
-                                  child: VideoPlayer(_videoController!),
-                                )
-                              else
-                                const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
+              child: Center(
+                child: item.isVideo
+                    ? GestureDetector(
+                        onTap: _togglePlay,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            if (_isInitialized && _videoController != null)
+                              AspectRatio(
+                                aspectRatio: _videoController!.value.aspectRatio,
+                                child: VideoPlayer(_videoController!),
+                              )
+                            else
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
                                 ),
+                              ),
 
-                              if (!_isPlaying && _isInitialized)
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.6),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white, width: 2),
-                                  ),
-                                  child: const Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 38,
-                                  ),
+                            if (!_isPlaying && _isInitialized)
+                              Container(
+                                width: 64,
+                                height: 64,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.6),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white, width: 2),
                                 ),
-                            ],
-                          ),
-                        )
-                      : Image.network(
-                          item.url,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stack) => const Icon(
-                            LucideIcons.image,
-                            color: Colors.white54,
-                            size: 64,
+                                child: const Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 38,
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    : GestureDetector(
+                        onDoubleTapDown: (details) =>
+                            _doubleTapDetails = details,
+                        onDoubleTap: _handleDoubleTap,
+                        child: InteractiveViewer(
+                          transformationController: _transformationController,
+                          minScale: 0.8,
+                          maxScale: 4.0,
+                          clipBehavior: Clip.none,
+                          child: Image.network(
+                            item.url,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stack) =>
+                                const Icon(
+                              LucideIcons.image,
+                              color: Colors.white54,
+                              size: 64,
+                            ),
                           ),
                         ),
-                ),
+                      ),
               ),
             ),
 
@@ -248,12 +294,19 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
                             ),
                           ),
                         ),
-                        Text(
-                          _formatDuration(_videoController!.value.duration),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                        Builder(
+                          builder: (context) {
+                            final dur = _videoController!.value.duration;
+                            final pos = _videoController!.value.position;
+                            final remaining = dur > pos ? (dur - pos) : Duration.zero;
+                            return Text(
+                              _formatDuration(remaining),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(

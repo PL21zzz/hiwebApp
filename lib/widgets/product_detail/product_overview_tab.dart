@@ -253,19 +253,22 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                       );
                     }
 
-                    return Image.network(
-                      item.url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stack) {
-                        return Container(
-                          color: const Color(0xFFCBD5E1),
-                          child: const Icon(
-                            LucideIcons.image,
-                            size: 48,
-                            color: Color(0xFF94A3B8),
-                          ),
-                        );
-                      },
+                    return GestureDetector(
+                      onTap: () => _openFullscreenModal(index),
+                      child: Image.network(
+                        item.url,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stack) {
+                          return Container(
+                            color: const Color(0xFFCBD5E1),
+                            child: const Icon(
+                              LucideIcons.image,
+                              size: 48,
+                              color: Color(0xFF94A3B8),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
@@ -522,8 +525,8 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                       '${_detail.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}đ',
                       style: const TextStyle(
                         fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0284C7),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -692,7 +695,7 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                     Icon(
                       LucideIcons.truck,
                       size: 16,
-                      color: AppColors.primary,
+                      color: Color(0xFF0284C7),
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -700,7 +703,7 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: Color(0xFF0284C7),
                       ),
                     ),
                   ],
@@ -711,7 +714,7 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                     Icon(
                       LucideIcons.refreshCw,
                       size: 15,
-                      color: AppColors.primary,
+                      color: Color(0xFF0284C7),
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -719,7 +722,7 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: Color(0xFF0284C7),
                       ),
                     ),
                   ],

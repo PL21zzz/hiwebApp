@@ -409,14 +409,14 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
 
               const SizedBox(height: 16),
 
-              // Full-width Xem thêm đánh giá Button matching sample media_1789698087217.png
+              // Full-width Xem thêm đánh giá Button matching sample image
               SizedBox(
                 width: double.infinity,
                 height: 40,
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFCBD5E1)),
+                    side: const BorderSide(color: Color(0xFFE2E8F0), width: 0.9),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -428,14 +428,14 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                         'Xem thêm đánh giá ',
                         style: TextStyle(
                           fontSize: 12.5,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF0284C7),
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF0EA5E9),
                         ),
                       ),
                       Icon(
                         LucideIcons.chevronDown,
-                        size: 16,
-                        color: Color(0xFF0284C7),
+                        size: 15,
+                        color: Color(0xFF0EA5E9),
                       ),
                     ],
                   ),
@@ -447,19 +447,19 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
 
         const SizedBox(height: 8),
 
-        // 3. Shop Profile Card matching sample media_1789698087217.png
+        // 3. Shop Profile Card
         Container(
           color: Colors.white,
           padding: const EdgeInsets.all(16),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 22,
-                backgroundColor: Color(0xFF0284C7),
+                backgroundColor: const Color(0xFF0284C7),
                 child: Text(
-                  'P',
-                  style: TextStyle(
+                  shop.name.isNotEmpty ? shop.name[0].toUpperCase() : 'P',
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -481,16 +481,16 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                     ),
                     const SizedBox(height: 3),
                     Row(
-                      children: const [
+                      children: [
                         Text(
-                          '50 ',
-                          style: TextStyle(
+                          '${shop.followerCount} ',
+                          style: const TextStyle(
                             fontSize: 11.5,
                             color: Color(0xFF1E293B),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Theo dõi  •  ',
                           style: TextStyle(
                             fontSize: 11.5,
@@ -498,25 +498,25 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                           ),
                         ),
                         Text(
-                          '2.3K ',
-                          style: TextStyle(
+                          '${shop.totalSold} ',
+                          style: const TextStyle(
                             fontSize: 11.5,
                             color: Color(0xFF1E293B),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Đã bán  •  ',
                           style: TextStyle(
                             fontSize: 11.5,
                             color: Color(0xFF64748B),
                           ),
                         ),
-                        Icon(Icons.star, size: 12, color: Color(0xFFEAB308)),
-                        SizedBox(width: 2),
+                        const Icon(Icons.star, size: 12, color: Color(0xFFEAB308)),
+                        const SizedBox(width: 2),
                         Text(
-                          '5',
-                          style: TextStyle(
+                          '${shop.rating.toInt()}',
+                          style: const TextStyle(
                             fontSize: 11.5,
                             color: Color(0xFF1E293B),
                             fontWeight: FontWeight.bold,
@@ -526,16 +526,16 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                     ),
                     const SizedBox(height: 3),
                     Row(
-                      children: const [
-                        Icon(
+                      children: [
+                        const Icon(
                           LucideIcons.clock,
                           size: 12,
                           color: Color(0xFF94A3B8),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
-                          'Tham gia: 1 năm trước',
-                          style: TextStyle(
+                          'Tham gia: ${shop.joinedDuration}',
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFF64748B),
                           ),

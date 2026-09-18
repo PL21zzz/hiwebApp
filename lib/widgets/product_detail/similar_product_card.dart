@@ -246,28 +246,31 @@ class SimilarProductCard extends StatelessWidget {
 
                     const SizedBox(height: 4),
 
-                    // Bottom Row: Trong ngay image badge + Location + Cart Button
+                    // 1. Badge "Trong ngày" image (bigger size)
+                    Image.network(
+                      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789702201/badge_trong_ngay_taqn2t.webp',
+                      height: 23,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const SizedBox.shrink(),
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    // 2. Location + Cart Button Row
                     Row(
                       children: [
-                        Image.network(
-                          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789702201/badge_trong_ngay_taqn2t.webp',
-                          height: 14,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const SizedBox.shrink(),
-                        ),
-                        const SizedBox(width: 3),
                         const Icon(
                           LucideIcons.mapPin,
-                          size: 9,
+                          size: 9.5,
                           color: Color(0xFF94A3B8),
                         ),
-                        const SizedBox(width: 1),
+                        const SizedBox(width: 2),
                         Expanded(
                           child: Text(
                             product.location,
                             style: const TextStyle(
-                              fontSize: 8.5,
+                              fontSize: 9,
                               color: Color(0xFF64748B),
                             ),
                             maxLines: 1,

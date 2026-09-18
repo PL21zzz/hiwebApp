@@ -263,7 +263,7 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.54,
+                  childAspectRatio: 0.50,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
@@ -329,7 +329,7 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.54,
+                  childAspectRatio: 0.50,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),

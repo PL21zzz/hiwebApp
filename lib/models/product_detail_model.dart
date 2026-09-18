@@ -68,6 +68,9 @@ class ShopProfileModel {
   final String lastActive;
   final double rating;
   final String responseRate;
+  final int followerCount;
+  final String totalSold;
+  final String joinedDuration;
 
   const ShopProfileModel({
     required this.name,
@@ -75,6 +78,9 @@ class ShopProfileModel {
     required this.lastActive,
     required this.rating,
     required this.responseRate,
+    this.followerCount = 50,
+    this.totalSold = '2.3K',
+    this.joinedDuration = '1 năm trước',
   });
 }
 
