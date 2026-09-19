@@ -15,19 +15,27 @@ class ProductGrid extends StatelessWidget {
         ? itemCount!
         : _products.length;
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.56,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemCount: count,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          product: _products[index],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = (constraints.maxWidth - 8) / 2;
+        const textSectionHeight = 104.0;
+        final childAspectRatio = cardWidth / (cardWidth + textSectionHeight);
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: childAspectRatio,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: count,
+          itemBuilder: (context, index) {
+            return ProductCard(
+              product: _products[index],
+            );
+          },
         );
       },
     );

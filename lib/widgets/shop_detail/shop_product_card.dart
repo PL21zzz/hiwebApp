@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_model.dart';
 import '../../screens/product/product_detail_screen.dart';
+import '../common/add_to_cart_button.dart';
 
 class ShopProductCard extends StatelessWidget {
   final ProductModel product;
@@ -23,7 +23,7 @@ class ShopProductCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const ProductDetailScreen(),
+            builder: (context) => ProductDetailScreen(product: product),
           ),
         );
       },
@@ -189,24 +189,7 @@ class ShopProductCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xFF64748B),
-                              width: 0.9,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              LucideIcons.shoppingCart,
-                              size: 12,
-                              color: Color(0xFF475569),
-                            ),
-                          ),
-                        ),
+                        const AddToCartButton(style: CartButtonStyle.circleOutline),
                       ],
                     ),
                   ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_model.dart';
+import '../../screens/product/product_detail_screen.dart';
 
 class HorizontalProductListSection extends StatefulWidget {
   final String? title;
@@ -102,7 +103,18 @@ class _HorizontalProductListSectionState
               separatorBuilder: (context, index) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
                 final product = displayedProducts[index];
-                return Container(
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, anim1, anim2) =>
+                            ProductDetailScreen(product: product),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: Container(
                   width: 138,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -379,8 +391,9 @@ class _HorizontalProductListSectionState
                       ],
                     ),
                   ),
-                );
-              },
+                ),
+              );
+            },
             ),
           ),
           const SizedBox(height: 12),

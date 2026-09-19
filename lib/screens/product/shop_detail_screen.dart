@@ -179,6 +179,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: GridView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: products.length,
@@ -227,6 +228,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: GridView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: _categoryNames.length,

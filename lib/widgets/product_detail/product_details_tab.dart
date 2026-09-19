@@ -252,26 +252,36 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Container(
                 height: 1,
                 color: Colors.black.withValues(alpha: 0.08),
               ),
-              const SizedBox(height: 10),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.50,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return SimilarProductCard(
-                    product: ProductModel.mockProducts[
-                        index % ProductModel.mockProducts.length],
+              const SizedBox(height: 4),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final cardWidth = (constraints.maxWidth - 10) / 2;
+                  const textSectionHeight = 144.0;
+                  final childAspectRatio =
+                      cardWidth / (cardWidth + textSectionHeight);
+
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: childAspectRatio,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return SimilarProductCard(
+                        product: ProductModel.mockProducts[
+                            index % ProductModel.mockProducts.length],
+                      );
+                    },
                   );
                 },
               ),
@@ -318,26 +328,36 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Container(
                 height: 1,
                 color: Colors.black.withValues(alpha: 0.08),
               ),
-              const SizedBox(height: 10),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.50,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  final p = ProductModel.mockProducts[
-                      (index + 2) % ProductModel.mockProducts.length];
-                  return SimilarProductCard(product: p);
+              const SizedBox(height: 4),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final cardWidth = (constraints.maxWidth - 10) / 2;
+                  const textSectionHeight = 144.0;
+                  final childAspectRatio =
+                      cardWidth / (cardWidth + textSectionHeight);
+
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: childAspectRatio,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      final p = ProductModel.mockProducts[
+                          (index + 2) % ProductModel.mockProducts.length];
+                      return SimilarProductCard(product: p);
+                    },
+                  );
                 },
               ),
             ],

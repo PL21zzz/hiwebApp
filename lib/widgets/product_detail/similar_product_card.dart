@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_model.dart';
 import '../../screens/product/product_detail_screen.dart';
+import '../common/add_to_cart_button.dart';
 
 class SimilarProductCard extends StatelessWidget {
   final ProductModel product;
@@ -24,24 +25,6 @@ class SimilarProductCard extends StatelessWidget {
   String get _brandInitial =>
       _brandName.isNotEmpty ? _brandName[0].toUpperCase() : 'P';
 
-  Widget _buildCartButton() {
-    return Container(
-      width: 25,
-      height: 25,
-      decoration: const BoxDecoration(
-        color: Color(0xFFE0F2FE),
-        shape: BoxShape.circle,
-      ),
-      child: const Center(
-        child: Icon(
-          LucideIcons.shoppingCart,
-          size: 13,
-          color: Color(0xFF0284C7),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -49,7 +32,7 @@ class SimilarProductCard extends StatelessWidget {
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, anim1, anim2) =>
-                const ProductDetailScreen(),
+                ProductDetailScreen(product: product),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
@@ -123,7 +106,7 @@ class SimilarProductCard extends StatelessWidget {
 
               // Product Info Area
               Padding(
-                padding: const EdgeInsets.all(7),
+                padding: const EdgeInsets.fromLTRB(6, 5, 6, 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -158,11 +141,11 @@ class SimilarProductCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
 
                     // Product Title (2 lines max)
                     SizedBox(
-                      height: 30,
+                      height: 26,
                       child: Text(
                         product.name,
                         maxLines: 2,
@@ -171,12 +154,12 @@ class SimilarProductCard extends StatelessWidget {
                           fontSize: 11,
                           fontWeight: FontWeight.normal,
                           color: Color(0xFF1E293B),
-                          height: 1.25,
+                          height: 1.2,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
 
                     // Price Row (Current Red Price + Original Strikethrough Price)
                     Row(
@@ -214,7 +197,7 @@ class SimilarProductCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
 
                     // Rating & Sold Row
                     Row(
@@ -244,18 +227,18 @@ class SimilarProductCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
 
                     // 1. Badge "Trong ngày" image (bigger size)
                     Image.network(
                       'https://res.cloudinary.com/dypm5avrx/image/upload/v1789702201/badge_trong_ngay_taqn2t.webp',
-                      height: 23,
+                      height: 21,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) =>
                           const SizedBox.shrink(),
                     ),
 
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
 
                     // 2. Location + Cart Button Row
                     Row(
@@ -277,7 +260,7 @@ class SimilarProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        _buildCartButton(),
+                        const AddToCartButton(style: CartButtonStyle.circleSolid),
                       ],
                     ),
                   ],

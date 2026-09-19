@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'home_screen.dart';
 import 'category/categories_screen.dart';
+import 'video/video_feed_screen.dart';
 import 'cart/cart_screen.dart';
 import 'auth/account_screen.dart';
 import 'auth/login_screen.dart';
@@ -20,7 +21,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     CategoriesScreen(),
-    Center(child: Text('Video Screen', style: TextStyle(fontSize: 16))),
+    VideoFeedScreen(),
     CartScreen(),
     AccountScreen(),
   ];

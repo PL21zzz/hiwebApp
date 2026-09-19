@@ -149,6 +149,41 @@ class ProductDetailModel {
     this.otherShopProducts = const [],
   });
 
+  factory ProductDetailModel.fromProduct(ProductModel product) {
+    final mock = ProductDetailModel.mockSample;
+    return ProductDetailModel(
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discountPercent: product.discountPercent,
+      rating: product.rating,
+      reviewCount: mock.reviewCount,
+      soldCount: product.soldCount,
+      isFavorite: product.isFavorite,
+      bestSellerBadge: mock.bestSellerBadge,
+      capacityOptions: mock.capacityOptions,
+      vouchers: mock.vouchers,
+      mediaList: [
+        if (product.imageUrl.isNotEmpty)
+          ProductMediaModel(
+            type: 'image',
+            url: product.imageUrl,
+            thumb: product.imageUrl,
+            title: product.name,
+          ),
+        ...mock.mediaList,
+      ],
+      tickerItems: mock.tickerItems,
+      specifications: mock.specifications,
+      shortDescription: mock.shortDescription,
+      fullDescription: mock.fullDescription,
+      reviews: mock.reviews,
+      shopProfile: mock.shopProfile,
+      otherShopProducts: mock.otherShopProducts,
+    );
+  }
+
   // Mock data instance matching Cetaphil Product Detail
   static const ProductDetailModel mockSample = ProductDetailModel(
     id: 'p1',

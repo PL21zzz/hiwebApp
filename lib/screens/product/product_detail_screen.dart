@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/product/product_model.dart';
 import '../../models/product/product_detail_model.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/product_detail/product_details_tab.dart';
 import '../../widgets/product_detail/product_overview_tab.dart';
 import '../../widgets/product_detail/product_reviews_tab.dart';
+import '../../widgets/common/top_notification.dart';
 import '../cart/cart_screen.dart';
+import '../search/search_screen.dart';
+import '../auth/login_screen.dart';
+import '../chat/messages_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;
   final ProductDetailModel? productDetail;
+  final ProductModel? product;
 
   const ProductDetailScreen({
     super.key,
     this.initialTabIndex = 0,
     this.productDetail,
+    this.product,
   });
 
   @override
@@ -35,7 +42,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? _selectedCapacity; // Initially null (unselected)
 
   ProductDetailModel get _detail =>
-      widget.productDetail ?? ProductDetailModel.mockSample;
+      widget.productDetail ??
+      (widget.product != null
+          ? ProductDetailModel.fromProduct(widget.product!)
+          : ProductDetailModel.mockSample);
 
   @override
   void initState() {
@@ -130,46 +140,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void _handlePurchaseAction(String actionLabel) {
-    if (_selectedCapacity == null) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: const [
-              Icon(LucideIcons.alertCircle, color: Colors.white, size: 18),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Vui lòng chọn Dung tích sản phẩm trước khi mua!',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: const Color(0xFFEF4444),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
-      return;
-    }
+    TopNotification.show(
+      context,
+      message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
+      isError: true,
+    );
 
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '$actionLabel thành công! (Dung tích: $_selectedCapacity)',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.primary,
-        duration: const Duration(seconds: 2),
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
       ),
     );
   }
@@ -272,7 +255,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // Search Button
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SearchScreen(),
+                            ),
+                          );
+                        },
                         borderRadius: BorderRadius.circular(20),
                         child: const Padding(
                           padding: EdgeInsets.all(6),
@@ -416,7 +406,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   children: [
                     // Chat Button
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, anim1, anim2) =>
+                                const MessagesScreen(),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
                       borderRadius: BorderRadius.circular(8),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(

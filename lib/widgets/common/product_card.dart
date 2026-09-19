@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_model.dart';
 import '../../screens/product/product_detail_screen.dart';
+import 'add_to_cart_button.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -11,56 +12,7 @@ class ProductCard extends StatelessWidget {
     required this.product,
   });
 
-  Widget _buildCartButton() {
-    return SizedBox(
-      width: 46,
-      height: 30,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: 46,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: const Color(0xFF1E293B), width: 1.1),
-            ),
-            child: const Center(
-              child: Icon(
-                LucideIcons.shoppingCart,
-                size: 16,
-                color: Color(0xFF1E293B),
-              ),
-            ),
-          ),
-          Positioned(
-            right: -1,
-            bottom: 3,
-            child: Container(
-              width: 13,
-              height: 13,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Text(
-                  '+',
-                  style: TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
-                    height: 1.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +21,7 @@ class ProductCard extends StatelessWidget {
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, anim1, anim2) =>
-                const ProductDetailScreen(),
+                ProductDetailScreen(product: product),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
@@ -133,12 +85,13 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+                padding: const EdgeInsets.fromLTRB(7, 4, 7, 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: 32,
+                      height: 26,
                       child: Text(
                         product.name,
                         maxLines: 2,
@@ -213,7 +166,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
                     Row(
                       children: [
                         const Icon(
@@ -233,7 +186,7 @@ class ProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        _buildCartButton(),
+                        const AddToCartButton(style: CartButtonStyle.pillPlus),
                       ],
                     ),
                   ],

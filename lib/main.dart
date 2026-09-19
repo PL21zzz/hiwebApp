@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:device_preview/device_preview.dart';
 import 'theme/app_theme.dart';
 import 'screens/main_navigation_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Custom status bar: transparent background & white icons
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -15,7 +17,12 @@ void main() {
     ),
   );
 
-  runApp(const VietMadeApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const VietMadeApp(),
+    ),
+  );
 }
 
 class VietMadeApp extends StatelessWidget {
@@ -24,6 +31,8 @@ class VietMadeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       title: 'VIETMADE.vn',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,

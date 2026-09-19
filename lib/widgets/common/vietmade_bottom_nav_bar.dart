@@ -74,7 +74,6 @@ class VietmadeBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 56,
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
@@ -84,14 +83,20 @@ class VietmadeBottomNavBar extends StatelessWidget {
           ),
         ),
       ),
-      child: Row(
-        children: [
-          _buildNavItem(context, icon: LucideIcons.home, label: 'Trang chủ', index: 0),
-          _buildNavItem(context, icon: LucideIcons.layoutGrid, label: 'Danh mục', index: 1),
-          _buildNavItem(context, icon: LucideIcons.video, label: 'Video', index: 2),
-          _buildNavItem(context, icon: LucideIcons.shoppingCart, label: 'Giỏ hàng', index: 3),
-          _buildNavItem(context, icon: LucideIcons.user, label: 'Tài khoản', index: 4),
-        ],
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 56,
+          child: Row(
+            children: [
+              _buildNavItem(context, icon: LucideIcons.home, label: 'Trang chủ', index: 0),
+              _buildNavItem(context, icon: LucideIcons.layoutGrid, label: 'Danh mục', index: 1),
+              _buildNavItem(context, icon: LucideIcons.video, label: 'Video', index: 2),
+              _buildNavItem(context, icon: LucideIcons.shoppingCart, label: 'Giỏ hàng', index: 3),
+              _buildNavItem(context, icon: LucideIcons.user, label: 'Tài khoản', index: 4),
+            ],
+          ),
+        ),
       ),
     );
   }

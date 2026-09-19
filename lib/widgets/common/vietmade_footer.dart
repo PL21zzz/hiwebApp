@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VietmadeFooter extends StatelessWidget {
   const VietmadeFooter({super.key});
+
+  Future<void> _launchSocialUrl(BuildContext context, String urlString) async {
+    final uri = Uri.parse(urlString);
+    try {
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Mở liên kết: $urlString')),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Mở liên kết: $urlString')),
+        );
+      }
+    }
+  }
 
   Widget _buildSupportRow(String label, String value) {
     return Row(
@@ -45,59 +67,41 @@ class VietmadeFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialIcon(IconData icon) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E293B),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, color: Colors.white, size: 16),
-    );
-  }
-
-  Widget _buildSocialIconText(String text) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E293B),
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-          ),
+  Widget _buildSocialIcon(IconData icon, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: const BoxDecoration(
+          color: Color(0xFF1E293B),
+          shape: BoxShape.circle,
         ),
+        child: Icon(icon, color: Colors.white, size: 16),
       ),
     );
   }
 
-  Widget _buildAccordionTile(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
+  Widget _buildSocialIconText(String text, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: const BoxDecoration(
+          color: Color(0xFF1E293B),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Text(
+            text,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 13.5,
-              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          const Icon(
-            Icons.chevron_right_rounded,
-            color: Color(0xFF94A3B8),
-            size: 18,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -235,20 +239,35 @@ class VietmadeFooter extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              _buildSocialIcon(LucideIcons.facebook),
+              _buildSocialIcon(
+                LucideIcons.facebook,
+                onTap: () => _launchSocialUrl(context, 'https://www.facebook.com'),
+              ),
               const SizedBox(width: 10),
-              _buildSocialIconText('X'),
+              _buildSocialIconText(
+                'X',
+                onTap: () => _launchSocialUrl(context, 'https://x.com'),
+              ),
               const SizedBox(width: 10),
-              _buildSocialIcon(LucideIcons.youtube),
+              _buildSocialIcon(
+                LucideIcons.youtube,
+                onTap: () => _launchSocialUrl(context, 'https://www.youtube.com'),
+              ),
             ],
           ),
           const SizedBox(height: 20),
           const Divider(color: Colors.white10),
 
           // 5. Expandable Links
-          _buildAccordionTile('Hỗ trợ khách hàng'),
+          const _ExpandableFooterSection(
+            title: 'Hỗ trợ khách hàng',
+            items: _customerSupportItems,
+          ),
           const Divider(color: Colors.white10, height: 1),
-          _buildAccordionTile('Danh mục sản phẩm'),
+          const _ExpandableFooterSection(
+            title: 'Danh mục sản phẩm',
+            items: _productCategoryItems,
+          ),
           const SizedBox(height: 24),
 
           // 6. Copyright Notice
@@ -263,6 +282,114 @@ class VietmadeFooter extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+const List<String> _customerSupportItems = [
+  'Giới thiệu',
+  'Chính sách đổi trả',
+  'Hướng dẫn đặt hàng',
+  'Vận chuyển & Giao nhận',
+  'Đăng ký bán hàng trên VietMade',
+  'Cam kết bảo mật thông tin',
+  'Liên hệ',
+  'Quy chế hoạt động',
+  'Sơ đồ Website',
+];
+
+const List<String> _productCategoryItems = [
+  'Thực phẩm chức năng',
+  'Mẹ và bé',
+  'Đồng hồ',
+  'Thiết bị chăm sóc sức khỏe',
+  'Điện máy điện lạnh',
+  'Văn phòng phẩm',
+  'Thời trang hàng hiệu',
+  'Chăm sóc cơ thể',
+  'Chăm sóc tóc',
+  'Thương hiệu',
+  'Son môi',
+  'Collagen chính hãng',
+];
+
+class _ExpandableFooterSection extends StatefulWidget {
+  final String title;
+  final List<String> items;
+
+  const _ExpandableFooterSection({
+    required this.title,
+    required this.items,
+  });
+
+  @override
+  State<_ExpandableFooterSection> createState() =>
+      _ExpandableFooterSectionState();
+}
+
+class _ExpandableFooterSectionState extends State<_ExpandableFooterSection> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () {
+            setState(() {
+              _isExpanded = !_isExpanded;
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(
+                  _isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
+                  color: const Color(0xFF94A3B8),
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_isExpanded)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12, top: 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.items.map((item) {
+                return InkWell(
+                  onTap: () {},
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        color: Color(0xFF94A3B8),
+                        fontSize: 13,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }
