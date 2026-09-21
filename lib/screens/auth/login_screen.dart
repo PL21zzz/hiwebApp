@@ -27,6 +27,19 @@ class _LoginScreenState extends State<LoginScreen> {
   int _failedAttempts = 0;
 
   @override
+  void initState() {
+    super.initState();
+    final remembered = AuthService.instance.getRememberedCredentials();
+    if (remembered != null) {
+      _emailController.text = remembered['identifier'] ?? '';
+      _passwordController.text = remembered['password'] ?? '';
+      _rememberMe = true;
+    } else {
+      _rememberMe = false;
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -91,6 +104,12 @@ class _LoginScreenState extends State<LoginScreen> {
     final result = AuthService.instance.login(identifier, password);
 
     if (result.isSuccess) {
+      if (_rememberMe) {
+        AuthService.instance.saveRememberedCredentials(identifier, password);
+      } else {
+        AuthService.instance.clearRememberedCredentials();
+      }
+
       setState(() {
         _failedAttempts = 0;
       });
@@ -112,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         _failedAttempts++;
+        _passwordController.clear();
       });
 
       if (!mounted) return;
@@ -384,17 +404,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: const Text(
-                                      'Quên mật khẩu?',
-                                      style: TextStyle(
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF116B81),
-                                      ),
-                                    ),
-                                  ),
+                                   GestureDetector(
+                                     onTap: () {},
+                                     child: const Text(
+                                       'Quên mật khẩu?',
+                                       style: TextStyle(
+                                         fontSize: 11.5,
+                                         fontWeight: FontWeight.w600,
+                                         color: Color(0xFF116B81),
+                                       ),
+                                     ),
+                                   ),
                                 ],
                               ),
                               const SizedBox(height: 14),

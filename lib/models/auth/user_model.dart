@@ -57,12 +57,19 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'user_name': userName,
       'password': password,
       'first_name': firstName,
       'last_name': lastName,
       'phone_number': phoneNumber,
       'email': email,
+      'avatar_url': avatarUrl,
+      'points': points,
+      'voucher_count': voucherCount,
+      'coins': coins,
+      'member_since': memberSince,
+      'rank': rank,
     };
   }
 

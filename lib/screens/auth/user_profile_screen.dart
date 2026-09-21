@@ -4,7 +4,9 @@ import '../../models/auth/profile_option_model.dart';
 import '../../models/auth/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/common/product_grid.dart';
 import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/vietmade_footer.dart';
 import '../../widgets/common/vietmade_header.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -450,7 +452,7 @@ class UserProfileScreen extends StatelessWidget {
 
             // Logout Button
             Container(
-              margin: const EdgeInsets.fromLTRB(14, 10, 14, 24),
+              margin: const EdgeInsets.fromLTRB(14, 10, 14, 16),
               width: double.infinity,
               height: 46,
               child: OutlinedButton.icon(
@@ -480,6 +482,50 @@ class UserProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
+
+            // Gợi ý dành cho bạn Section (Reused Product List 2 from Home)
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Gợi ý dành cho bạn',
+                    style: TextStyle(
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1F1F1F),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(4),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      child: Text(
+                        'Xem tất cả',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(6),
+              color: AppColors.productBoxBg,
+              child: const ProductGrid(itemCount: 6),
+            ),
+            const SizedBox(height: 120),
+            const VietmadeFooter(),
           ],
         ),
       ),

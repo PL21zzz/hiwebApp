@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/auth/user_model.dart';
 
 class AuthResult {
@@ -17,8 +19,14 @@ class AuthService extends ChangeNotifier {
   static final AuthService _instance = AuthService._internal();
   static AuthService get instance => _instance;
 
+  static const String _prefUsersKey = 'auth_registered_users';
+  static const String _prefCredentialsKey = 'auth_registered_credentials';
+  static const String _prefCurrentUserKey = 'auth_current_user';
+  static const String _prefRememberIdKey = 'auth_remembered_identifier';
+  static const String _prefRememberPassKey = 'auth_remembered_password';
+
   AuthService._internal() {
-    _seedDefaultUsers();
+    _loadDataFromLocal();
   }
 
   UserModel? _currentUser;
@@ -28,22 +36,107 @@ class AuthService extends ChangeNotifier {
   final List<UserModel> _users = [];
   final Map<String, String> _credentials = {}; // key: identifier (user_name or email lowercased), value: password
 
-  void _seedDefaultUsers() {
-    final sampleUser = UserModel(
-      id: 'usr_phongtuan_01',
-      userName: 'phongtuan',
-      password: '123456',
-      firstName: 'Nguyễn Tuấn',
-      lastName: 'Phong',
-      phoneNumber: '0912345678',
-      email: 'phongtuan@hiweb.vn',
-      coins: 0,
-      memberSince: '16/09/2026',
-      rank: 'Thành viên từ: 16/09/2026',
-    );
-    _users.add(sampleUser);
-    _credentials['phongtuan'] = '123456';
-    _credentials['phongtuan@hiweb.vn'] = '123456';
+  String? _rememberedIdentifier;
+  String? _rememberedPassword;
+  bool _hasRememberedCredentials = false;
+
+  bool get hasRememberedCredentials => _hasRememberedCredentials;
+
+  Future<void> _loadDataFromLocal() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // 1. Load users list
+      final usersJsonString = prefs.getString(_prefUsersKey);
+      if (usersJsonString != null && usersJsonString.isNotEmpty) {
+        final List<dynamic> jsonList = jsonDecode(usersJsonString);
+        _users.clear();
+        for (final item in jsonList) {
+          _users.add(UserModel.fromJson(Map<String, dynamic>.from(item)));
+        }
+      }
+
+      // 2. Load credentials map
+      final credsJsonString = prefs.getString(_prefCredentialsKey);
+      if (credsJsonString != null && credsJsonString.isNotEmpty) {
+        final Map<String, dynamic> map = jsonDecode(credsJsonString);
+        _credentials.clear();
+        map.forEach((k, v) => _credentials[k] = v.toString());
+      }
+
+      // 3. Load current user
+      final currentUserJsonString = prefs.getString(_prefCurrentUserKey);
+      if (currentUserJsonString != null && currentUserJsonString.isNotEmpty) {
+        _currentUser = UserModel.fromJson(jsonDecode(currentUserJsonString));
+      }
+
+      // 4. Load remembered credentials
+      _rememberedIdentifier = prefs.getString(_prefRememberIdKey);
+      _rememberedPassword = prefs.getString(_prefRememberPassKey);
+      _hasRememberedCredentials =
+          _rememberedIdentifier != null && _rememberedPassword != null;
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading auth data from SharedPreferences: $e');
+    }
+  }
+
+  Future<void> _saveDataToLocal() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // 1. Save users list
+      final usersListJson = _users.map((u) => u.toJson()).toList();
+      await prefs.setString(_prefUsersKey, jsonEncode(usersListJson));
+
+      // 2. Save credentials map
+      await prefs.setString(_prefCredentialsKey, jsonEncode(_credentials));
+
+      // 3. Save current user state
+      if (_currentUser != null) {
+        await prefs.setString(
+            _prefCurrentUserKey, jsonEncode(_currentUser!.toJson()));
+      } else {
+        await prefs.remove(_prefCurrentUserKey);
+      }
+    } catch (e) {
+      debugPrint('Error saving auth data to SharedPreferences: $e');
+    }
+  }
+
+  Map<String, String>? getRememberedCredentials() {
+    if (!_hasRememberedCredentials ||
+        _rememberedIdentifier == null ||
+        _rememberedPassword == null) {
+      return null;
+    }
+    return {
+      'identifier': _rememberedIdentifier!,
+      'password': _rememberedPassword!,
+    };
+  }
+
+  void saveRememberedCredentials(String identifier, String password) async {
+    _rememberedIdentifier = identifier;
+    _rememberedPassword = password;
+    _hasRememberedCredentials = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_prefRememberIdKey, identifier);
+      await prefs.setString(_prefRememberPassKey, password);
+    } catch (_) {}
+  }
+
+  void clearRememberedCredentials() async {
+    _rememberedIdentifier = null;
+    _rememberedPassword = null;
+    _hasRememberedCredentials = false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_prefRememberIdKey);
+      await prefs.remove(_prefRememberPassKey);
+    } catch (_) {}
   }
 
   bool isUserNameTaken(String userName) {
@@ -88,6 +181,7 @@ class AuthService extends ChangeNotifier {
     );
 
     _currentUser = matchedUser;
+    _saveDataToLocal();
     notifyListeners();
 
     return AuthResult(
@@ -148,6 +242,7 @@ class AuthService extends ChangeNotifier {
 
     // Auto login after registration
     _currentUser = newUser;
+    _saveDataToLocal();
     notifyListeners();
 
     return AuthResult(
@@ -159,6 +254,7 @@ class AuthService extends ChangeNotifier {
 
   void logout() {
     _currentUser = null;
+    _saveDataToLocal();
     notifyListeners();
   }
 }
