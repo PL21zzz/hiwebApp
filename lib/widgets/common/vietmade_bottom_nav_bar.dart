@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../screens/auth/login_screen.dart';
+import '../../screens/auth/account_screen.dart';
 import '../../screens/cart/cart_screen.dart';
 import '../../theme/app_colors.dart';
 
@@ -39,7 +39,7 @@ class VietmadeBottomNavBar extends StatelessWidget {
             Navigator.of(context).push(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    const LoginScreen(),
+                    const AccountScreen(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),

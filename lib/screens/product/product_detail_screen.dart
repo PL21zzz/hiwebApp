@@ -12,6 +12,7 @@ import '../cart/cart_screen.dart';
 import '../search/search_screen.dart';
 import '../auth/login_screen.dart';
 import '../chat/messages_screen.dart';
+import '../../widgets/common/product_share_bottom_sheet.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -162,7 +163,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return GestureDetector(
       onTap: () => _onTabHeaderTapped(tabIndex),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         height: 48,
         child: Stack(
           alignment: Alignment.center,
@@ -173,7 +174,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 title,
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.white70,
-                  fontSize: isSelected ? 13 : 12.5,
+                  fontSize: isSelected ? 15.5 : 14.5,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 ),
               ),
@@ -183,7 +184,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 bottom: 4,
                 child: Container(
                   height: 2.5,
-                  width: 22,
+                  width: 26,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(2),
@@ -243,9 +244,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 _buildTabHeaderItem('Tổng quan', 0),
-                                const SizedBox(width: 2),
+                                const SizedBox(width: 6),
                                 _buildTabHeaderItem('Đánh giá', 1),
-                                const SizedBox(width: 2),
+                                const SizedBox(width: 6),
                                 _buildTabHeaderItem('Sản phẩm', 2),
                               ],
                             ),
@@ -276,7 +277,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // Share Button (Custom Web SVG curved arrow share icon)
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          ProductShareBottomSheet.show(
+                            context,
+                            productDetail: _detail,
+                          );
+                        },
                         borderRadius: BorderRadius.circular(20),
                         child: const Padding(
                           padding: EdgeInsets.all(6),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/home/category_model.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/common/product_grid.dart';
 import '../../widgets/common/vietmade_footer.dart';
@@ -27,12 +28,7 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
   OverlayEntry? _sortOverlayEntry;
   bool _isSortMenuOpen = false;
 
-  static const List<String> _sortOptions = [
-    'Mới nhất',
-    'Bán chạy nhất',
-    'Giá thấp đến cao',
-    'Giá cao đến thấp',
-  ];
+  static const List<String> _sortOptions = CategoryModel.sortOptions;
 
   @override
   void dispose() {

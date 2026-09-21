@@ -22,23 +22,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<String> _rankBadges = [
-    '#1 Bán chạy',
-    '#2 Bán chạy',
-    '#3 Bán chạy',
-    '#4 Bán chạy',
-    '#5 Bán chạy',
-    '#6 Bán chạy',
-  ];
-
-  final List<String> _categoryNames = [
-    'Handmade',
-    'Quà tặng',
-    'Trang trí',
-    'Chăm sóc cá nhân',
-    'Dưỡng da & Chăm sóc da',
-    'Y tế & Thực phẩm chức năng',
-  ];
+  final List<String> _rankBadges = ShopProfileModel.mockRankBadges;
+  final List<String> _categoryNames = ShopProfileModel.mockCategoryNames;
 
   @override
   void initState() {

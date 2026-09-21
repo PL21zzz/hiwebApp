@@ -24,6 +24,13 @@ class CategoryModel {
     CategoryModel(id: 'c4', emoji: '👶', title: 'Mẹ và bé'),
     CategoryModel(id: 'c5', emoji: '👕', title: 'Thời trang'),
   ];
+
+  static const List<String> sortOptions = [
+    'Mới nhất',
+    'Bán chạy nhất',
+    'Giá thấp đến cao',
+    'Giá cao đến thấp',
+  ];
 }
 
 class DrawerCategoryModel {

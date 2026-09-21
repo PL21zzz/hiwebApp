@@ -2,21 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/product/flash_sale_model.dart';
 import '../../models/product/product_model.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/common/vietmade_footer.dart';
-
-class FlashSaleSlotInfo {
-  final String label;
-  final int startHour;
-  final int endHour;
-
-  const FlashSaleSlotInfo({
-    required this.label,
-    required this.startHour,
-    required this.endHour,
-  });
-}
+import '../../widgets/common/top_notification.dart';
+import '../auth/login_screen.dart';
+import '../product/product_detail_screen.dart';
 
 class FlashSaleScreen extends StatefulWidget {
   const FlashSaleScreen({super.key});
@@ -26,11 +18,7 @@ class FlashSaleScreen extends StatefulWidget {
 }
 
 class _FlashSaleScreenState extends State<FlashSaleScreen> {
-  static const List<FlashSaleSlotInfo> _allDailySlots = [
-    FlashSaleSlotInfo(label: '12:00', startHour: 12, endHour: 15),
-    FlashSaleSlotInfo(label: '15:00', startHour: 15, endHour: 19),
-    FlashSaleSlotInfo(label: '19:00', startHour: 19, endHour: 24),
-  ];
+  static const List<FlashSaleSlotInfo> _allDailySlots = FlashSaleModel.mockDailySlots;
 
   late List<FlashSaleSlotInfo> _availableSlots;
   int _selectedSlotIndex = 0;
@@ -40,14 +28,7 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
   int _remainingSeconds = 0;
   bool _isCurrentSlotActive = true;
 
-  final List<String> _categories = [
-    'Top sản phẩm nổi bật',
-    'Deal giá sốc',
-    'Sản phẩm siêu rẻ',
-    'Thực phẩm chức năng',
-    'Mỹ phẩm',
-    'Mẹ và bé',
-  ];
+  final List<String> _categories = FlashSaleModel.mockCategories;
 
   @override
   void initState() {
@@ -209,220 +190,260 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
     );
   }
 
+  void _handlePurchaseAction() {
+    TopNotification.show(
+      context,
+      message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
+      isError: true,
+    );
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
+  }
+
   Widget _buildProductCard(ProductModel item) {
     final isLive = _isCurrentSlotActive;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProductDetailScreen(product: item),
           ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Left: Image (Discount Badge ONLY shown if isLive == true)
-          SizedBox(
-            width: 95,
-            height: 95,
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    item.imageUrl,
-                    width: 95,
-                    height: 95,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.image, color: Colors.grey),
-                    ),
-                  ),
-                ),
-                if (isLive)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 2,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE53935),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(6),
-                          bottomLeft: Radius.circular(6),
-                        ),
-                      ),
-                      child: Text(
-                        '-${item.discountPercent}%',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
-          ),
-          const SizedBox(width: 12),
-
-          // Right: Details Column
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  item.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1E293B),
-                    height: 1.25,
-                  ),
-                ),
-                const SizedBox(height: 4),
-
-                // BÁN CHẠY Badge
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE53935),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: const Text(
-                    'BÁN CHẠY',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 8.5,
-                      fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic,
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left: Image (Discount Badge ONLY shown if isLive == true)
+            SizedBox(
+              width: 95,
+              height: 95,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.network(
+                      item.imageUrl,
+                      width: 95,
+                      height: 95,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey.shade200,
+                        child: const Icon(Icons.image, color: Colors.grey),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 6),
-
-                // Price Section
-                if (isLive) ...[
-                  // Original Price
-                  Text(
-                    _formatPrice(item.originalPrice),
-                    style: const TextStyle(
-                      fontSize: 10.5,
-                      color: Color(0xFFA1A1AA),
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                  // Flash Sale Price
-                  Text(
-                    _formatPrice(item.price),
-                    style: const TextStyle(
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFFE53935),
-                    ),
-                  ),
-                ] else ...[
-                  // Hidden Price for Upcoming Slot
-                  const Text(
-                    '???.000đ',
-                    style: TextStyle(
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFFE53935),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 6),
-
-                // Bottom Row: Progress / Status Bar & Action Button
-                Row(
-                  children: [
-                    // Progress Bar
-                    Expanded(
+                  if (isLive)
+                    Positioned(
+                      top: 0,
+                      right: 0,
                       child: Container(
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFED7AA),
-                          borderRadius: BorderRadius.circular(11),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 2,
                         ),
-                        child: Stack(
-                          children: [
-                            FractionallySizedBox(
-                              widthFactor: isLive ? 0.75 : 0.45,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFF6A00),
-                                  borderRadius: BorderRadius.circular(11),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: Text(
-                                isLive
-                                    ? 'ĐÃ BÁN ${item.soldCount}'
-                                    : 'SẮP MỞ BÁN',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9.5,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ],
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE53935),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(6),
+                            bottomLeft: Radius.circular(6),
+                          ),
+                        ),
+                        child: Text(
+                          '-${item.discountPercent}%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
 
-                    // Button: Mua ngay (live) vs Chi tiết (upcoming)
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isLive
-                            ? const Color(0xFFE53935)
-                            : const Color(0xFFFF7300),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        minimumSize: Size.zero,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+            // Right: Content Section
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product Name
+                  Text(
+                    item.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1E293B),
+                      height: 1.25,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // BÁN CHẠY Badge
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE53935),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: const Text(
+                      'BÁN CHẠY',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 8.5,
+                        fontWeight: FontWeight.w900,
+                        fontStyle: FontStyle.italic,
                       ),
-                      child: Text(
-                        isLive ? 'Mua ngay' : 'Chi tiết',
-                        style: const TextStyle(
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Price Section
+                  if (isLive) ...[
+                    // Original Price
+                    Text(
+                      _formatPrice(item.originalPrice),
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFFA1A1AA),
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    // Flash Sale Price
+                    Text(
+                      _formatPrice(item.price),
+                      style: const TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFE53935),
+                      ),
+                    ),
+                  ] else ...[
+                    // Hidden Price for Upcoming Slot
+                    const Text(
+                      '???.000đ',
+                      style: TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFE53935),
                       ),
                     ),
                   ],
-                ),
-              ],
+                  const SizedBox(height: 6),
+
+                  // Bottom Row: Progress / Status Bar & Action Button
+                  Row(
+                    children: [
+                      // Progress Bar
+                      Expanded(
+                        child: Container(
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFED7AA),
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          child: Stack(
+                            children: [
+                              FractionallySizedBox(
+                                widthFactor: isLive ? 0.75 : 0.45,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFF6A00),
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  isLive
+                                      ? 'ĐÃ BÁN ${item.soldCount}'
+                                      : 'SẮP MỞ BÁN',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9.5,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // Button: Mua ngay (live) vs Chi tiết (upcoming)
+                      ElevatedButton(
+                        onPressed: () {
+                          if (isLive) {
+                            _handlePurchaseAction();
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailScreen(product: item),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isLive
+                              ? const Color(0xFFE53935)
+                              : const Color(0xFFFF7300),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Text(
+                          isLive ? 'Mua ngay' : 'Chi tiết',
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -504,7 +525,7 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
                     style: const TextStyle(
                       color: Color(0xFFE53935),
                       fontSize: 15,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -512,17 +533,17 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
               ),
             ),
 
-            // 3. 3 Time Slots Bar (Disappears past slots dynamically)
+            // 3. Time Slots Bar (Dynamic 4 Slots)
             Container(
               height: 52,
               color: const Color(0xFF2B2F33),
               child: Row(
                 children: [
-                  _buildTimeSlotTab(0),
-                  Container(width: 1, color: const Color(0xFF404448)),
-                  _buildTimeSlotTab(1),
-                  Container(width: 1, color: const Color(0xFF404448)),
-                  _buildTimeSlotTab(2),
+                  for (int i = 0; i < _availableSlots.length; i++) ...[
+                    if (i > 0)
+                      Container(width: 1, color: const Color(0xFF404448)),
+                    _buildTimeSlotTab(i),
+                  ],
                 ],
               ),
             ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/common/top_notification.dart';
 import '../main_navigation_screen.dart';
 import 'login_screen.dart';
 
@@ -13,6 +15,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -23,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
+  String? _userNameError;
   String? _lastNameError;
   String? _firstNameError;
   String? _emailError;
@@ -32,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _userNameController.dispose();
     _lastNameController.dispose();
     _firstNameController.dispose();
     _emailController.dispose();
@@ -43,6 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _validateForm() {
     setState(() {
+      _userNameError = null;
       _lastNameError = null;
       _firstNameError = null;
       _emailError = null;
@@ -53,6 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     bool isValid = true;
 
+    final userName = _userNameController.text.trim();
     final lastName = _lastNameController.text.trim();
     final firstName = _firstNameController.text.trim();
     final email = _emailController.text.trim();
@@ -60,6 +67,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
+    // 1. Tên đăng nhập
+    if (userName.isEmpty) {
+      _userNameError = 'Vui lòng nhập tên đăng nhập';
+      isValid = false;
+    } else if (userName.contains(' ')) {
+      _userNameError = 'Tên đăng nhập không được chứa khoảng trắng';
+      isValid = false;
+    } else if (AuthService.instance.isUserNameTaken(userName)) {
+      _userNameError = 'Tên đăng nhập đã tồn tại';
+      isValid = false;
+    }
+
+    // 2. Họ & Tên
     if (lastName.isEmpty) {
       _lastNameError = 'Nhập họ và tên đệm';
       isValid = false;
@@ -70,6 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isValid = false;
     }
 
+    // 3. Email
     final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (email.isEmpty) {
       _emailError = 'Vui lòng nhập email';
@@ -77,8 +98,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else if (!emailRegex.hasMatch(email)) {
       _emailError = 'Email không hợp lệ (VD: name@domain.com)';
       isValid = false;
+    } else if (AuthService.instance.isEmailTaken(email)) {
+      _emailError = 'Email này đã được đăng ký';
+      isValid = false;
     }
 
+    // 4. Số điện thoại
     final phoneRegex = RegExp(r'^0[0-9]{9}$');
     if (phone.isEmpty) {
       _phoneError = 'Vui lòng nhập số điện thoại';
@@ -86,17 +111,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else if (!phoneRegex.hasMatch(phone)) {
       _phoneError = 'SĐT phải đủ 10 số (bắt đầu bằng 0)';
       isValid = false;
+    } else if (AuthService.instance.isPhoneTaken(phone)) {
+      _phoneError = 'Số điện thoại này đã được đăng ký';
+      isValid = false;
     }
 
-    final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%^*&!#_.\-+?]).{8,}$');
+    // 5. Mật khẩu
     if (password.isEmpty) {
       _passwordError = 'Vui lòng nhập mật khẩu';
       isValid = false;
-    } else if (!passwordRegex.hasMatch(password)) {
-      _passwordError = 'Mật khẩu chưa đúng yêu cầu (>=8 ký tự, gồm hoa, thường, số, ký tự đặc biệt)';
+    } else if (password.length < 6) {
+      _passwordError = 'Mật khẩu phải từ 6 ký tự trở lên';
       isValid = false;
     }
 
+    // 6. Nhập lại mật khẩu
     if (confirmPassword.isEmpty) {
       _confirmPasswordError = 'Vui lòng nhập lại mật khẩu';
       isValid = false;
@@ -106,7 +135,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     setState(() {});
+
+    if (!isValid) {
+      TopNotification.show(
+        context,
+        message: 'Vui lòng kiểm tra lại thông tin đăng ký',
+        isError: true,
+      );
+    }
+
     return isValid;
+  }
+
+  void _handleRegister() {
+    if (!_validateForm()) {
+      return;
+    }
+
+    final result = AuthService.instance.register(
+      userName: _userNameController.text,
+      password: _passwordController.text,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      phoneNumber: _phoneController.text,
+      email: _emailController.text,
+    );
+
+    if (result.isSuccess) {
+      TopNotification.show(
+        context,
+        message: 'Đăng ký tài khoản thành công!',
+        isError: false,
+      );
+      Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (context, anim1, anim2) =>
+              const MainNavigationScreen(initialIndex: 4),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+        (route) => false,
+      );
+    } else {
+      TopNotification.show(
+        context,
+        message: result.message,
+        isError: true,
+      );
+    }
   }
 
   InputDecoration _buildInputDecoration({
@@ -117,12 +193,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return InputDecoration(
       hintText: hintText,
       hintStyle: const TextStyle(
-        fontSize: 12.5,
+        fontSize: 12,
         color: Color(0xFF94A3B8),
       ),
       errorText: errorText,
       errorStyle: const TextStyle(
-        fontSize: 10.5,
+        fontSize: 10,
         color: Colors.red,
         height: 1.1,
       ),
@@ -133,8 +209,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             )
           : null,
       suffixIconConstraints: const BoxConstraints(
-        minWidth: 32,
-        minHeight: 32,
+        minWidth: 28,
+        minHeight: 28,
       ),
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(
@@ -187,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: const Color(0xFFF8FAFC),
         body: Column(
           children: [
-            // 1. Header Bar (No back button)
+            // Header Bar
             Container(
               color: AppColors.primary,
               child: SafeArea(
@@ -240,7 +316,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
 
-            // 2. Vertically Centered Register Card Container
+            // Form Container - Vertically Centered Card
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -278,7 +354,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Color(0xFF1E293B),
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              const SizedBox(height: 3),
                               const Text(
                                 'Tạo tài khoản VietMade.vn',
                                 style: TextStyle(
@@ -287,6 +363,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               const SizedBox(height: 12),
+
+                              // Tên đăng nhập
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Tên đăng nhập',
+                                  style: TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF334155),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              TextField(
+                                controller: _userNameController,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF1E293B),
+                                ),
+                                decoration: _buildInputDecoration(
+                                  hintText: 'Nhập tên đăng nhập',
+                                  errorText: _userNameError,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
 
                               // Row: Họ và tên đệm + Tên
                               Row(
@@ -308,7 +410,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         TextField(
                                           controller: _lastNameController,
                                           style: const TextStyle(
-                                            fontSize: 12.5,
+                                            fontSize: 12,
                                             color: Color(0xFF1E293B),
                                           ),
                                           decoration: _buildInputDecoration(
@@ -337,7 +439,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         TextField(
                                           controller: _firstNameController,
                                           style: const TextStyle(
-                                            fontSize: 12.5,
+                                            fontSize: 12,
                                             color: Color(0xFF1E293B),
                                           ),
                                           decoration: _buildInputDecoration(
@@ -369,7 +471,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 style: const TextStyle(
-                                  fontSize: 12.5,
+                                  fontSize: 12,
                                   color: Color(0xFF1E293B),
                                 ),
                                 decoration: _buildInputDecoration(
@@ -396,7 +498,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 controller: _phoneController,
                                 keyboardType: TextInputType.phone,
                                 style: const TextStyle(
-                                  fontSize: 12.5,
+                                  fontSize: 12,
                                   color: Color(0xFF1E293B),
                                 ),
                                 decoration: _buildInputDecoration(
@@ -423,11 +525,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 controller: _passwordController,
                                 obscureText: !_isPasswordVisible,
                                 style: const TextStyle(
-                                  fontSize: 12.5,
+                                  fontSize: 12,
                                   color: Color(0xFF1E293B),
                                 ),
                                 decoration: _buildInputDecoration(
-                                  hintText: '',
+                                  hintText: 'Nhập mật khẩu',
                                   errorText: _passwordError,
                                   suffixIcon: GestureDetector(
                                     onTap: () {
@@ -464,11 +566,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 controller: _confirmPasswordController,
                                 obscureText: !_isConfirmPasswordVisible,
                                 style: const TextStyle(
-                                  fontSize: 12.5,
+                                  fontSize: 12,
                                   color: Color(0xFF1E293B),
                                 ),
                                 decoration: _buildInputDecoration(
-                                  hintText: '',
+                                  hintText: 'Nhập lại mật khẩu',
                                   errorText: _confirmPasswordError,
                                   suffixIcon: GestureDetector(
                                     onTap: () {
@@ -516,16 +618,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 width: double.infinity,
                                 height: 40,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_validateForm()) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Đăng ký tài khoản thành công!'),
-                                          backgroundColor: AppColors.primary,
-                                        ),
-                                      );
-                                    }
-                                  },
+                                  onPressed: _handleRegister,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primary,
                                     foregroundColor: Colors.white,

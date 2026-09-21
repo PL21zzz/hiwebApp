@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/filter/filter_model.dart';
 import '../../theme/app_colors.dart';
 
 class FilterDrawer extends StatefulWidget {
@@ -268,168 +269,63 @@ class _FilterDrawerState extends State<FilterDrawer> {
                   _buildCardSection(
                     title: 'Danh mục sản phẩm',
                     searchHint: 'Tìm kiếm danh mục...',
-                    children: [
-                      _buildCheckboxRow(
-                        label: 'Điện thoại',
-                        count: '125',
-                        isChecked: _selectedCategories.contains('cat1'),
+                    children: FilterModel.mockCategories.map((item) {
+                      final isChecked = _selectedCategories.contains(item.id);
+                      return _buildCheckboxRow(
+                        label: item.label,
+                        count: item.count,
+                        isChecked: isChecked,
                         onChanged: (val) {
                           setState(() {
                             val == true
-                                ? _selectedCategories.add('cat1')
-                                : _selectedCategories.remove('cat1');
+                                ? _selectedCategories.add(item.id)
+                                : _selectedCategories.remove(item.id);
                           });
                         },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Laptop',
-                        count: '86',
-                        isChecked: _selectedCategories.contains('cat2'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedCategories.add('cat2')
-                                : _selectedCategories.remove('cat2');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Tivi',
-                        count: '74',
-                        isChecked: _selectedCategories.contains('cat3'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedCategories.add('cat3')
-                                : _selectedCategories.remove('cat3');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Tủ lạnh',
-                        count: '52',
-                        isChecked: _selectedCategories.contains('cat4'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedCategories.add('cat4')
-                                : _selectedCategories.remove('cat4');
-                          });
-                        },
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
 
                   // 2. Thương hiệu
                   _buildCardSection(
                     title: 'Thương hiệu',
                     searchHint: 'Tìm kiếm thương hiệu...',
-                    children: [
-                      _buildCheckboxRow(
-                        label: 'Samsung',
-                        count: '128',
-                        isChecked: _selectedBrands.contains('b1'),
+                    children: FilterModel.mockBrands.map((item) {
+                      final isChecked = _selectedBrands.contains(item.id);
+                      return _buildCheckboxRow(
+                        label: item.label,
+                        count: item.count,
+                        isChecked: isChecked,
                         onChanged: (val) {
                           setState(() {
                             val == true
-                                ? _selectedBrands.add('b1')
-                                : _selectedBrands.remove('b1');
+                                ? _selectedBrands.add(item.id)
+                                : _selectedBrands.remove(item.id);
                           });
                         },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'LG',
-                        count: '96',
-                        isChecked: _selectedBrands.contains('b2'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedBrands.add('b2')
-                                : _selectedBrands.remove('b2');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Panasonic',
-                        count: '72',
-                        isChecked: _selectedBrands.contains('b3'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedBrands.add('b3')
-                                : _selectedBrands.remove('b3');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Sony',
-                        count: '64',
-                        isChecked: _selectedBrands.contains('b4'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedBrands.add('b4')
-                                : _selectedBrands.remove('b4');
-                          });
-                        },
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
 
                   // 3. Xuất xứ
                   _buildCardSection(
                     title: 'Xuất xứ',
                     searchHint: 'Tìm kiếm xuất xứ...',
-                    children: [
-                      _buildCheckboxRow(
-                        label: 'Việt Nam',
-                        count: '1147',
-                        isChecked: _selectedOrigins.contains('o1'),
+                    children: FilterModel.mockOrigins.map((item) {
+                      final isChecked = _selectedOrigins.contains(item.id);
+                      return _buildCheckboxRow(
+                        label: item.label,
+                        count: item.count,
+                        isChecked: isChecked,
                         onChanged: (val) {
                           setState(() {
                             val == true
-                                ? _selectedOrigins.add('o1')
-                                : _selectedOrigins.remove('o1');
+                                ? _selectedOrigins.add(item.id)
+                                : _selectedOrigins.remove(item.id);
                           });
                         },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Trung Quốc',
-                        count: '1074',
-                        isChecked: _selectedOrigins.contains('o2'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedOrigins.add('o2')
-                                : _selectedOrigins.remove('o2');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Quảng Châu',
-                        count: '425',
-                        isChecked: _selectedOrigins.contains('o3'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedOrigins.add('o3')
-                                : _selectedOrigins.remove('o3');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Hồng Kông',
-                        count: '217',
-                        isChecked: _selectedOrigins.contains('o4'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedOrigins.add('o4')
-                                : _selectedOrigins.remove('o4');
-                          });
-                        },
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
 
                   // 4. Giới tính
@@ -449,7 +345,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                         },
                       ),
                       _buildCheckboxRow(
-                        label: 'Unisex',
+                        label: 'Nam',
                         count: '14',
                         isChecked: _selectedGenders.contains('g2'),
                         onChanged: (val) {
@@ -461,8 +357,8 @@ class _FilterDrawerState extends State<FilterDrawer> {
                         },
                       ),
                       _buildCheckboxRow(
-                        label: 'Nam',
-                        count: '8',
+                        label: 'Unisex',
+                        count: '32',
                         isChecked: _selectedGenders.contains('g3'),
                         onChanged: (val) {
                           setState(() {
@@ -478,57 +374,22 @@ class _FilterDrawerState extends State<FilterDrawer> {
                   // 5. Nơi bán
                   _buildCardSection(
                     title: 'Nơi bán',
-                    icon: const Text('📍', style: TextStyle(fontSize: 14)),
-                    children: [
-                      _buildCheckboxRow(
-                        label: 'Hà Nội',
-                        count: '598',
-                        isChecked: _selectedLocations.contains('l1'),
+                    searchHint: 'Tìm kiếm nơi bán...',
+                    children: FilterModel.mockLocations.map((item) {
+                      final isChecked = _selectedLocations.contains(item.id);
+                      return _buildCheckboxRow(
+                        label: item.label,
+                        count: item.count,
+                        isChecked: isChecked,
                         onChanged: (val) {
                           setState(() {
                             val == true
-                                ? _selectedLocations.add('l1')
-                                : _selectedLocations.remove('l1');
+                                ? _selectedLocations.add(item.id)
+                                : _selectedLocations.remove(item.id);
                           });
                         },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Hồ Chí Minh',
-                        count: '258',
-                        isChecked: _selectedLocations.contains('l2'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedLocations.add('l2')
-                                : _selectedLocations.remove('l2');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'Phú Thọ',
-                        count: '35',
-                        isChecked: _selectedLocations.contains('l3'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedLocations.add('l3')
-                                : _selectedLocations.remove('l3');
-                          });
-                        },
-                      ),
-                      _buildCheckboxRow(
-                        label: 'An Giang',
-                        count: '28',
-                        isChecked: _selectedLocations.contains('l4'),
-                        onChanged: (val) {
-                          setState(() {
-                            val == true
-                                ? _selectedLocations.add('l4')
-                                : _selectedLocations.remove('l4');
-                          });
-                        },
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
 
                   // 6. Khoảng giá

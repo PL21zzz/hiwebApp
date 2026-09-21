@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/video/video_model.dart';
+import '../../theme/app_colors.dart';
+import '../common/product_share_bottom_sheet.dart';
 
 class VideoRightActions extends StatefulWidget {
   final VideoItemModel video;
@@ -18,6 +21,8 @@ class _VideoRightActionsState extends State<VideoRightActions> {
   late bool _isLiked;
   late bool _isSaved;
   late bool _isFollowing;
+  bool _isFollowSuccessState = false;
+  Timer? _followTimer;
 
   @override
   void initState() {
@@ -25,6 +30,30 @@ class _VideoRightActionsState extends State<VideoRightActions> {
     _isLiked = widget.video.isLiked;
     _isSaved = widget.video.isSaved;
     _isFollowing = widget.video.isFollowing;
+  }
+
+  @override
+  void dispose() {
+    _followTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handleFollowTap() {
+    if (_isFollowing || _isFollowSuccessState) return;
+
+    setState(() {
+      _isFollowSuccessState = true;
+    });
+
+    _followTimer = Timer(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _isFollowSuccessState = false;
+          _isFollowing = true;
+          widget.video.isFollowing = true;
+        });
+      }
+    });
   }
 
   @override
@@ -65,21 +94,18 @@ class _VideoRightActionsState extends State<VideoRightActions> {
                   Positioned(
                     bottom: 0,
                     child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isFollowing = true;
-                          widget.video.isFollowing = true;
-                        });
-                      },
+                      onTap: _handleFollowTap,
                       child: Container(
                         width: 20,
                         height: 20,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFEF4444), // Red follow button
+                        decoration: BoxDecoration(
+                          color: _isFollowSuccessState
+                              ? AppColors.primary
+                              : const Color(0xFFEF4444),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          Icons.add,
+                        child: Icon(
+                          _isFollowSuccessState ? Icons.check : Icons.add,
                           color: Colors.white,
                           size: 14,
                         ),
@@ -141,11 +167,9 @@ class _VideoRightActionsState extends State<VideoRightActions> {
             color: Colors.white,
             label: widget.video.shares,
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Chia sẻ video'),
-                  duration: Duration(seconds: 1),
-                ),
+              ProductShareBottomSheet.showVideo(
+                context,
+                video: widget.video,
               );
             },
           ),

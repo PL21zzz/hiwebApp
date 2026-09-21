@@ -4,7 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../screens/chat/messages_screen.dart';
 import '../../screens/search/search_screen.dart';
 import '../../screens/cart/cart_screen.dart';
-import '../../screens/auth/login_screen.dart';
+import '../../screens/auth/account_screen.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -146,7 +146,7 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                         Navigator.of(context).push(
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) =>
-                                const LoginScreen(),
+                                const AccountScreen(),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),

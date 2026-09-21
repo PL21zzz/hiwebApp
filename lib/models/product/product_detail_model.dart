@@ -92,6 +92,24 @@ class ShopProfileModel {
     this.productCount = 18,
     this.welcomeMessage = 'Chào bạn, shop có thể giúp gì cho bạn?',
   });
+
+  static const List<String> mockRankBadges = [
+    '#1 Bán chạy',
+    '#2 Bán chạy',
+    '#3 Bán chạy',
+    '#4 Bán chạy',
+    '#5 Bán chạy',
+    '#6 Bán chạy',
+  ];
+
+  static const List<String> mockCategoryNames = [
+    'Handmade',
+    'Quà tặng',
+    'Trang trí',
+    'Chăm sóc cá nhân',
+    'Dưỡng da & Chăm sóc da',
+    'Y tế & Thực phẩm chức năng',
+  ];
 }
 
 class ProductSpecificationModel {
@@ -164,16 +182,7 @@ class ProductDetailModel {
       bestSellerBadge: mock.bestSellerBadge,
       capacityOptions: mock.capacityOptions,
       vouchers: mock.vouchers,
-      mediaList: [
-        if (product.imageUrl.isNotEmpty)
-          ProductMediaModel(
-            type: 'image',
-            url: product.imageUrl,
-            thumb: product.imageUrl,
-            title: product.name,
-          ),
-        ...mock.mediaList,
-      ],
+      mediaList: mock.mediaList,
       tickerItems: mock.tickerItems,
       specifications: mock.specifications,
       shortDescription: mock.shortDescription,

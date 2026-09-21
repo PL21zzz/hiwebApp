@@ -23,6 +23,8 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
   bool _isInitialized = false;
   bool _isPlaying = false;
   bool _isMuted = false;
+  bool _isDragging = false;
+  double _dragPositionMs = 0.0;
 
   final TransformationController _transformationController =
       TransformationController();
@@ -42,6 +44,8 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
     _videoController = null;
     _isInitialized = false;
     _isPlaying = false;
+    _isDragging = false;
+    _dragPositionMs = 0.0;
 
     final item = widget.mediaList[_currentIndex];
     if (item.isVideo) {
@@ -58,12 +62,14 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
           controller.play();
           setState(() => _isPlaying = true);
         }
+      }).catchError((err) {
+        debugPrint('Error initializing video: $err');
       });
     }
   }
 
   void _videoListener() {
-    if (mounted) {
+    if (mounted && !_isDragging) {
       setState(() {});
     }
   }
@@ -87,6 +93,24 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
         _isPlaying = true;
       }
     });
+  }
+
+  void _previousMedia() {
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex--;
+        _setupMedia();
+      });
+    }
+  }
+
+  void _nextMedia() {
+    if (_currentIndex < widget.mediaList.length - 1) {
+      setState(() {
+        _currentIndex++;
+        _setupMedia();
+      });
+    }
   }
 
   void _handleDoubleTap() {
@@ -116,10 +140,29 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
     }
   }
 
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
+  Duration _getDuration() {
+    if (_videoController != null &&
+        _videoController!.value.isInitialized &&
+        _videoController!.value.duration > Duration.zero) {
+      return _videoController!.value.duration;
+    }
+    return const Duration(seconds: 5);
+  }
+
+  Duration _getPosition() {
+    if (_isDragging) {
+      return Duration(milliseconds: _dragPositionMs.toInt());
+    }
+    if (_videoController != null && _videoController!.value.isInitialized) {
+      return _videoController!.value.position;
+    }
+    return Duration.zero;
+  }
+
+  String _formatTime(Duration d) {
+    if (d.isNegative) d = Duration.zero;
+    final minutes = d.inMinutes;
+    final seconds = (d.inSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -186,205 +229,356 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
               ),
             ),
 
-            // Main Media Display Area
+            // Main Media Display Area with Nav Arrows
             Expanded(
-              child: Center(
-                child: item.isVideo
-                    ? GestureDetector(
-                        onTap: _togglePlay,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            if (_isInitialized && _videoController != null)
-                              AspectRatio(
-                                aspectRatio: _videoController!.value.aspectRatio,
-                                child: VideoPlayer(_videoController!),
-                              )
-                            else
-                              const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Main Media Content
+                  Center(
+                    child: item.isVideo
+                        ? Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  GestureDetector(
+                                    onTap: _togglePlay,
+                                    child: AspectRatio(
+                                      aspectRatio: _isInitialized && _videoController != null
+                                          ? _videoController!.value.aspectRatio
+                                          : 16 / 9,
+                                      child: _isInitialized && _videoController != null
+                                          ? VideoPlayer(_videoController!)
+                                          : const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
 
-                            if (!_isPlaying && _isInitialized)
-                              Container(
-                                width: 64,
-                                height: 64,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.6),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: const Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.white,
-                                  size: 38,
+                                  // Play icon overlay when paused
+                                  if (!_isPlaying && _isInitialized)
+                                    GestureDetector(
+                                      onTap: _togglePlay,
+                                      child: Container(
+                                        width: 56,
+                                        height: 56,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withValues(alpha: 0.6),
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: Colors.white, width: 2),
+                                        ),
+                                        child: const Icon(
+                                          Icons.play_arrow,
+                                          color: Colors.white,
+                                          size: 36,
+                                        ),
+                                      ),
+                                    ),
+
+                                  // Standard Mobile Video Player Control Bar (matching sample)
+                                  if (_isInitialized && _videoController != null)
+                                    Container(
+                                      color: Colors.black.withValues(alpha: 0.75),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              // Play / Pause Icon
+                                              GestureDetector(
+                                                onTap: _togglePlay,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                                  child: Icon(
+                                                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                                                    color: Colors.white,
+                                                    size: 22,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+
+                                              // Time format: 0:02 / 0:05
+                                              Builder(
+                                                builder: (context) {
+                                                  final dur = _getDuration();
+                                                  final pos = _getPosition();
+                                                  return Text(
+                                                    '${_formatTime(pos)} / ${_formatTime(dur)}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+
+                                              const Spacer(),
+
+                                              // Volume Icon
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _isMuted = !_isMuted;
+                                                    _videoController?.setVolume(_isMuted ? 0.0 : 1.0);
+                                                  });
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(6),
+                                                  child: Icon(
+                                                    _isMuted ? LucideIcons.volumeX : LucideIcons.volume2,
+                                                    color: Colors.white,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                              ),
+
+                                              // Fullscreen Icon
+                                              const Padding(
+                                                padding: EdgeInsets.all(6),
+                                                child: Icon(
+                                                  Icons.fullscreen,
+                                                  color: Colors.white,
+                                                  size: 22,
+                                                ),
+                                              ),
+
+                                              // 3-dots Menu Icon
+                                              const Padding(
+                                                padding: EdgeInsets.all(6),
+                                                child: Icon(
+                                                  Icons.more_vert,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          // Sleek White Progress Slider Bar
+                                          Builder(
+                                            builder: (context) {
+                                              final dur = _getDuration();
+                                              final pos = _getPosition();
+                                              final maxMs = dur.inMilliseconds.toDouble() > 0
+                                                  ? dur.inMilliseconds.toDouble()
+                                                  : 5000.0;
+                                              final currentMs = pos.inMilliseconds
+                                                  .toDouble()
+                                                  .clamp(0.0, maxMs);
+
+                                              return SizedBox(
+                                                height: 20,
+                                                child: SliderTheme(
+                                                  data: const SliderThemeData(
+                                                    thumbShape: RoundSliderThumbShape(
+                                                      enabledThumbRadius: 6,
+                                                    ),
+                                                    trackHeight: 3,
+                                                    activeTrackColor: Colors.white,
+                                                    inactiveTrackColor: Colors.white38,
+                                                    thumbColor: Colors.white,
+                                                    overlayShape: RoundSliderOverlayShape(
+                                                      overlayRadius: 10,
+                                                    ),
+                                                  ),
+                                                  child: Slider(
+                                                    value: currentMs,
+                                                    min: 0.0,
+                                                    max: maxMs,
+                                                    onChangeStart: (val) {
+                                                      setState(() {
+                                                        _isDragging = true;
+                                                        _dragPositionMs = val;
+                                                      });
+                                                    },
+                                                    onChanged: (val) {
+                                                      setState(() {
+                                                        _dragPositionMs = val;
+                                                      });
+                                                    },
+                                                    onChangeEnd: (val) {
+                                                      _videoController
+                                                          ?.seekTo(Duration(milliseconds: val.toInt()))
+                                                          .then((_) {
+                                                        if (mounted) {
+                                                          setState(() {
+                                                            _isDragging = false;
+                                                          });
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onDoubleTapDown: (details) =>
+                                _doubleTapDetails = details,
+                            onDoubleTap: _handleDoubleTap,
+                            child: InteractiveViewer(
+                              transformationController: _transformationController,
+                              minScale: 0.8,
+                              maxScale: 4.0,
+                              clipBehavior: Clip.none,
+                              child: Image.network(
+                                item.url,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stack) =>
+                                    const Icon(
+                                  LucideIcons.image,
+                                  color: Colors.white54,
+                                  size: 64,
                                 ),
                               ),
-                          ],
-                        ),
-                      )
-                    : GestureDetector(
-                        onDoubleTapDown: (details) =>
-                            _doubleTapDetails = details,
-                        onDoubleTap: _handleDoubleTap,
-                        child: InteractiveViewer(
-                          transformationController: _transformationController,
-                          minScale: 0.8,
-                          maxScale: 4.0,
-                          clipBehavior: Clip.none,
-                          child: Image.network(
-                            item.url,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stack) =>
-                                const Icon(
-                              LucideIcons.image,
-                              color: Colors.white54,
-                              size: 64,
                             ),
+                          ),
+                  ),
+
+                  // Left Navigation Arrow (<)
+                  if (_currentIndex > 0)
+                    Positioned(
+                      left: 16,
+                      child: GestureDetector(
+                        onTap: _previousMedia,
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                            size: 28,
                           ),
                         ),
                       ),
+                    ),
+
+                  // Right Navigation Arrow (>)
+                  if (_currentIndex < widget.mediaList.length - 1)
+                    Positioned(
+                      right: 16,
+                      child: GestureDetector(
+                        onTap: _nextMedia,
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
 
-            // Bottom Video Controls & Scrubber (if Video)
-            if (item.isVideo && _isInitialized && _videoController != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: Colors.black45,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          _formatDuration(_videoController!.value.position),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                        Expanded(
-                          child: SliderTheme(
-                            data: const SliderThemeData(
-                              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
-                              trackHeight: 3,
-                              activeTrackColor: Colors.tealAccent,
-                              inactiveTrackColor: Colors.white30,
-                              thumbColor: Colors.tealAccent,
-                            ),
-                            child: Slider(
-                              value: _videoController!.value.position.inMilliseconds
-                                  .toDouble()
-                                  .clamp(
-                                    0.0,
-                                    _videoController!.value.duration.inMilliseconds.toDouble(),
-                                  ),
-                              min: 0.0,
-                              max: _videoController!.value.duration.inMilliseconds > 0
-                                  ? _videoController!.value.duration.inMilliseconds.toDouble()
-                                  : 1.0,
-                              onChanged: (val) {
-                                _videoController?.seekTo(
-                                  Duration(milliseconds: val.toInt()),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Builder(
-                          builder: (context) {
-                            final dur = _videoController!.value.duration;
-                            final pos = _videoController!.value.position;
-                            final remaining = dur > pos ? (dur - pos) : Duration.zero;
-                            return Text(
-                              _formatDuration(remaining),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isMuted = !_isMuted;
-                              _videoController?.setVolume(_isMuted ? 0.0 : 1.0);
-                            });
-                          },
-                          child: Icon(
-                            _isMuted ? LucideIcons.volumeX : LucideIcons.volume2,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-            // Bottom Media Thumbnail Bar
+            // Bottom Media Thumbnail Bar & Page Indicator
             Container(
-              height: 70,
               padding: const EdgeInsets.symmetric(vertical: 8),
               color: Colors.black87,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: widget.mediaList.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemBuilder: (context, index) {
-                  final media = widget.mediaList[index];
-                  final isSelected = index == _currentIndex;
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 54,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: widget.mediaList.length,
+                      separatorBuilder: (context, index) => const SizedBox(width: 10),
+                      itemBuilder: (context, index) {
+                        final media = widget.mediaList[index];
+                        final isSelected = index == _currentIndex;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _currentIndex = index;
-                        _setupMedia();
-                      });
-                    },
-                    child: Container(
-                      width: 54,
-                      height: 54,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: isSelected ? Colors.tealAccent : Colors.white30,
-                          width: isSelected ? 2 : 1,
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(
-                              media.thumb.isNotEmpty ? media.thumb : media.url,
-                              fit: BoxFit.cover,
-                            ),
-                            if (media.isVideo)
-                              Container(
-                                color: Colors.black38,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _currentIndex = index;
+                              _setupMedia();
+                            });
+                          },
+                          child: Container(
+                            width: 54,
+                            height: 54,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: isSelected ? Colors.cyanAccent : Colors.white30,
+                                width: isSelected ? 2 : 1,
                               ),
-                          ],
-                        ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.network(
+                                    media.thumb.isNotEmpty ? media.thumb : media.url,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  if (media.isVideo)
+                                    Container(
+                                      color: Colors.black38,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.play_arrow,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Page Pill Counter (1/6)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${_currentIndex + 1}/${widget.mediaList.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
           ],
