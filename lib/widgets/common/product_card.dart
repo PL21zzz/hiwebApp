@@ -186,7 +186,10 @@ class ProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const AddToCartButton(style: CartButtonStyle.pillPlus),
+                        AddToCartButton(
+                          style: CartButtonStyle.pillPlus,
+                          product: product,
+                        ),
                       ],
                     ),
                   ],

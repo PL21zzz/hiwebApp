@@ -26,43 +26,65 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
   @override
   void initState() {
     super.initState();
-    _initController();
+    if (widget.isActive) {
+      _initController();
+    }
   }
 
   Future<void> _initController() async {
-    final uri = Uri.parse(widget.video.videoUrl);
-    _controller = VideoPlayerController.networkUrl(uri);
+    _controller?.dispose();
+    _controller = null;
+
+    final controller = widget.video.videoUrl.startsWith('assets/')
+      ? VideoPlayerController.asset(widget.video.videoUrl)
+      : VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl));
+    _controller = controller;
+
     try {
-      await _controller!.initialize();
-      _controller!.setLooping(true);
-      _controller!.setVolume(widget.isMuted ? 0.0 : 1.0);
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
-        if (widget.isActive && _isPlayingManually) {
-          _controller!.play();
-        }
+      await controller.initialize().timeout(const Duration(seconds: 4));
+      if (!mounted || _controller != controller) {
+        controller.dispose();
+        return;
+      }
+      controller.setLooping(true);
+      controller.setVolume(widget.isMuted ? 0.0 : 1.0);
+      setState(() {
+        _isInitialized = true;
+      });
+      if (widget.isActive && _isPlayingManually) {
+        controller.play();
       }
     } catch (e) {
       debugPrint('Error initializing video player: $e');
+      if (mounted && _controller == controller) {
+        setState(() {
+          _isInitialized = false;
+        });
+      }
     }
   }
 
   @override
   void didUpdateWidget(covariant VideoItemPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_controller != null && _isInitialized) {
+    if (oldWidget.isActive != widget.isActive) {
+      if (widget.isActive) {
+        _isPlayingManually = true;
+        if (_controller == null || !_isInitialized) {
+          _initController();
+        } else {
+          _controller!.play();
+        }
+      } else {
+        // Free video buffers immediately when user scrolls to another video
+        _controller?.pause();
+        _controller?.dispose();
+        _controller = null;
+        _isInitialized = false;
+      }
+    } else if (_controller != null && _isInitialized) {
       if (oldWidget.isMuted != widget.isMuted) {
         _controller!.setVolume(widget.isMuted ? 0.0 : 1.0);
-      }
-      if (oldWidget.isActive != widget.isActive) {
-        if (widget.isActive) {
-          _isPlayingManually = true;
-          _controller!.play();
-        } else {
-          _controller!.pause();
-        }
       }
     }
   }
@@ -70,6 +92,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
   @override
   void dispose() {
     _controller?.dispose();
+    _controller = null;
     super.dispose();
   }
 
@@ -95,7 +118,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
         fit: StackFit.expand,
         children: [
           // 1. Background Video / Thumbnail
-          if (_isInitialized && _controller != null)
+          if (_isInitialized && _controller != null && _controller!.value.isInitialized)
             FittedBox(
               fit: BoxFit.cover,
               clipBehavior: Clip.hardEdge,
@@ -112,7 +135,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
               errorBuilder: (_, __, ___) => Container(
                 color: const Color(0xFF1E293B),
                 child: const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
+                  child: Icon(Icons.play_circle_outline, size: 48, color: Colors.white70),
                 ),
               ),
             ),

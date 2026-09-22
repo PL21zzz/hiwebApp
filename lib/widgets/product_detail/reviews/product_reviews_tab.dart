@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/product/product_detail_model.dart';
 import '../../../models/product/product_model.dart';
 import '../../../screens/product/shop_detail_screen.dart';
+import '../overview/fullscreen_video_modal.dart';
 import 'horizontal_product_list_section.dart';
 
 class ProductReviewsTab extends StatefulWidget {
@@ -19,46 +20,41 @@ class ProductReviewsTab extends StatefulWidget {
 }
 
 class _ProductReviewsTabState extends State<ProductReviewsTab> {
-  int _selectedFilterIndex = 0;
-
   ProductDetailModel get _detail =>
       widget.productDetail ?? ProductDetailModel.mockSample;
 
-  List<ProductReviewModel> get _filteredReviews {
-    if (_selectedFilterIndex == 1) {
-      return _detail.reviews.where((r) => r.rating == 5).toList();
-    }
-    if (_selectedFilterIndex == 2) {
-      return _detail.reviews.where((r) => r.photos.isNotEmpty).toList();
-    }
-    return _detail.reviews;
-  }
-
-  Widget _buildFilterChip(String label, int index) {
-    final isSelected = _selectedFilterIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedFilterIndex = index;
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFF0F9FF) : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF0284C7) : const Color(0xFFE2E8F0),
-            width: isSelected ? 1.2 : 1,
-          ),
+  void _openReviewMedia(ProductReviewMediaModel item) {
+    if (item.isVideo && item.videoUrl != null) {
+      showDialog(
+        context: context,
+        useSafeArea: false,
+        builder: (_) => FullscreenVideoModal(
+          mediaList: [
+            ProductMediaModel(
+              type: 'video',
+              url: item.videoUrl!,
+              thumb: item.url,
+              title: 'Video đánh giá',
+            ),
+          ],
+          initialIndex: 0,
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.5,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? const Color(0xFF0284C7) : const Color(0xFF475569),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(12),
+        child: InteractiveViewer(
+          minScale: 0.8,
+          maxScale: 4,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(item.url, fit: BoxFit.contain),
           ),
         ),
       ),
@@ -66,22 +62,25 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
   }
 
   Widget _buildReviewCard(ProductReviewModel review) {
+    final media = review.media.isNotEmpty
+        ? review.media
+        : review.photos
+            .map((url) => ProductReviewMediaModel(url: url))
+            .toList();
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(8),
+      padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // User Header
           Row(
             children: [
               CircleAvatar(
-                radius: 16,
-                backgroundColor: const Color(0xFF0284C7),
+                radius: 15,
+                backgroundColor: const Color(0xFFE879F9),
                 backgroundImage: review.userAvatar.isNotEmpty
                     ? NetworkImage(review.userAvatar)
                     : null,
@@ -92,7 +91,7 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                             : 'U',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -103,25 +102,49 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      review.userName,
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          review.userName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                        if (review.isVerifiedPurchase) ...[
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Đã mua hàng',
+                            style: TextStyle(
+                              fontSize: 9,
+                              color: Color(0xFF0284C7),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     Row(
-                      children: List.generate(
-                        5,
-                        (index) => Icon(
-                          Icons.star,
-                          size: 11,
-                          color: index < review.rating
-                              ? const Color(0xFFEAB308)
-                              : const Color(0xFFCBD5E1),
+                      children: [
+                        ...List.generate(
+                          5,
+                          (index) => Icon(
+                            Icons.star,
+                            size: 11,
+                            color: index < review.rating
+                                ? const Color(0xFFEAB308)
+                                : const Color(0xFFCBD5E1),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 5),
+                        Text(
+                          review.variant,
+                          style: const TextStyle(
+                            fontSize: 9.5,
+                            color: Color(0xFF94A3B8),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -129,7 +152,7 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
               Text(
                 review.date,
                 style: const TextStyle(
-                  fontSize: 10.5,
+                  fontSize: 9.5,
                   color: Color(0xFF94A3B8),
                 ),
               ),
@@ -137,48 +160,65 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
           ),
           const SizedBox(height: 8),
 
-          // Comment Text
           if (review.comment.isNotEmpty)
             Text(
               review.comment,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11.5,
                 color: Color(0xFF334155),
                 height: 1.35,
               ),
             ),
 
-          // Photos Grid
-          if (review.photos.isNotEmpty) ...[
+          if (media.isNotEmpty) ...[
             const SizedBox(height: 8),
             SizedBox(
               height: 64,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.zero,
-                itemCount: review.photos.length,
+                itemCount: media.length,
                 separatorBuilder: (context, index) => const SizedBox(width: 6),
                 itemBuilder: (context, index) {
-                  final photoUrl = review.photos[index];
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.network(
-                      photoUrl,
-                      width: 64,
-                      height: 64,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 64,
-                        height: 64,
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.image, color: Colors.grey),
-                      ),
+                  final item = media[index];
+                  return GestureDetector(
+                    onTap: () => _openReviewMedia(item),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(
+                            item.url,
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              width: 64,
+                              height: 64,
+                              color: const Color(0xFFE2E8F0),
+                              child: const Icon(Icons.image, color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        if (item.isVideo)
+                          const Positioned.fill(
+                            child: Center(
+                              child: Icon(
+                                Icons.play_circle_fill,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 },
               ),
             ),
           ],
+
         ],
       ),
     );
@@ -303,57 +343,122 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                children: [
+                  Text(
+                    _detail.rating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF334155),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  ...List.generate(
+                    5,
+                    (index) => const Icon(
+                      Icons.star,
+                      size: 11,
+                      color: Color(0xFFF59E0B),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '(${_detail.reviewCount})',
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      color: Color(0xFF0284C7),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.chevron_right,
+                    size: 18,
+                    color: Color(0xFF94A3B8),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              const Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 11,
+                    color: Color(0xFF0284C7),
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    'Tất cả đánh giá đều từ người đã mua hàng',
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      color: Color(0xFF0284C7),
+                    ),
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 9),
+                child: Divider(height: 1, color: Color(0xFFE2E8F0)),
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Đánh giá sản phẩm',
+                    'Đánh giá mới nhất',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E293B),
                     ),
                   ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.star,
-                        size: 15,
-                        color: Color(0xFFEAB308),
-                      ),
-                      const SizedBox(width: 3),
-                      Text(
-                        '${_detail.rating}/5 (${_detail.reviews.length})',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0284C7),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Hữu ích cho bạn',
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      color: Color(0xFF94A3B8),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 2),
 
-              // Filter Chips Row
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.zero,
-                child: Row(
-                  children: [
-                    _buildFilterChip('Tất cả (${_detail.reviews.length})', 0),
-                    _buildFilterChip('5 Sao', 1),
-                    _buildFilterChip('Có hình ảnh/Video', 2),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-
-              // Reviews List
               Column(
-                children: _filteredReviews
+                children: _detail.reviews
                     .map((review) => _buildReviewCard(review))
                     .toList(),
+              ),
+
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                height: 32,
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Xem tất cả ${_detail.reviewCount} đánh giá',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF0284C7),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 14,
+                        color: Color(0xFF0284C7),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

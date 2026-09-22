@@ -9,6 +9,8 @@ class ProductModel {
   final String location;
   final String imageUrl;
   final String category;
+  final String variantLabel;
+  final List<String> variantOptions;
   final bool isFlashSale;
   final bool isFavorite;
 
@@ -23,6 +25,8 @@ class ProductModel {
     required this.location,
     required this.imageUrl,
     required this.category,
+    this.variantLabel = '',
+    this.variantOptions = const [],
     this.isFlashSale = false,
     this.isFavorite = false,
   });
@@ -39,6 +43,8 @@ class ProductModel {
       location: 'Hồ Chí Minh',
       imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
       category: 'Dưỡng da',
+      variantLabel: 'Dung tích',
+      variantOptions: ['453g', '250g', '100g'],
     ),
     ProductModel(
       id: 'p2',
@@ -51,6 +57,8 @@ class ProductModel {
       location: 'Hồ Chí Minh',
       imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
       category: 'Y tế',
+      variantLabel: 'Size',
+      variantOptions: ['S', 'M', 'L'],
     ),
     ProductModel(
       id: 'p3',

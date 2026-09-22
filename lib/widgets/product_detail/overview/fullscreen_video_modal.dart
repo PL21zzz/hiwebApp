@@ -49,7 +49,9 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
 
     final item = widget.mediaList[_currentIndex];
     if (item.isVideo) {
-      final controller = VideoPlayerController.networkUrl(Uri.parse(item.url));
+        final controller = item.url.startsWith('assets/')
+          ? VideoPlayerController.asset(item.url)
+          : VideoPlayerController.networkUrl(Uri.parse(item.url));
       _videoController = controller;
       controller.addListener(_videoListener);
       controller.initialize().then((_) {

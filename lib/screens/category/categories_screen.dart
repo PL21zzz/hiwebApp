@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/home/category_model.dart';
+import '../../services/category_service.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/common/vietmade_header.dart';
 import '../../widgets/common/category_drawer.dart';
+import '../../widgets/common/common_loading.dart';
+import '../../widgets/common/vietmade_header.dart';
 import '../product/category_product_list_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -17,73 +18,92 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    CategoryService.instance.fetchRootCategories();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final categories = DrawerCategoryModel.mockDrawerCategories;
-    final selectedCategory = categories[_selectedIndex];
-    final subcategories = SubcategoryModel.getSubcategoriesForCategory(selectedCategory.id);
+    return ListenableBuilder(
+      listenable: CategoryService.instance,
+      builder: (context, _) {
+        final categories = CategoryService.instance.rootCategories;
+        if (categories.isEmpty) {
+          return const Scaffold(
+            appBar: VietmadeHeader(showMenu: false),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const VietmadeHeader(showMenu: false),
-      drawer: const CategoryDrawer(),
-      body: Row(
-        children: [
-          // 1. Left Sidebar: Categories Navigation List (Ratio 1)
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: const Color(0xFFF8FAFC),
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                itemCount: categories.length,
-                separatorBuilder: (context, index) => const Divider(
-                  height: 1,
-                  thickness: 0.5,
-                  color: Color(0xFFE2E8F0),
-                ),
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedIndex == index;
-                  final item = categories[index];
+        final safeIndex = _selectedIndex < categories.length ? _selectedIndex : 0;
+        final selectedCategory = categories[safeIndex];
+        final subcategories =
+            CategoryService.instance.getCategoryTreeFor(selectedCategory.id);
 
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                    child: Container(
-                      height: 56,
-                      color: isSelected ? Colors.white : const Color(0xFFF8FAFC),
-                      child: Row(
-                        children: [
-                          // Left Active Indicator Bar
-                          Container(
-                            width: 3,
-                            height: double.infinity,
-                            color: isSelected ? AppColors.primary : Colors.transparent,
-                          ),
-                          const SizedBox(width: 5),
-                          // Category Title Text
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Text(
-                                item.title,
-                                style: TextStyle(
-                                  fontSize: 11.5,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                  color: isSelected ? AppColors.primary : const Color(0xFF475569),
-                                  height: 1.2,
-                                ),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: const VietmadeHeader(showMenu: false),
+          drawer: const CategoryDrawer(),
+          body: Row(
+            children: [
+              // 1. Left Sidebar: Categories Navigation List (Ratio 1)
+              Expanded(
+                flex: 1,
+                child: Container(
+                  color: const Color(0xFFF8FAFC),
+                  child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    itemCount: categories.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      height: 1,
+                      thickness: 0.5,
+                      color: Color(0xFFE2E8F0),
                     ),
-                  );
+                    itemBuilder: (context, index) {
+                      final isSelected = safeIndex == index;
+                      final item = categories[index];
+
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                          CategoryService.instance.fetchCategoryTree(item.id);
+                        },
+                        child: Container(
+                          height: 56,
+                          color: isSelected ? Colors.white : const Color(0xFFF8FAFC),
+                          child: Row(
+                            children: [
+                              // Left Active Indicator Bar
+                              Container(
+                                width: 3,
+                                height: double.infinity,
+                                color: isSelected ? AppColors.primary : Colors.transparent,
+                              ),
+                              const SizedBox(width: 5),
+                              // Category Title Text
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 4),
+                                  child: Text(
+                                    item.title,
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                      color: isSelected ? AppColors.primary : const Color(0xFF475569),
+                                      height: 1.2,
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                 },
               ),
             ),
@@ -100,7 +120,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             flex: 4,
             child: Container(
               color: Colors.white,
-              child: Column(
+                child: CategoryService.instance.isLoadingTree
+                    ? const CommonLoading(message: 'Đang tải danh mục...')
+                    : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Category Header Title
@@ -239,5 +261,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ],
       ),
     );
+      },
+    );
   }
 }
+

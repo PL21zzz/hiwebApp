@@ -4,6 +4,8 @@ import '../../models/home/category_model.dart';
 import '../../theme/app_colors.dart';
 import '../../screens/product/category_product_list_screen.dart';
 
+import '../../services/category_service.dart';
+
 class CategoryDrawer extends StatefulWidget {
   const CategoryDrawer({super.key});
 
@@ -16,11 +18,14 @@ class _CategoryDrawerState extends State<CategoryDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = DrawerCategoryModel.mockDrawerCategories;
-    final subcategories = _selectedCategory != null
-        ? SubcategoryModel.getSubcategoriesForCategory(_selectedCategory!.id)
-        : const <SubcategoryModel>[];
-    final drawerWidth = MediaQuery.of(context).size.width * 0.78;
+    return ListenableBuilder(
+      listenable: CategoryService.instance,
+      builder: (context, _) {
+        final categories = CategoryService.instance.rootCategories;
+        final subcategories = _selectedCategory != null
+            ? CategoryService.instance.getCategoryTreeFor(_selectedCategory!.id)
+            : const <SubcategoryModel>[];
+        final drawerWidth = MediaQuery.of(context).size.width * 0.78;
 
     return Drawer(
       width: drawerWidth,
@@ -202,6 +207,8 @@ class _CategoryDrawerState extends State<CategoryDrawer> {
           ),
         ],
       ),
+    );
+      },
     );
   }
 }

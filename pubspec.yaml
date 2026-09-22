@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.5.3
   image_picker: ^1.2.1
   dvhcvn: ^2.1.20250301
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,7 @@ flutter:
   # Assets configuration
   assets:
     - assets/icons/
+    - assets/videos/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

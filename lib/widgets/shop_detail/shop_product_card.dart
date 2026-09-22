@@ -189,7 +189,10 @@ class ShopProductCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        const AddToCartButton(style: CartButtonStyle.circleOutline),
+                        AddToCartButton(
+                          style: CartButtonStyle.circleOutline,
+                          product: product,
+                        ),
                       ],
                     ),
                   ],

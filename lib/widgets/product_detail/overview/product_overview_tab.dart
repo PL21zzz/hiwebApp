@@ -647,8 +647,8 @@ class _ProductOverviewTabState extends State<ProductOverviewTab>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Dung tích',
+                  Text(
+                    _detail.variantLabel,
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.bold,
@@ -840,21 +840,36 @@ class _OverviewVideoItemWidgetState extends State<_OverviewVideoItemWidget> {
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
+    if (widget.isCurrentPage) {
+      _initializePlayer();
+    }
   }
 
-  void _initializePlayer() {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-      ..initialize().then((_) {
-        if (mounted) {
-          _controller?.seekTo(Duration.zero);
-          _controller?.setLooping(true);
-          _controller?.setVolume(widget.isMuted ? 0.0 : 1.0);
-          setState(() {
-            _isInitialized = true;
-          });
-        }
+  Future<void> _initializePlayer() async {
+    if (_controller != null || !widget.isCurrentPage) return;
+
+    final controller = widget.videoUrl.startsWith('assets/')
+      ? VideoPlayerController.asset(widget.videoUrl)
+      : VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    _controller = controller;
+
+    try {
+      await controller.initialize();
+      if (!mounted || _controller != controller) return;
+
+      await controller.seekTo(Duration.zero);
+      await controller.setLooping(true);
+      await controller.setVolume(widget.isMuted ? 0.0 : 1.0);
+      setState(() {
+        _isInitialized = true;
       });
+    } catch (error) {
+      debugPrint('Error initializing product video: $error');
+      if (_controller == controller) {
+        await controller.dispose();
+        _controller = null;
+      }
+    }
   }
 
   @override
@@ -864,10 +879,15 @@ class _OverviewVideoItemWidgetState extends State<_OverviewVideoItemWidget> {
       if (oldWidget.isMuted != widget.isMuted) {
         _controller?.setVolume(widget.isMuted ? 0.0 : 1.0);
       }
+      if (widget.isCurrentPage && !oldWidget.isCurrentPage) {
+        _initializePlayer();
+      }
       if (!widget.isCurrentPage && _isPlaying) {
         _controller?.pause();
         setState(() => _isPlaying = false);
       }
+    } else if (widget.isCurrentPage && !oldWidget.isCurrentPage) {
+      _initializePlayer();
     }
   }
 

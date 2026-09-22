@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_model.dart';
 import '../../models/product/product_detail_model.dart';
+import '../../models/user/cart/cart_item_model.dart';
+import '../../services/auth_service.dart';
+import '../../services/user/cart_service.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/common/top_notification.dart';
 import '../../widgets/product_detail/details/product_details_tab.dart';
@@ -12,6 +15,8 @@ import '../../widgets/product_detail/product_detail_header_bar.dart';
 import '../../widgets/product_detail/reviews/product_reviews_tab.dart';
 import '../auth/login_screen.dart';
 import '../cart/cart_screen.dart';
+import '../checkout/checkout_screen.dart';
+import '../../widgets/product_detail/buy_now_bottom_sheet.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -139,20 +144,77 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void _handlePurchaseAction(String actionLabel) {
-    TopNotification.show(
-      context,
-      message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
-      isError: true,
+    if (actionLabel == 'Mua ngay') {
+      BuyNowBottomSheet.show(
+        context,
+        productDetail: _detail,
+        initialCapacity: _selectedCapacity,
+        onConfirm: (selectedVariant, quantity) {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  CheckoutScreen(
+                productDetail: _detail,
+                selectedVariant: selectedVariant,
+                quantity: quantity,
+              ),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    if (!AuthService.instance.isLoggedIn) {
+      TopNotification.show(
+        context,
+        message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
+        isError: true,
+      );
+
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const LoginScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
+      return;
+    }
+
+    final cartItem = CartItemModel(
+      id: _detail.id,
+      shopName: _detail.shopProfile.name.isNotEmpty
+          ? _detail.shopProfile.name
+          : 'VietMade Store',
+      name: _detail.name,
+        imageUrl: _detail.mediaList.isNotEmpty &&
+            _detail.mediaList.first.isVideo &&
+            _detail.mediaList.first.thumb.isNotEmpty
+          ? _detail.mediaList.first.thumb
+          : _detail.mediaList.isNotEmpty
+            ? _detail.mediaList.first.url
+          : 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+      brand: 'VietMade',
+      variantInfo: _selectedCapacity != null
+          ? 'Đã chọn: $_selectedCapacity'
+          : 'Đã chọn: Mặc định',
+      price: _detail.price.toInt(),
+      originalPrice: _detail.originalPrice.toInt(),
+      quantity: 1,
+      isSelected: true,
     );
 
-    Navigator.push(
+    CartService.instance.addToCart(cartItem);
+
+    TopNotification.show(
       context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const LoginScreen(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      ),
+      message: 'Đã thêm "${cartItem.name}" vào giỏ hàng',
+      isError: false,
     );
   }
 
@@ -240,29 +302,69 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         );
                       },
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.primary,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.12),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          LucideIcons.shoppingCart,
-                          color: AppColors.primary,
-                          size: 21,
-                        ),
+                      child: ListenableBuilder(
+                        listenable: CartService.instance,
+                        builder: (context, _) {
+                          final cartCount = CartService.instance.totalItemCount;
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.primary,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.12),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  LucideIcons.shoppingCart,
+                                  color: AppColors.primary,
+                                  size: 21,
+                                ),
+                              ),
+                              if (cartCount > 0)
+                                Positioned(
+                                  top: -4,
+                                  right: -4,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 2,
+                                    ),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFEF4444),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 18,
+                                      minHeight: 18,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '$cartCount',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),

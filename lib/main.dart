@@ -17,6 +17,10 @@ void main() {
     ),
   );
 
+  // Optimize image cache memory to prevent OOM when streaming videos
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 40 << 20; // 40MB limit
+  PaintingBinding.instance.imageCache.maximumSize = 100;
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode,

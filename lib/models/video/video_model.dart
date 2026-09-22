@@ -35,7 +35,7 @@ class VideoItemModel {
     VideoItemModel(
       id: 'v1',
       videoUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638143/videodetail1_tkmffs.mp4',
+          'assets/videos/videodetail.mp4',
       thumbnailUrl:
           'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
       authorName: '@DongGia15k',
@@ -52,7 +52,7 @@ class VideoItemModel {
     VideoItemModel(
       id: 'v2',
       videoUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638136/videodetail2_zfkwdq.mp4',
+          'assets/videos/videodetail.mp4',
       thumbnailUrl:
           'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
       authorName: '@GiaDungViet',
@@ -69,7 +69,7 @@ class VideoItemModel {
     VideoItemModel(
       id: 'v3',
       videoUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638201/videodetail3_z6o8sg.mp4',
+          'assets/videos/videodetail.mp4',
       thumbnailUrl:
           'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
       authorName: '@MayTreDanShop',

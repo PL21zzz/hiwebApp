@@ -7,6 +7,7 @@ import '../../screens/cart/cart_screen.dart';
 import '../../screens/chat/messages_screen.dart';
 import '../../screens/search/search_screen.dart';
 import '../../services/auth_service.dart';
+import '../../services/user/cart_service.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -23,16 +24,49 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget _buildIconButton({
     required IconData icon,
     required VoidCallback onTap,
+    int badgeCount = 0,
   }) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        child: Icon(
-          icon,
-          size: 21,
-          color: Colors.white,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(
+              icon,
+              size: 21,
+              color: Colors.white,
+            ),
+            if (badgeCount > 0)
+              Positioned(
+                top: -3,
+                right: -4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  constraints: const BoxConstraints(
+                    minWidth: 14,
+                    minHeight: 14,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFEF4444),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$badgeCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8.5,
+                        fontWeight: FontWeight.bold,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -135,16 +169,26 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                         );
                       },
                     ),
-                    _buildIconButton(
-                      icon: LucideIcons.shoppingCart,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) =>
-                                const CartScreen(),
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ),
+                    ListenableBuilder(
+                      listenable: Listenable.merge([CartService.instance, AuthService.instance]),
+                      builder: (context, _) {
+                        final count = AuthService.instance.isLoggedIn
+                            ? CartService.instance.totalItemCount
+                            : 0;
+
+                        return _buildIconButton(
+                          icon: LucideIcons.shoppingCart,
+                          badgeCount: count,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) =>
+                                    const CartScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

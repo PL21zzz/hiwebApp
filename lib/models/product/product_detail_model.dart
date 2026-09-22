@@ -48,6 +48,9 @@ class ProductReviewModel {
   final String variant;
   final String comment;
   final List<String> photos;
+  final List<ProductReviewMediaModel> media;
+  final int helpfulCount;
+  final bool isVerifiedPurchase;
   final String? shopResponse;
 
   const ProductReviewModel({
@@ -58,7 +61,22 @@ class ProductReviewModel {
     required this.variant,
     required this.comment,
     this.photos = const [],
+    this.media = const [],
+    this.helpfulCount = 0,
+    this.isVerifiedPurchase = true,
     this.shopResponse,
+  });
+}
+
+class ProductReviewMediaModel {
+  final String url;
+  final bool isVideo;
+  final String? videoUrl;
+
+  const ProductReviewMediaModel({
+    required this.url,
+    this.isVideo = false,
+    this.videoUrl,
   });
 }
 
@@ -134,6 +152,7 @@ class ProductDetailModel {
   final bool isFavorite;
   final String bestSellerBadge;
   final List<String> capacityOptions;
+  final String variantLabel;
   final List<String> vouchers;
   final List<ProductMediaModel> mediaList;
   final List<TickerItemModel> tickerItems;
@@ -156,6 +175,7 @@ class ProductDetailModel {
     this.isFavorite = false,
     required this.bestSellerBadge,
     required this.capacityOptions,
+    this.variantLabel = 'Dung tích',
     required this.vouchers,
     required this.mediaList,
     required this.tickerItems,
@@ -180,7 +200,10 @@ class ProductDetailModel {
       soldCount: product.soldCount,
       isFavorite: product.isFavorite,
       bestSellerBadge: mock.bestSellerBadge,
-      capacityOptions: mock.capacityOptions,
+      capacityOptions: product.variantOptions,
+      variantLabel: product.variantLabel.isNotEmpty
+          ? product.variantLabel
+          : mock.variantLabel,
       vouchers: mock.vouchers,
       mediaList: mock.mediaList,
       tickerItems: mock.tickerItems,
@@ -200,18 +223,19 @@ class ProductDetailModel {
     price: 450000,
     originalPrice: 520000,
     discountPercent: 13,
-    rating: 4.9,
-    reviewCount: 128,
+    rating: 4.1,
+    reviewCount: 16,
     soldCount: '2.6k+',
     isFavorite: true,
     bestSellerBadge: '#1 bán chạy của Phương Thảo Pharmacy',
     capacityOptions: ['453g', '250g', '100g'],
+    variantLabel: 'Dung tích',
     vouchers: ['10%', '10%', '10%'],
     mediaList: [
       ProductMediaModel(
         type: 'video',
         url:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638143/videodetail1_tkmffs.mp4',
+            'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
         title: 'Video sản phẩm 1',
@@ -219,7 +243,7 @@ class ProductDetailModel {
       ProductMediaModel(
         type: 'video',
         url:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638136/videodetail2_zfkwdq.mp4',
+            'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
         title: 'Video hướng dẫn 2',
@@ -227,7 +251,7 @@ class ProductDetailModel {
       ProductMediaModel(
         type: 'video',
         url:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/v1789638201/videodetail3_z6o8sg.mp4',
+            'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
         title: 'Video thực tế 3',
@@ -331,30 +355,70 @@ class ProductDetailModel {
         'Thoa đều gel dưỡng ẩm lên vùng da khô cần chăm sóc hàng ngày sau khi làm sạch da. Sử dụng 1-2 lần/ngày vào buổi sáng và tối.',
     reviews: [
       ProductReviewModel(
-        userName: 'Trần rắn',
-        userAvatar: '',
-        rating: 3,
-        date: '5 tháng trước',
-        variant: '100g',
-        comment: 'Date gần quá, ko thích',
-        photos: [
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
-        ],
-        shopResponse:
-            'hiện tại đang là tháng 3/2026. Hsd đến 7/2027, còn hơn 1 năm nữa. Tuýp với trọng lượng 15g sẽ có bản thỉnh thoảng mới chấm thi 3-4 tháng cũng đã hết rồi ạ.',
-      ),
-      ProductReviewModel(
-        userName: 'Lâm*** Vũ',
+        userName: 'Mình*** Anh',
         userAvatar: '',
         rating: 5,
-        date: '1 năm trước',
-        variant: '',
-        comment: '',
-        photos: [],
-        shopResponse:
-            'Cảm ơn Bạn đã tin tưởng và mua sản phẩm ở Shop. Shop hy vọng được tiếp tục phục vụ Bạn trong những lần tới nữa ạ.',
+        date: 'Hữu ích (12)',
+        variant: 'Phân loại: 453g',
+        comment:
+            'Kem dưỡng ẩm tốt, chất kem mịn và thấm khá nhanh. Đóng gói cẩn thận, hàng nhận được giống hình.',
+        media: [
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
+            isVideo: true,
+            videoUrl: 'assets/videos/videodetail.mp4',
+          ),
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+          ),
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+          ),
+        ],
+        helpfulCount: 12,
+      ),
+      ProductReviewModel(
+        userName: 'Ngọc*** Hà',
+        userAvatar: '',
+        rating: 5,
+        date: 'Hữu ích (8)',
+        variant: 'Phân loại: 453g',
+        comment:
+            'Giao nhanh hơn dự kiến. Mình dùng buổi tối thấy da mềm hơn, không bị cảm giác quá bí.',
+        media: [
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+          ),
+        ],
+        helpfulCount: 8,
+      ),
+      ProductReviewModel(
+        userName: 'Thu*** Trang',
+        userAvatar: '',
+        rating: 4,
+        date: 'Hữu ích (5)',
+        variant: 'Phân loại: 250g',
+        comment:
+            'Sản phẩm ổn, bao bì chắc chắn. Mùi nhẹ, mình thích. Trừ một sao vì hộp bên ngoài hơi móp khi nhận.',
+        media: [
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+          ),
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+          ),
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+          ),
+        ],
+        helpfulCount: 5,
       ),
     ],
     shopProfile: ShopProfileModel(

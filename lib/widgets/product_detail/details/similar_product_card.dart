@@ -260,7 +260,10 @@ class SimilarProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const AddToCartButton(style: CartButtonStyle.circleSolid),
+                        AddToCartButton(
+                          style: CartButtonStyle.circleSolid,
+                          product: product,
+                        ),
                       ],
                     ),
                   ],
