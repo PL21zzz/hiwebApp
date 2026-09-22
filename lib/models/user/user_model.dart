@@ -28,9 +28,17 @@ class UserModel {
     this.points = 1250,
     this.voucherCount = 5,
     this.coins = 0,
-    this.memberSince = '16/09/2026',
-    this.rank = 'Thành viên từ: 16/09/2026',
-  });
+    String? memberSince,
+    String? rank,
+  })  : memberSince = memberSince ?? _formatCurrentDate(),
+        rank = rank ?? 'Thành viên từ: ${_formatCurrentDate()}';
+
+  static String _formatCurrentDate() {
+    final now = DateTime.now();
+    final day = now.day.toString().padLeft(2, '0');
+    final month = now.month.toString().padLeft(2, '0');
+    return '$day/$month/${now.year}';
+  }
 
   String get fullName {
     final name = '$lastName $firstName'.trim();
@@ -50,8 +58,8 @@ class UserModel {
       points: (json['points'] as num?)?.toInt() ?? 1250,
       voucherCount: (json['voucher_count'] as num?)?.toInt() ?? 5,
       coins: (json['coins'] as num?)?.toInt() ?? 0,
-      memberSince: json['member_since'] as String? ?? '16/09/2026',
-      rank: json['rank'] as String? ?? 'Thành viên từ: 16/09/2026',
+      memberSince: json['member_since'] as String? ?? _formatCurrentDate(),
+      rank: json['rank'] as String? ?? 'Thành viên từ: ${_formatCurrentDate()}',
     );
   }
 

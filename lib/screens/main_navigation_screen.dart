@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
-import 'home_screen.dart';
-import 'category/categories_screen.dart';
-import 'video/video_feed_screen.dart';
-import 'cart/cart_screen.dart';
+import '../services/auth_service.dart';
+import '../widgets/common/vietmade_bottom_nav_bar.dart';
 import 'auth/account_screen.dart';
-import '../theme/app_colors.dart';
+import 'auth/login_screen.dart';
+import 'cart/cart_screen.dart';
+import 'category/categories_screen.dart';
+import 'home_screen.dart';
+import 'video/video_feed_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final int initialIndex;
@@ -25,7 +26,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.initialIndex;
+    if (widget.initialIndex == 4 && !AuthService.instance.isLoggedIn) {
+      _currentIndex = 0;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const LoginScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
+      });
+    } else {
+      _currentIndex = widget.initialIndex;
+    }
   }
 
   final List<Widget> _screens = const [
@@ -43,23 +59,24 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Color(0xFFE2E8F0),
-              width: 1,
-            ),
-          ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            if (index == 3) {
+      bottomNavigationBar: VietmadeBottomNavBar(
+        selectedIndex: _currentIndex,
+        onTap: (index) {
+          if (index == 3) {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const CartScreen(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
+          } else if (index == 4) {
+            if (!AuthService.instance.isLoggedIn) {
               Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      const CartScreen(),
+                      const LoginScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
@@ -69,37 +86,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 _currentIndex = index;
               });
             }
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: const Color(0xFF64748B),
-          selectedFontSize: 11,
-          unselectedFontSize: 11,
-          elevation: 0,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(LucideIcons.home, size: 22),
-              label: 'Trang chủ',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(LucideIcons.layoutGrid, size: 22),
-              label: 'Danh mục',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(LucideIcons.video, size: 22),
-              label: 'Video',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(LucideIcons.shoppingCart, size: 22),
-              label: 'Giỏ hàng',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(LucideIcons.user, size: 22),
-              label: 'Tài khoản',
-            ),
-          ],
-        ),
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
+        },
       ),
     );
   }

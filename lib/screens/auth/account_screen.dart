@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import 'login_screen.dart';
-import 'user_profile_screen.dart';
+import '../user/user_profile_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});

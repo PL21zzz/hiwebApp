@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../screens/auth/account_screen.dart';
+import '../../screens/auth/login_screen.dart';
 import '../../screens/cart/cart_screen.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
 
 class VietmadeBottomNavBar extends StatelessWidget {
   final int? selectedIndex;
+  final ValueChanged<int>? onTap;
 
   const VietmadeBottomNavBar({
     super.key,
     this.selectedIndex,
+    this.onTap,
   });
 
   Widget _buildNavItem(
@@ -24,6 +28,10 @@ class VietmadeBottomNavBar extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () {
+          if (onTap != null) {
+            onTap!(index);
+            return;
+          }
           if (index == 0) {
             Navigator.of(context).popUntil((route) => route.isFirst);
           } else if (index == 3) {
@@ -36,14 +44,25 @@ class VietmadeBottomNavBar extends StatelessWidget {
               ),
             );
           } else if (index == 4) {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const AccountScreen(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (!AuthService.instance.isLoggedIn) {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const LoginScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const AccountScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
           } else {
             Navigator.of(context).popUntil((route) => route.isFirst);
           }

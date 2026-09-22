@@ -51,7 +51,7 @@ class ProfileMockData {
 
   static const List<OrderStatusOption> orderStatuses = [
     OrderStatusOption(
-      id: 'pending',
+      id: 'pending_pickup',
       label: 'Chờ lấy hàng',
       imageUrl: orderIconPending,
     ),

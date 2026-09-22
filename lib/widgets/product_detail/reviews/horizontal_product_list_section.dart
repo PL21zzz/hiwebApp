@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/product/product_model.dart';
-import '../../screens/product/product_detail_screen.dart';
+import '../../../models/product/product_model.dart';
+import '../../../screens/product/product_detail_screen.dart';
 
 class HorizontalProductListSection extends StatefulWidget {
   final String? title;

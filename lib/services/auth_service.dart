@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/auth/user_model.dart';
+import '../models/user/user_model.dart';
 
 class AuthResult {
   final bool isSuccess;
@@ -223,8 +223,13 @@ class AuthService extends ChangeNotifier {
       );
     }
 
+    final now = DateTime.now();
+    final day = now.day.toString().padLeft(2, '0');
+    final month = now.month.toString().padLeft(2, '0');
+    final formattedDate = '$day/$month/${now.year}';
+
     final newUser = UserModel(
-      id: 'usr_${DateTime.now().millisecondsSinceEpoch}',
+      id: 'usr_${now.millisecondsSinceEpoch}',
       userName: userName.trim(),
       password: password,
       firstName: firstName.trim(),
@@ -233,7 +238,8 @@ class AuthService extends ChangeNotifier {
       email: email.trim(),
       points: 200,
       voucherCount: 2,
-      rank: 'Thành viên Mới',
+      memberSince: formattedDate,
+      rank: 'Thành viên từ: $formattedDate',
     );
 
     _users.add(newUser);
@@ -250,6 +256,19 @@ class AuthService extends ChangeNotifier {
       message: 'Đăng ký tài khoản thành công!',
       user: newUser,
     );
+  }
+
+  void updateAvatar(String avatarUrl) {
+    if (_currentUser == null) return;
+    _currentUser = _currentUser!.copyWith(avatarUrl: avatarUrl);
+
+    final index = _users.indexWhere((u) => u.id == _currentUser!.id);
+    if (index != -1) {
+      _users[index] = _currentUser!;
+    }
+
+    _saveDataToLocal();
+    notifyListeners();
   }
 
   void logout() {
