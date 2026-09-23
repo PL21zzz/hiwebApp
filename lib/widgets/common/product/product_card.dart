@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/product/product_model.dart';
-import '../../screens/product/product_detail_screen.dart';
-import 'add_to_cart_button.dart';
+import '../../../models/product/product_model.dart';
+import '../../../screens/product/product_detail_screen.dart';
+import '../product/add_to_cart_button.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;

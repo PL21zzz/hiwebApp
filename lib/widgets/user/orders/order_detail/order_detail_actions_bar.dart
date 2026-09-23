@@ -3,8 +3,8 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../models/user/orders/order_detail_model.dart';
 import '../../../../services/user/order_service.dart';
 import '../../../../screens/user/support/support_request_screen.dart';
-import '../../../common/confirm_dialog.dart';
-import '../../../common/top_notification.dart';
+import '../../../common/dialogs/confirm_dialog.dart';
+import '../../../common/dialogs/top_notification.dart';
 
 class OrderDetailActionsBar extends StatelessWidget {
   final OrderDetailModel detail;

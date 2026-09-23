@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../widgets/common/vietmade_header.dart';
-import '../widgets/common/vietmade_footer.dart';
-import '../widgets/common/category_drawer.dart';
-import '../widgets/common/product_grid.dart';
+import '../widgets/common/layout/vietmade_header.dart';
+import '../widgets/common/layout/vietmade_footer.dart';
+import '../widgets/common/layout/category_drawer.dart';
+import '../widgets/common/product/product_grid.dart';
 import '../widgets/home/banner_slider.dart';
 import '../widgets/home/category_grid.dart';
 import '../widgets/home/flash_sale_section.dart';

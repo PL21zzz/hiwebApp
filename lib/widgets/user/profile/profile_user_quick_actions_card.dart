@@ -8,16 +8,14 @@ class ProfileUserQuickActionsCard extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE0F2FE),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(option.icon, size: 20, color: const Color(0xFF0284C7)),
+          Image.asset(
+            option.imageAsset,
+            width: 32,
+            height: 32,
+            fit: BoxFit.contain,
+            errorBuilder: (_, __, ___) => Icon(option.icon, size: 28, color: const Color(0xFF0284C7)),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 5),
           Text(
             option.label,
             textAlign: TextAlign.center,

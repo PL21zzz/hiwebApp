@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/product/product_model.dart';
-import 'product_card.dart';
+import '../../../models/product/product_model.dart';
+import '../product/product_card.dart';
 
 class ProductGrid extends StatelessWidget {
   final int? itemCount;

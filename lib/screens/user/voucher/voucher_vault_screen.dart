@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/voucher/voucher_model.dart';
 import '../../../theme/app_colors.dart';
-import '../../../widgets/common/vietmade_header.dart';
+import '../../../widgets/common/layout/vietmade_header.dart';
 import '../../../widgets/user/voucher/voucher_card.dart';
 
 class VoucherVaultScreen extends StatefulWidget {

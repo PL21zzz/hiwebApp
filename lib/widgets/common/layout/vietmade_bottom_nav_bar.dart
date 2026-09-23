@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../screens/auth/account_screen.dart';
-import '../../screens/auth/login_screen.dart';
-import '../../screens/notification/notifications_screen.dart';
-import '../../services/auth_service.dart';
-import '../../theme/app_colors.dart';
+import '../../../screens/auth/account_screen.dart';
+import '../../../screens/auth/login_screen.dart';
+import '../../../screens/notification/notifications_screen.dart';
+import '../../../services/auth_service.dart';
+import '../../../theme/app_colors.dart';
 
 class VietmadeBottomNavBar extends StatelessWidget {
   final int? selectedIndex;
@@ -45,13 +45,14 @@ class VietmadeBottomNavBar extends StatelessWidget {
             );
           } else if (index == 4) {
             if (!AuthService.instance.isLoggedIn) {
-              Navigator.of(context).push(
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       const LoginScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
+                (route) => false,
               );
             } else {
               Navigator.of(context).push(

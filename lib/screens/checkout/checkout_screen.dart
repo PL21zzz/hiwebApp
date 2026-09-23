@@ -12,7 +12,7 @@ import '../../widgets/checkout/payment_method_card.dart';
 import '../../widgets/checkout/shipping_info_card.dart';
 import '../../widgets/checkout/shop_item_card.dart';
 import '../../widgets/checkout/voucher_coins_card.dart';
-import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/dialogs/top_notification.dart';
 import '../../widgets/user/cart/cart_voucher_bottom_sheet.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -48,6 +48,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _autoFillUserInfo() {
+    _nameController.clear();
+    _emailController.clear();
+    _phoneController.clear();
+    _addressController.clear();
+
+    if (!AuthService.instance.isLoggedIn) {
+      return;
+    }
+
     final user = AuthService.instance.currentUser;
     final address = AddressService.instance.defaultAddress;
     if (address != null) {
@@ -255,10 +264,18 @@ class _AddressSelectionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+    final sheetHeight = MediaQuery.sizeOf(context).height * 0.8;
     return SafeArea(
       top: false,
       child: Container(
-        constraints: const BoxConstraints(maxHeight: 560),
+        height: isAndroid ? sheetHeight : null,
+        constraints: BoxConstraints(
+          maxHeight: isAndroid ? sheetHeight : 560,
+        ),
+        margin: isAndroid
+          ? EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.2)
+          : null,
         decoration: const BoxDecoration(
           color: Color(0xFFF8FAFC),
           borderRadius: BorderRadius.vertical(top: Radius.circular(18)),

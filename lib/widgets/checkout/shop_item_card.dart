@@ -3,7 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/checkout/checkout_mock_data.dart';
 import '../../models/product/product_detail_model.dart';
 import '../../theme/app_colors.dart';
-import '../common/voucher_select_chip.dart';
+import '../common/cards/voucher_select_chip.dart';
 
 class ShopItemCard extends StatelessWidget {
   final ProductDetailModel productDetail;

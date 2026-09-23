@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/voucher/voucher_model.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/top_notification.dart';
+import '../../common/dialogs/top_notification.dart';
 
 class VoucherCard extends StatelessWidget {
   final VoucherItemModel voucher;

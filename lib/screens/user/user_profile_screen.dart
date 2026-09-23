@@ -8,8 +8,8 @@ import '../../widgets/user/profile/profile_user_quick_actions_card.dart';
 import '../../widgets/user/profile/profile_user_recommendations_section.dart';
 import '../../widgets/user/profile/profile_user_rewards_card.dart';
 import '../../widgets/user/profile/profile_user_tools_grid.dart';
-import '../../widgets/common/vietmade_footer.dart';
-import '../../widgets/common/vietmade_header.dart';
+import '../../widgets/common/layout/vietmade_footer.dart';
+import '../../widgets/common/layout/vietmade_header.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final UserModel user;

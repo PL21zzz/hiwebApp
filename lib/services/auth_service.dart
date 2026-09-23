@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user/user_model.dart';
+import 'user/address_service.dart';
+import 'user/support_request_service.dart';
 
 class AuthResult {
   final bool isSuccess;
@@ -273,6 +275,9 @@ class AuthService extends ChangeNotifier {
 
   void logout() {
     _currentUser = null;
+    clearRememberedCredentials();
+    AddressService.instance.clear();
+    SupportRequestService.instance.clear();
     _saveDataToLocal();
     notifyListeners();
   }

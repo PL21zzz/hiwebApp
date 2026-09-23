@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/product/product_detail_model.dart';
 import '../../models/product/product_model.dart';
-import '../../widgets/common/vietmade_footer.dart';
+import '../../widgets/common/layout/vietmade_footer.dart';
 import '../../widgets/shop_detail/shop_banner_header.dart';
 import '../../widgets/shop_detail/shop_product_card.dart';
 

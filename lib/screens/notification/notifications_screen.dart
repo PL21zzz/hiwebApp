@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/notification/notification_model.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/common/category_drawer.dart';
-import '../../widgets/common/vietmade_header.dart';
+import '../../widgets/common/layout/category_drawer.dart';
+import '../../widgets/common/layout/vietmade_header.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

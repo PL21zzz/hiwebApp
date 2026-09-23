@@ -4,7 +4,7 @@ import '../../services/auth_service.dart';
 import '../../widgets/auth/auth_header_bar.dart';
 import '../../widgets/auth/cloudflare_captcha_modal.dart';
 import '../../widgets/auth/login/login_form_card.dart';
-import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/dialogs/top_notification.dart';
 import '../main_navigation_screen.dart';
 import 'register_screen.dart';
 

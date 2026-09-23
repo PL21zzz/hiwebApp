@@ -3,7 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/product/product_detail_model.dart';
 import '../../../models/product/product_model.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/vietmade_footer.dart';
+import '../../common/layout/vietmade_footer.dart';
 import 'similar_product_card.dart';
 
 class ProductDetailsTab extends StatefulWidget {

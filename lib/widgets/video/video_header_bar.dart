@@ -26,6 +26,8 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
     'Theo dõi',
     'Video cho bạn',
     'Xu hướng',
+    'Yêu thích',
+    'Đã lưu',
   ];
 
   Widget _buildTabItem(int index, String label) {
@@ -81,33 +83,39 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
       right: 0,
       child: Column(
         children: [
-          Padding(
+              Padding(
             padding: EdgeInsets.only(
-              top: topPadding + 8,
-              left: 12,
-              right: 12,
-              bottom: 8,
+                  top: topPadding + 8,
+                  left: 8,
+                  right: 8,
+                  bottom: 8,
             ),
             child: Row(
               children: [
-                // 3 Tabs centered in left area (single horizontal line)
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildTabItem(0, _tabs[0]),
-                        const SizedBox(width: 18),
-                        _buildTabItem(1, _tabs[1]),
-                        const SizedBox(width: 18),
-                        _buildTabItem(2, _tabs[2]),
-                      ],
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: const SizedBox(
+                        width: 26,
+                        child: Icon(LucideIcons.chevronLeft, color: Colors.white, size: 21),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 12),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Transform.translate(
+                        offset: const Offset(0, 3),
+                        child: SizedBox(
+                          height: 32,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            itemCount: _tabs.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 18),
+                            itemBuilder: (_, index) => _buildTabItem(index, _tabs[index]),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
 
                 // 2 Action Icons on the far right with 10px spacing
                 Row(

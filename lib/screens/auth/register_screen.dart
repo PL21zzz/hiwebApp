@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/auth/auth_header_bar.dart';
 import '../../widgets/auth/register/register_form_card.dart';
-import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/dialogs/top_notification.dart';
 import '../main_navigation_screen.dart';
 import 'login_screen.dart';
 

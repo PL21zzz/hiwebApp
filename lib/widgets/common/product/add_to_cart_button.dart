@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/product/product_model.dart';
-import '../../models/user/cart/cart_item_model.dart';
-import '../../screens/auth/login_screen.dart';
-import '../../services/auth_service.dart';
-import '../../services/user/cart_service.dart';
-import 'top_notification.dart';
+import '../../../models/product/product_model.dart';
+import '../../../models/user/cart/cart_item_model.dart';
+import '../../../screens/auth/login_screen.dart';
+import '../../../services/auth_service.dart';
+import '../../../services/user/cart_service.dart';
+import '../dialogs/top_notification.dart';
 
 enum CartButtonStyle {
   pillPlus, // Standard pill button with '+' badge (used in ProductCard)
@@ -37,14 +37,14 @@ class AddToCartButton extends StatelessWidget {
         isError: true,
       );
 
-      Navigator.push(
-        context,
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const LoginScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
+        (route) => false,
       );
     } else {
       final CartItemModel itemToAdd;

@@ -4,9 +4,10 @@ import '../../../models/user/address/address_model.dart';
 import '../../../services/user/address_service.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/user/address/add_address_modal.dart';
-import '../../../widgets/common/confirm_dialog.dart';
-import '../../../widgets/common/reusable_info_card.dart';
-import '../../../widgets/common/vietmade_header.dart';
+import '../../../widgets/common/dialogs/confirm_dialog.dart';
+import '../../../widgets/common/cards/reusable_info_card.dart';
+import '../../../widgets/common/layout/vietmade_footer.dart';
+import '../../../widgets/common/layout/vietmade_header.dart';
 
 class AddressScreen extends StatelessWidget {
   final bool isSelectMode;
@@ -112,6 +113,8 @@ class AddressScreen extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 60),
+                  const VietmadeFooter(),
                 ],
               ),
             ),

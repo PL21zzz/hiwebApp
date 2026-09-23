@@ -5,7 +5,7 @@ import '../../../models/user/address/address_model.dart';
 import '../../../services/user/address_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/top_notification.dart';
+import '../../common/dialogs/top_notification.dart';
 import 'location_search_picker_modal.dart';
 
 class AddAddressModal extends StatefulWidget {

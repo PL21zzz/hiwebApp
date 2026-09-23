@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/filter/filter_model.dart';
-import '../../theme/app_colors.dart';
+import '../../../models/filter/filter_model.dart';
+import '../../../theme/app_colors.dart';
 
 class FilterDrawer extends StatefulWidget {
   const FilterDrawer({super.key});

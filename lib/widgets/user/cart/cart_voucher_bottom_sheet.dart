@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/voucher/voucher_model.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/top_notification.dart';
+import '../../common/dialogs/top_notification.dart';
 
 class CartVoucherBottomSheet extends StatefulWidget {
   final String title;
@@ -50,8 +50,14 @@ class _CartVoucherBottomSheetState extends State<CartVoucherBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+    final availableHeight = MediaQuery.sizeOf(context).height - bottomInset;
     return Container(
-      constraints: const BoxConstraints(maxHeight: 600),
+      height: isAndroid ? availableHeight * 0.8 : null,
+      constraints: BoxConstraints(
+        maxHeight: isAndroid ? availableHeight * 0.8 : 600,
+      ),
+      margin: isAndroid ? EdgeInsets.only(top: availableHeight * 0.2) : null,
       decoration: const BoxDecoration(
         color: Color(0xFFF8FAFC),
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),

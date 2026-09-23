@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../theme/app_colors.dart';
+import '../../../theme/app_colors.dart';
 
 class VoucherSelectChip extends StatelessWidget {
   final String label;

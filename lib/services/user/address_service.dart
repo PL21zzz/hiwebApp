@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/user/address/address_model.dart';
+import '../auth_service.dart';
 
 class AddressService extends ChangeNotifier {
   static final AddressService _instance = AddressService._internal();
@@ -17,11 +18,22 @@ class AddressService extends ChangeNotifier {
   List<AddressModel> get addresses => List.unmodifiable(_addresses);
 
   AddressModel? get defaultAddress {
-    if (_addresses.isEmpty) return null;
+    if (!AuthService.instance.isLoggedIn || _addresses.isEmpty) return null;
     return _addresses.firstWhere(
       (a) => a.isDefault,
       orElse: () => _addresses.first,
     );
+  }
+
+  Future<void> clear() async {
+    _addresses.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_prefAddressKey);
+    } catch (e) {
+      debugPrint('Error clearing addresses: $e');
+    }
+    notifyListeners();
   }
 
   Future<void> _loadAddresses() async {

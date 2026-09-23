@@ -5,8 +5,8 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/flash_sale_model.dart';
 import '../../models/product/product_model.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/common/vietmade_footer.dart';
-import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/layout/vietmade_footer.dart';
+import '../../widgets/common/dialogs/top_notification.dart';
 import '../auth/login_screen.dart';
 import '../product/product_detail_screen.dart';
 
@@ -197,14 +197,14 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
       isError: true,
     );
 
-    Navigator.push(
-      context,
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             const LoginScreen(),
         transitionDuration: Duration.zero,
         reverseTransitionDuration: Duration.zero,
       ),
+      (route) => false,
     );
   }
 

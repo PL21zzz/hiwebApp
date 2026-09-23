@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/product_grid.dart';
+import '../../common/product/product_grid.dart';
 
 class ProfileUserRecommendationsSection extends StatelessWidget {
   const ProfileUserRecommendationsSection({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/orders/order_detail_model.dart';
 import '../../../models/user/orders/order_model.dart';
-import '../../../widgets/common/vietmade_header.dart';
+import '../../../widgets/common/layout/vietmade_header.dart';
 import '../../../widgets/user/orders/order_detail/order_detail_actions_bar.dart';
 import '../../../widgets/user/orders/order_detail/order_detail_payment_card.dart';
 import '../../../widgets/user/orders/order_detail/order_detail_products_card.dart';

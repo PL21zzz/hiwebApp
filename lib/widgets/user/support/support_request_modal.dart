@@ -3,8 +3,8 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/support/support_request_model.dart';
 import '../../../services/user/support_request_service.dart';
 import '../../../theme/app_colors.dart';
-import '../../common/top_notification.dart';
-import '../../common/vietmade_modal_container.dart';
+import '../../common/dialogs/top_notification.dart';
+import '../../common/dialogs/vietmade_modal_container.dart';
 
 class SupportRequestModal extends StatefulWidget {
   const SupportRequestModal({super.key});

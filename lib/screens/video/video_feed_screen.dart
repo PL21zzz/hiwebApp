@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../../models/video/video_model.dart';
 import '../../widgets/video/video_header_bar.dart';
 import '../../widgets/video/video_info_section.dart';
@@ -17,17 +18,25 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
   late final PageController _pageController;
   int _currentPage = 0;
   bool _isMuted = false;
+  bool _showSwipeHint = false;
+  Timer? _swipeHintTimer;
   final List<VideoItemModel> _videos = VideoItemModel.mockVideos;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _swipeHintTimer = Timer(const Duration(seconds: 4), () {
+      if (mounted && _currentPage == 0) {
+        setState(() => _showSwipeHint = true);
+      }
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _swipeHintTimer?.cancel();
     super.dispose();
   }
 
@@ -52,6 +61,7 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
             onPageChanged: (index) {
               setState(() {
                 _currentPage = index;
+                _showSwipeHint = false;
               });
             },
             itemBuilder: (context, index) {
@@ -73,7 +83,7 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
                   VideoInfoSection(video: video),
 
                   // Bottom Swipe Hint Pill (only on first video)
-                  if (index == 0) const VideoSwipeHint(),
+                  if (index == 0 && _showSwipeHint) const VideoSwipeHint(),
                 ],
               );
             },

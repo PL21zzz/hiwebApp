@@ -48,4 +48,15 @@ class SupportRequestService extends ChangeNotifier {
     _saveRequests();
     notifyListeners();
   }
+
+  Future<void> clear() async {
+    _requests.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_prefSupportKey);
+    } catch (e) {
+      debugPrint('Error clearing support requests: $e');
+    }
+    notifyListeners();
+  }
 }

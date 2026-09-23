@@ -7,7 +7,7 @@ import '../../models/user/cart/cart_item_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/user/cart_service.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/common/top_notification.dart';
+import '../../widgets/common/dialogs/top_notification.dart';
 import '../../widgets/product_detail/details/product_details_tab.dart';
 import '../../widgets/product_detail/overview/product_overview_tab.dart';
 import '../../widgets/product_detail/product_detail_bottom_bar.dart';
@@ -175,14 +175,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         isError: true,
       );
 
-      Navigator.push(
-        context,
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const LoginScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
+        (route) => false,
       );
       return;
     }

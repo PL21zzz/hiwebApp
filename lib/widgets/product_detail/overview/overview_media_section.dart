@@ -94,7 +94,14 @@ class _OverviewMediaSectionState extends State<OverviewMediaSection>
         children: [
           Icon(item.icon, size: 13, color: item.iconColor),
           const SizedBox(width: 5),
-          Text(item.text, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF334155))),
+          Flexible(
+            child: Text(
+              item.text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+            ),
+          ),
         ],
       ),
     );
@@ -151,17 +158,25 @@ class _OverviewMediaSectionState extends State<OverviewMediaSection>
                         animation: _tickerAnimation,
                         builder: (_, __) {
                           final offset = -_tickerAnimation.value * _itemSlotHeight;
-                            TickerItemModel itemAt(int index) =>
+                          TickerItemModel itemAt(int index) =>
                               tickerItems[index % tickerItems.length];
-                          return Transform.translate(
-                            offset: Offset(0, offset),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _tickerBadge(itemAt(_topItemIndex)),
-                                _tickerBadge(itemAt(_topItemIndex + 1)),
-                                _tickerBadge(itemAt(_topItemIndex + 2)),
-                              ],
+                          return OverflowBox(
+                            alignment: Alignment.topLeft,
+                            minHeight: 0,
+                            maxHeight: double.infinity,
+                            minWidth: 0,
+                            maxWidth: 260,
+                            child: Transform.translate(
+                              offset: Offset(0, offset),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _tickerBadge(itemAt(_topItemIndex)),
+                                  _tickerBadge(itemAt(_topItemIndex + 1)),
+                                  _tickerBadge(itemAt(_topItemIndex + 2)),
+                                ],
+                              ),
                             ),
                           );
                         },

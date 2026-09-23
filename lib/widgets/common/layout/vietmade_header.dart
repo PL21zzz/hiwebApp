@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../screens/auth/account_screen.dart';
-import '../../screens/auth/login_screen.dart';
-import '../../screens/cart/cart_screen.dart';
-import '../../screens/chat/messages_screen.dart';
-import '../../screens/search/search_screen.dart';
-import '../../services/auth_service.dart';
-import '../../services/user/cart_service.dart';
-import '../../theme/app_colors.dart';
+import '../../../screens/auth/account_screen.dart';
+import '../../../screens/auth/login_screen.dart';
+import '../../../screens/cart/cart_screen.dart';
+import '../../../screens/chat/messages_screen.dart';
+import '../../../screens/search/search_screen.dart';
+import '../../../services/auth_service.dart';
+import '../../../services/user/cart_service.dart';
+import '../../../theme/app_colors.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showMenu;
@@ -196,13 +196,14 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                       icon: LucideIcons.user,
                       onTap: () {
                         if (!AuthService.instance.isLoggedIn) {
-                          Navigator.of(context).push(
+                          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) =>
                                   const LoginScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
+                            (route) => false,
                           );
                         } else {
                           Navigator.of(context).push(

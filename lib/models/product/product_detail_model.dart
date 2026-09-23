@@ -20,11 +20,11 @@ class ProductMediaModel {
   bool get isImage => type == 'image';
 
   Map<String, String> toMap() => {
-        'type': type,
-        'url': url,
-        'thumb': thumb,
-        'title': title,
-      };
+    'type': type,
+    'url': url,
+    'thumb': thumb,
+    'title': title,
+  };
 }
 
 class TickerItemModel {
@@ -106,7 +106,8 @@ class ShopProfileModel {
     this.totalSold = '2.3K',
     this.joinedDuration = '1 năm trước',
     this.isFavorite = true,
-    this.coverUrl = 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+    this.coverUrl =
+        'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
     this.videoCount = 1,
     this.productCount = 18,
     this.welcomeMessage = 'Chào bạn, shop có thể giúp gì cho bạn?',
@@ -135,10 +136,7 @@ class ProductSpecificationModel {
   final String title;
   final String value;
 
-  const ProductSpecificationModel({
-    required this.title,
-    required this.value,
-  });
+  const ProductSpecificationModel({required this.title, required this.value});
 }
 
 class ProductDetailModel {
@@ -188,8 +186,30 @@ class ProductDetailModel {
     this.otherShopProducts = const [],
   });
 
+  String get effectiveVariantLabel {
+    if (variantLabel.trim().isNotEmpty) return variantLabel;
+    return name.contains(RegExp(r'\d\s?(g|kg|ml|l|viên)', caseSensitive: false))
+        ? 'Dung tích'
+        : 'Size';
+  }
+
+  List<String> get effectiveVariantOptions {
+    if (capacityOptions.isNotEmpty) return capacityOptions;
+    return effectiveVariantLabel == 'Dung tích'
+        ? const ['100ml', '50ml', '30ml']
+        : const ['S', 'M', 'L'];
+  }
+
   factory ProductDetailModel.fromProduct(ProductModel product) {
     final mock = ProductDetailModel.mockSample;
+    final inferredLabel =
+        product.variantLabel.isNotEmpty
+            ? product.variantLabel
+            : (product.name.contains(
+                  RegExp(r'\d\s?(g|kg|ml|l|viên)', caseSensitive: false),
+                )
+                ? 'Dung tích'
+                : 'Size');
     return ProductDetailModel(
       id: product.id,
       name: product.name,
@@ -201,10 +221,13 @@ class ProductDetailModel {
       soldCount: product.soldCount,
       isFavorite: product.isFavorite,
       bestSellerBadge: mock.bestSellerBadge,
-      capacityOptions: product.variantOptions,
-      variantLabel: product.variantLabel.isNotEmpty
-          ? product.variantLabel
-          : mock.variantLabel,
+      capacityOptions:
+          product.variantOptions.isNotEmpty
+              ? product.variantOptions
+              : (inferredLabel == 'Dung tích'
+                  ? const ['100ml', '50ml', '30ml']
+                  : const ['S', 'M', 'L']),
+      variantLabel: inferredLabel,
       vouchers: mock.vouchers,
       mediaList: mock.mediaList,
       tickerItems: mock.tickerItems,
@@ -224,9 +247,11 @@ class ProductDetailModel {
       name: item.name,
       price: item.price.toDouble(),
       originalPrice: item.originalPrice.toDouble(),
-      discountPercent: item.originalPrice > 0
-          ? ((item.originalPrice - item.price) * 100 / item.originalPrice).round()
-          : 0,
+      discountPercent:
+          item.originalPrice > 0
+              ? ((item.originalPrice - item.price) * 100 / item.originalPrice)
+                  .round()
+              : 0,
       rating: mock.rating,
       reviewCount: mock.reviewCount,
       soldCount: mock.soldCount,
@@ -275,24 +300,21 @@ class ProductDetailModel {
     mediaList: [
       ProductMediaModel(
         type: 'video',
-        url:
-            'assets/videos/videodetail.mp4',
+        url: 'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
         title: 'Video sản phẩm 1',
       ),
       ProductMediaModel(
         type: 'video',
-        url:
-            'assets/videos/videodetail.mp4',
+        url: 'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
         title: 'Video hướng dẫn 2',
       ),
       ProductMediaModel(
         type: 'video',
-        url:
-            'assets/videos/videodetail.mp4',
+        url: 'assets/videos/videodetail.mp4',
         thumb:
             'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
         title: 'Video thực tế 3',
@@ -365,18 +387,9 @@ class ProductDetailModel {
         title: 'Thương hiệu:',
         value: 'không thương hiệu',
       ),
-      ProductSpecificationModel(
-        title: 'Số lượng sản phẩm còn:',
-        value: '157',
-      ),
-      ProductSpecificationModel(
-        title: 'Xuất xứ:',
-        value: 'Ấn Độ',
-      ),
-      ProductSpecificationModel(
-        title: 'Kho hàng tại:',
-        value: 'Nghệ An',
-      ),
+      ProductSpecificationModel(title: 'Số lượng sản phẩm còn:', value: '157'),
+      ProductSpecificationModel(title: 'Xuất xứ:', value: 'Ấn Độ'),
+      ProductSpecificationModel(title: 'Kho hàng tại:', value: 'Nghệ An'),
     ],
     shortDescription:
         'Ezamic Gel Azelaic Acid 20% giúp dưỡng ẩm cho da, hỗ trợ điều trị mụn, mờ thâm, làm mờ sưng viêm, sạch da, ngừa mụn.\n\n'

@@ -3,8 +3,9 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/support/support_request_model.dart';
 import '../../../services/user/support_request_service.dart';
 import '../../../theme/app_colors.dart';
-import '../../../widgets/common/reusable_info_card.dart';
-import '../../../widgets/common/vietmade_header.dart';
+import '../../../widgets/common/cards/reusable_info_card.dart';
+import '../../../widgets/common/layout/vietmade_footer.dart';
+import '../../../widgets/common/layout/vietmade_header.dart';
 import '../../../widgets/user/support/support_request_modal.dart';
 
 class SupportRequestScreen extends StatelessWidget {
@@ -120,6 +121,8 @@ class SupportRequestScreen extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 60),
+                  const VietmadeFooter(),
                 ],
               ),
             ),

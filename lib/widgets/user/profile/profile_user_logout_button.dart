@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../services/auth_service.dart';
-import '../../common/confirm_dialog.dart';
-import '../../common/top_notification.dart';
+import '../../common/dialogs/confirm_dialog.dart';
+import '../../common/dialogs/top_notification.dart';
+import '../../../screens/auth/login_screen.dart';
 
 class ProfileUserLogoutButton extends StatelessWidget {
   const ProfileUserLogoutButton({super.key});
@@ -18,6 +19,15 @@ class ProfileUserLogoutButton extends StatelessWidget {
       isDangerous: true,
       onConfirm: () {
         AuthService.instance.logout();
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const LoginScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+          (route) => false,
+        );
         TopNotification.show(
           context,
           message: 'Đã đăng xuất tài khoản',

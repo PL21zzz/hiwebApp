@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/cart/cart_item_model.dart';
 import '../../../services/user/cart_service.dart';
-import '../../common/confirm_dialog.dart';
-import '../../common/voucher_select_chip.dart';
+import '../../common/dialogs/confirm_dialog.dart';
+import '../../common/cards/voucher_select_chip.dart';
 import '../../../theme/app_colors.dart';
 
 class CartShopGroupCard extends StatelessWidget {

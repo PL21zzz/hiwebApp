@@ -3,7 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/product/product_detail_model.dart';
 import '../../screens/search/search_screen.dart';
 import '../../theme/app_colors.dart';
-import '../common/product_share_bottom_sheet.dart';
+import '../common/product/product_share_bottom_sheet.dart';
 
 class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedTabIndex;

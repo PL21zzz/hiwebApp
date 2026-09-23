@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../widgets/common/vietmade_bottom_nav_bar.dart';
+import '../widgets/common/layout/vietmade_bottom_nav_bar.dart';
 import 'auth/account_screen.dart';
 import 'auth/login_screen.dart';
 import 'category/categories_screen.dart';
@@ -30,13 +30,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       _currentIndex = 0;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Navigator.of(context).push(
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 const LoginScreen(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
+          (route) => false,
         );
       });
     } else {
@@ -66,13 +67,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             setState(() => _currentIndex = index);
           } else if (index == 4) {
             if (!AuthService.instance.isLoggedIn) {
-              Navigator.of(context).push(
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       const LoginScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
+                (route) => false,
               );
             } else {
               setState(() {

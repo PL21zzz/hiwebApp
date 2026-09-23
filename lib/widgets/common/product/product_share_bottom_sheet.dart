@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../models/product/product_detail_model.dart';
-import '../../models/product/product_model.dart';
-import '../../models/video/video_model.dart';
-import '../../screens/chat/messages_screen.dart';
-import '../../theme/app_colors.dart';
+import '../../../models/product/product_detail_model.dart';
+import '../../../models/product/product_model.dart';
+import '../../../models/video/video_model.dart';
+import '../../../screens/chat/messages_screen.dart';
+import '../../../theme/app_colors.dart';
 
 class ProductShareBottomSheet extends StatelessWidget {
   final VideoItemModel? video;

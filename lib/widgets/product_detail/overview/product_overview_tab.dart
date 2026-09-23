@@ -4,6 +4,7 @@ import '../../../theme/app_colors.dart';
 import 'overview_media_section.dart';
 import 'overview_product_info_section.dart';
 import 'overview_variant_section.dart';
+import '../product_customization_section.dart';
 
 class ProductOverviewTab extends StatefulWidget {
   final ScrollController? scrollController;
@@ -63,6 +64,8 @@ class _ProductOverviewTabState extends State<ProductOverviewTab> {
           onCapacitySelected: _selectCapacity,
         ),
         const SizedBox(height: 8),
+        const ProductCustomizationSection(),
+        const SizedBox(height: 8),
         _VoucherSection(detail: _detail),
         const SizedBox(height: 12),
       ],
@@ -91,25 +94,50 @@ class _VoucherSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
-          const Icon(Icons.confirmation_number_outlined, size: 16, color: AppColors.primary),
+          const Icon(
+            Icons.confirmation_number_outlined,
+            size: 16,
+            color: AppColors.primary,
+          ),
           const SizedBox(width: 8),
-          const Text('Mã giảm giá', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: Color(0xFF334155))),
+          const Text(
+            'Mã giảm giá',
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF334155),
+            ),
+          ),
           const Spacer(),
           Row(
-            children: detail.vouchers
-                .map(
-                  (voucher) => Container(
-                    margin: const EdgeInsets.only(right: 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF2F2),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: const Color(0xFFFECACA), width: 0.8),
-                    ),
-                    child: Text(voucher, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFEF4444))),
-                  ),
-                )
-                .toList(),
+            children:
+                detail.vouchers
+                    .map(
+                      (voucher) => Container(
+                        margin: const EdgeInsets.only(right: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFEF2F2),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: const Color(0xFFFECACA),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Text(
+                          voucher,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFEF4444),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
           ),
           const SizedBox(width: 4),
           const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),

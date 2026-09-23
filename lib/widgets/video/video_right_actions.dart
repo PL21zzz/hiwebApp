@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/video/video_model.dart';
 import '../../theme/app_colors.dart';
-import '../common/product_share_bottom_sheet.dart';
+import '../common/product/product_share_bottom_sheet.dart';
+import '../common/dialogs/top_notification.dart';
+import 'video_report_flow.dart';
 
 class VideoRightActions extends StatefulWidget {
   final VideoItemModel video;
 
-  const VideoRightActions({
-    super.key,
-    required this.video,
-  });
+  const VideoRightActions({super.key, required this.video});
 
   @override
   State<VideoRightActions> createState() => _VideoRightActionsState();
@@ -56,6 +55,17 @@ class _VideoRightActionsState extends State<VideoRightActions> {
     });
   }
 
+  Future<void> _openReportFlow() async {
+    final submitted = await VideoReportFlow.show(context);
+    if (submitted == true && mounted) {
+      TopNotification.show(
+        context,
+        message: 'Đã gửi báo cáo thành công',
+        isError: false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -83,10 +93,15 @@ class _VideoRightActionsState extends State<VideoRightActions> {
                     child: Image.network(
                       widget.video.authorAvatar,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: Colors.cyan.shade600,
-                        child: const Icon(LucideIcons.shoppingBag, color: Colors.white, size: 22),
-                      ),
+                      errorBuilder:
+                          (_, __, ___) => Container(
+                            color: Colors.cyan.shade600,
+                            child: const Icon(
+                              LucideIcons.shoppingBag,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
                     ),
                   ),
                 ),
@@ -99,9 +114,10 @@ class _VideoRightActionsState extends State<VideoRightActions> {
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: _isFollowSuccessState
-                              ? AppColors.primary
-                              : const Color(0xFFEF4444),
+                          color:
+                              _isFollowSuccessState
+                                  ? AppColors.primary
+                                  : const Color(0xFFEF4444),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -167,10 +183,7 @@ class _VideoRightActionsState extends State<VideoRightActions> {
             color: Colors.white,
             label: widget.video.shares,
             onTap: () {
-              ProductShareBottomSheet.showVideo(
-                context,
-                video: widget.video,
-              );
+              ProductShareBottomSheet.showVideo(context, video: widget.video);
             },
           ),
           const SizedBox(height: 16),
@@ -180,14 +193,7 @@ class _VideoRightActionsState extends State<VideoRightActions> {
             icon: LucideIcons.flag,
             color: Colors.white,
             label: 'Báo cáo',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đã báo cáo vi phạm'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
-            },
+            onTap: _openReportFlow,
           ),
         ],
       ),
@@ -205,11 +211,7 @@ class _VideoRightActionsState extends State<VideoRightActions> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 28,
-          ),
+          Icon(icon, color: color, size: 28),
           const SizedBox(height: 3),
           Text(
             label,
@@ -217,12 +219,7 @@ class _VideoRightActionsState extends State<VideoRightActions> {
               color: Colors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              shadows: [
-                Shadow(
-                  color: Colors.black45,
-                  blurRadius: 4,
-                ),
-              ],
+              shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
             ),
           ),
         ],

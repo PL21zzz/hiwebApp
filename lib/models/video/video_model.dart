@@ -10,6 +10,13 @@ class VideoItemModel {
   final String comments;
   final String saves;
   final String shares;
+  final String productName;
+  final String discountPercentage;
+  final String price;
+  final String soldCount;
+  final String rating;
+  final int productCount;
+  final String voucherDiscount;
   bool isLiked;
   bool isSaved;
   bool isFollowing;
@@ -26,6 +33,13 @@ class VideoItemModel {
     required this.comments,
     required this.saves,
     required this.shares,
+    this.productName = 'Đồ dùng tiện ích mini - mẫu 01',
+    this.discountPercentage = '-48%',
+    this.price = '15.000đ',
+    this.soldCount = '1.2K đã bán',
+    this.rating = '4.9',
+    this.productCount = 5,
+    this.voucherDiscount = 'Giảm 25%',
     this.isLiked = false,
     this.isSaved = false,
     this.isFollowing = false,
