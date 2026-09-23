@@ -4,6 +4,7 @@ import '../../../data/vietnam_divisions_data.dart';
 import '../../../models/user/address/address_model.dart';
 import '../../../services/user/address_service.dart';
 import '../../../services/auth_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../common/top_notification.dart';
 import 'location_search_picker_modal.dart';
 
@@ -303,11 +304,13 @@ class _AddAddressModalState extends State<AddAddressModal> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // Header with title and close X button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,7 +404,7 @@ class _AddAddressModalState extends State<AddAddressModal> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     side: const BorderSide(color: Color(0xFF94A3B8), width: 1.2),
-                    activeColor: const Color(0xFF0097B2),
+                    activeColor: AppColors.primary,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -445,7 +448,7 @@ class _AddAddressModalState extends State<AddAddressModal> {
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 42),
-                      backgroundColor: const Color(0xFF0097B2),
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -467,6 +470,7 @@ class _AddAddressModalState extends State<AddAddressModal> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

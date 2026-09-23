@@ -1,8 +1,25 @@
 import 'package:flutter/foundation.dart';
+import '../../models/product/product_model.dart';
 import '../../models/user/cart/cart_item_model.dart';
 
 class CartService extends ChangeNotifier {
-  CartService._() : _items = [];
+  CartService._()
+      : _items = ProductModel.mockCartProducts
+            .map(
+              (product) => CartItemModel(
+                id: product.id,
+                shopName: product.shopName,
+                name: product.name,
+                imageUrl: product.imageUrl,
+                brand: product.shopName,
+                variantInfo: product.variantOptions.isNotEmpty
+                    ? 'Đã chọn: ${product.variantOptions.first}'
+                    : 'Đã chọn: Mặc định',
+                price: product.price.toInt(),
+                originalPrice: product.originalPrice.toInt(),
+              ),
+            )
+            .toList();
 
   static final CartService instance = CartService._();
 

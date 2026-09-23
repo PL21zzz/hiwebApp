@@ -3,19 +3,21 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/cart/cart_item_model.dart';
 import '../../../services/user/cart_service.dart';
 import '../../common/confirm_dialog.dart';
+import '../../common/voucher_select_chip.dart';
+import '../../../theme/app_colors.dart';
 
 class CartShopGroupCard extends StatelessWidget {
   final String shopName;
   final List<CartItemModel> items;
   final bool isEditing;
-  final VoidCallback? onToggleEdit;
+  final VoidCallback? onShopVoucherPressed;
 
   const CartShopGroupCard({
     super.key,
     required this.shopName,
     required this.items,
     this.isEditing = false,
-    this.onToggleEdit,
+    this.onShopVoucherPressed,
   });
 
   String _formatPrice(int value) {
@@ -67,7 +69,7 @@ class CartShopGroupCard extends StatelessWidget {
                   height: 28,
                   child: Checkbox(
                     value: isShopAllSelected,
-                    activeColor: const Color(0xFF0097B2),
+                    activeColor: AppColors.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                     onChanged: (val) {
                       CartService.instance.toggleShopSelection(shopName, val ?? false);
@@ -89,17 +91,6 @@ class CartShopGroupCard extends StatelessWidget {
                   color: Color(0xFF475569),
                 ),
                 const Spacer(),
-                InkWell(
-                  onTap: onToggleEdit,
-                  child: Text(
-                    isEditing ? 'Xong' : 'Sửa',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: isEditing ? FontWeight.bold : FontWeight.normal,
-                      color: isEditing ? const Color(0xFFEF4444) : const Color(0xFF0284C7),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -111,14 +102,16 @@ class CartShopGroupCard extends StatelessWidget {
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
 
           // 3. Shop Voucher Row
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            child: Row(
+          InkWell(
+            onTap: onShopVoucherPressed,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
               children: [
                 const Icon(
                   LucideIcons.ticket,
                   size: 16,
-                  color: Color(0xFF0097B2),
+                  color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
                 const Text(
@@ -129,31 +122,9 @@ class CartShopGroupCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0F9FF),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Row(
-                    children: [
-                      Text(
-                        'Chọn hoặc nhập mã',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF0284C7),
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      Icon(
-                        LucideIcons.chevronRight,
-                        size: 13,
-                        color: Color(0xFF0284C7),
-                      ),
-                    ],
-                  ),
-                ),
+                const VoucherSelectChip(),
               ],
+              ),
             ),
           ),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
@@ -169,7 +140,7 @@ class CartShopGroupCard extends StatelessWidget {
                     const Icon(
                       LucideIcons.truck,
                       size: 16,
-                      color: Color(0xFF0097B2),
+                      color: AppColors.primary,
                     ),
                     const SizedBox(width: 8),
                     RichText(
@@ -238,7 +209,7 @@ class CartShopGroupCard extends StatelessWidget {
             height: 28,
             child: Checkbox(
               value: item.isSelected,
-              activeColor: const Color(0xFF0097B2),
+              activeColor: AppColors.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               onChanged: (_) {
                 CartService.instance.toggleItemSelection(item.id);

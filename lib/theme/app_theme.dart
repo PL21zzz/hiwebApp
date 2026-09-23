@@ -27,7 +27,7 @@ class AppTheme {
         surface: AppColors.cardBg,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.header,
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,

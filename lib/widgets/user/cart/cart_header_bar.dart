@@ -19,7 +19,7 @@ class CartHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primary,
+      color: AppColors.header,
       child: SafeArea(
         bottom: false,
         child: Padding(

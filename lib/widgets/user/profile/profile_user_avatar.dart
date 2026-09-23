@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/user_model.dart';
 import '../../../services/auth_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../common/top_notification.dart';
 
 class ProfileUserAvatar extends StatelessWidget {
@@ -32,7 +33,7 @@ class ProfileUserAvatar extends StatelessWidget {
             height: 62,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF0097B2), width: 1.8),
+              border: Border.all(color: AppColors.primary, width: 1.8),
             ),
             padding: const EdgeInsets.all(2.5),
             child: Container(
@@ -72,7 +73,7 @@ class ProfileUserAvatar extends StatelessWidget {
               width: 21,
               height: 21,
               decoration: BoxDecoration(
-                color: const Color(0xFF0097B2),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 1.5),
               ),
@@ -113,79 +114,82 @@ class ProfileUserAvatar extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Đổi ảnh đại diện',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Option 1: Chụp ảnh (Camera)
-              ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE0F2FE),
-                    shape: BoxShape.circle,
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  child: const Icon(LucideIcons.camera, color: Color(0xFF0097B2), size: 20),
                 ),
-                title: const Text(
-                  'Chụp ảnh',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
-                ),
-                subtitle: const Text(
-                  'Mở camera của điện thoại',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickAvatarImage(context, ImageSource.camera);
-                },
-              ),
-              const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-              // Option 2: Tải ảnh lên (Gallery)
-              ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE0F2FE),
-                    shape: BoxShape.circle,
+                const SizedBox(height: 16),
+                const Text(
+                  'Đổi ảnh đại diện',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
                   ),
-                  child: const Icon(LucideIcons.image, color: Color(0xFF0097B2), size: 20),
                 ),
-                title: const Text(
-                  'Tải ảnh lên',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                const SizedBox(height: 16),
+
+                // Option 1: Chụp ảnh (Camera)
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE0F2FE),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(LucideIcons.camera, color: AppColors.primary, size: 20),
+                  ),
+                  title: const Text(
+                    'Chụp ảnh',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                  ),
+                  subtitle: const Text(
+                    'Mở camera của điện thoại',
+                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickAvatarImage(context, ImageSource.camera);
+                  },
                 ),
-                subtitle: const Text(
-                  'Mở thư viện ảnh của điện thoại',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                // Option 2: Tải ảnh lên (Gallery)
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE0F2FE),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(LucideIcons.image, color: AppColors.primary, size: 20),
+                  ),
+                  title: const Text(
+                    'Tải ảnh lên',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                  ),
+                  subtitle: const Text(
+                    'Mở thư viện ảnh của điện thoại',
+                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickAvatarImage(context, ImageSource.gallery);
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickAvatarImage(context, ImageSource.gallery);
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

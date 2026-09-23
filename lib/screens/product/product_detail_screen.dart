@@ -15,6 +15,7 @@ import '../../widgets/product_detail/product_detail_header_bar.dart';
 import '../../widgets/product_detail/reviews/product_reviews_tab.dart';
 import '../auth/login_screen.dart';
 import '../cart/cart_screen.dart';
+import 'product_reviews_screen.dart';
 import '../checkout/checkout_screen.dart';
 import '../../widgets/product_detail/buy_now_bottom_sheet.dart';
 
@@ -265,6 +266,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           key: _reviewsKey,
                           child: ProductReviewsTab(
                             productDetail: _detail,
+                            onViewAllReviews: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => ProductReviewsScreen(
+                                    productDetail: _detail,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
 

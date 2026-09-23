@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../theme/app_colors.dart';
 
 class OrderEmptyState extends StatelessWidget {
   final VoidCallback onContinueShopping;
@@ -29,7 +30,7 @@ class OrderEmptyState extends StatelessWidget {
             child: const Icon(
               LucideIcons.packageOpen,
               size: 36,
-              color: Color(0xFF0284C7),
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -56,7 +57,7 @@ class OrderEmptyState extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onContinueShopping,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0097B2),
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -64,6 +65,7 @@ class OrderEmptyState extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
+              icon: const Icon(LucideIcons.shoppingBag, size: 16),
               label: const Text(
                 '+ Tiếp tục mua sắm',
                 style: TextStyle(

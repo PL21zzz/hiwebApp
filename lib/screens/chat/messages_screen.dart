@@ -79,7 +79,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
           children: [
             // 1. Header (Teal background extending to top status bar)
             Container(
-              color: AppColors.primary,
+              color: AppColors.header,
               child: SafeArea(
                 bottom: false,
                 child: Column(

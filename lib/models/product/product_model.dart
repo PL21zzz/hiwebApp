@@ -9,6 +9,7 @@ class ProductModel {
   final String location;
   final String imageUrl;
   final String category;
+  final String shopName;
   final String variantLabel;
   final List<String> variantOptions;
   final bool isFlashSale;
@@ -25,6 +26,7 @@ class ProductModel {
     required this.location,
     required this.imageUrl,
     required this.category,
+    this.shopName = 'VietMade Store',
     this.variantLabel = '',
     this.variantOptions = const [],
     this.isFlashSale = false,
@@ -107,6 +109,39 @@ class ProductModel {
       location: 'Hồ Chí Minh',
       imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
       category: 'Y tế',
+    ),
+  ];
+
+  static const List<ProductModel> mockCartProducts = [
+    ProductModel(
+      id: 'cart_french_perfume',
+      name: 'Nước hoa French Perfume Oriental 100ml - Hương thơm phương Đông...',
+      price: 350000,
+      originalPrice: 450000,
+      discountPercent: 22,
+      rating: 4.8,
+      soldCount: '1k+',
+      location: 'Hồ Chí Minh',
+      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+      category: 'Nước hoa',
+      shopName: 'ShopMyPham',
+      variantLabel: 'Phân loại',
+      variantOptions: ['French Perfume'],
+    ),
+    ProductModel(
+      id: 'cart_collagen_cream',
+      name: 'Kem dưỡng da collagen Hàn Quốc - Dưỡng ẩm & chống lão hóa',
+      price: 280000,
+      originalPrice: 520000,
+      discountPercent: 46,
+      rating: 4.7,
+      soldCount: '2k+',
+      location: 'Hồ Chí Minh',
+      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+      category: 'Dưỡng da',
+      shopName: 'ShopMyPham',
+      variantLabel: 'Phân loại',
+      variantOptions: ['Mặc định'],
     ),
   ];
 }

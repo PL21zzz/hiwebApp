@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/checkout/checkout_mock_data.dart';
 import '../../models/product/product_detail_model.dart';
 import '../../theme/app_colors.dart';
+import '../common/voucher_select_chip.dart';
 
 class ShopItemCard extends StatelessWidget {
   final ProductDetailModel productDetail;
@@ -10,6 +11,7 @@ class ShopItemCard extends StatelessWidget {
   final int quantity;
   final String imageUrl;
   final String Function(double) formatCurrency;
+  final VoidCallback? onShopVoucherPressed;
 
   const ShopItemCard({
     super.key,
@@ -18,6 +20,7 @@ class ShopItemCard extends StatelessWidget {
     required this.quantity,
     required this.imageUrl,
     required this.formatCurrency,
+    this.onShopVoucherPressed,
   });
 
   @override
@@ -26,7 +29,12 @@ class ShopItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _TitleRow(icon: LucideIcons.store, title: CheckoutMockData.shopName),
+          _TitleRow(
+            icon: LucideIcons.store,
+            title: productDetail.shopProfile.name.isNotEmpty
+                ? productDetail.shopProfile.name
+                : CheckoutMockData.shopName,
+          ),
           const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +66,22 @@ class ShopItemCard extends StatelessWidget {
           const SizedBox(height: 12),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           const SizedBox(height: 10),
-          _ActionRow(icon: LucideIcons.ticket, title: 'Mã giảm giá của shop', trailing: CheckoutMockData.shopVoucherLabel),
+          InkWell(
+            onTap: onShopVoucherPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Icon(LucideIcons.ticket, color: AppColors.primary, size: 16),
+                    SizedBox(width: 8),
+                    Text('Mã giảm giá của shop', style: TextStyle(fontSize: 12.5, color: Color(0xFF334155))),
+                  ],
+                ),
+                const VoucherSelectChip(),
+              ],
+            ),
+          ),
           const SizedBox(height: 10),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           const SizedBox(height: 10),
@@ -74,7 +97,18 @@ class ShopItemCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   Text(CheckoutMockData.shippingDate, style: const TextStyle(fontSize: 11, color: Color(0xFF64748B))),
-                  Text('${CheckoutMockData.shippingFee}đ    Miễn phí', style: const TextStyle(fontSize: 11, color: Color(0xFF0F172A))),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF0F172A)),
+                      children: [
+                        TextSpan(text: '${CheckoutMockData.shippingFee}đ    '),
+                        const TextSpan(
+                          text: 'Miễn phí',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      ],
+                    ),
+                  ),
                 ]),
               ],
             ),

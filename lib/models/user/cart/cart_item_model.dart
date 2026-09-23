@@ -49,20 +49,3 @@ class CartItemModel {
     );
   }
 }
-
-class CartMockData {
-  static const List<CartItemModel> sampleItems = [
-    CartItemModel(
-      id: 'cart_omega3',
-      shopName: 'VietMade Store',
-      name: 'Omega 3-6-9 Healthy Care 200 viên',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/order_product_mock_qiuzdo.webp',
-      brand: 'Healthy Care',
-      variantInfo: 'Đã chọn: Size: M',
-      price: 420000,
-      originalPrice: 480000,
-      quantity: 1,
-      isSelected: true,
-    ),
-  ];
-}

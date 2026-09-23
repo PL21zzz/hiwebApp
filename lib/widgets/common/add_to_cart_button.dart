@@ -51,7 +51,7 @@ class AddToCartButton extends StatelessWidget {
       if (product != null) {
         itemToAdd = CartItemModel(
           id: product!.id,
-          shopName: 'VietMade Store',
+          shopName: product!.shopName,
           name: product!.name,
           imageUrl: product!.imageUrl,
           brand: 'VietMade',
@@ -62,7 +62,20 @@ class AddToCartButton extends StatelessWidget {
           isSelected: true,
         );
       } else {
-        itemToAdd = CartMockData.sampleItems[0];
+        final mockProduct = ProductModel.mockCartProducts[0];
+        itemToAdd = CartItemModel(
+          id: mockProduct.id,
+          shopName: mockProduct.shopName,
+          name: mockProduct.name,
+          imageUrl: mockProduct.imageUrl,
+          brand: mockProduct.shopName,
+          variantInfo: mockProduct.variantOptions.isNotEmpty
+              ? 'Đã chọn: ${mockProduct.variantOptions.first}'
+              : 'Đã chọn: Mặc định',
+          price: mockProduct.price.toInt(),
+          originalPrice: mockProduct.originalPrice.toInt(),
+          isSelected: true,
+        );
       }
 
       CartService.instance.addToCart(itemToAdd);

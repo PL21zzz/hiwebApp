@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../services/auth_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../../widgets/common/top_notification.dart';
 
 class CoinScreen extends StatefulWidget {
@@ -46,7 +47,7 @@ class _CoinScreenState extends State<CoinScreen> {
           color: isToday ? const Color(0xFFF0F9FF) : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isToday ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0),
+            color: isToday ? AppColors.primary : const Color(0xFFE2E8F0),
             width: isToday ? 1.5 : 1,
           ),
         ),
@@ -57,7 +58,7 @@ class _CoinScreenState extends State<CoinScreen> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: isToday ? const Color(0xFF0097B2) : const Color(0xFF475569),
+                color: isToday ? AppColors.primary : const Color(0xFF475569),
               ),
             ),
             const SizedBox(height: 6),
@@ -95,7 +96,7 @@ class _CoinScreenState extends State<CoinScreen> {
               style: TextStyle(
                 fontSize: 10.5,
                 fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
-                color: isToday ? const Color(0xFF0097B2) : const Color(0xFF94A3B8),
+                color: isToday ? AppColors.primary : const Color(0xFF94A3B8),
               ),
             ),
           ],
@@ -117,9 +118,9 @@ class _CoinScreenState extends State<CoinScreen> {
         backgroundColor: const Color(0xFFF1F5F9),
         body: Column(
           children: [
-            // Top Cyan Header Section matching media_1789982981383.png
+            // Top Header Section
             Container(
-              color: const Color(0xFF0097B2),
+              color: AppColors.header,
               child: SafeArea(
                 bottom: false,
                 child: Padding(
@@ -269,7 +270,7 @@ class _CoinScreenState extends State<CoinScreen> {
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic,
-                                    color: Color(0xFF0097B2),
+                                    color: AppColors.primary,
                                   ),
                                 ),
                                 const SizedBox(height: 14),
@@ -293,7 +294,7 @@ class _CoinScreenState extends State<CoinScreen> {
                                   child: ElevatedButton(
                                     onPressed: _claimDailyCoins,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF0097B2),
+                                      backgroundColor: AppColors.primary,
                                       foregroundColor: Colors.white,
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
@@ -323,7 +324,7 @@ class _CoinScreenState extends State<CoinScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF0097B2),
+                              color: AppColors.primary,
                             ),
                           ),
                           const SizedBox(height: 10),

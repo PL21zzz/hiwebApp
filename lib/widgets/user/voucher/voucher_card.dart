@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/voucher/voucher_model.dart';
+import '../../../theme/app_colors.dart';
 import '../../common/top_notification.dart';
 
 class VoucherCard extends StatelessWidget {
@@ -46,7 +47,7 @@ class VoucherCard extends StatelessWidget {
                 ),
                 child: const Icon(
                   LucideIcons.ticket,
-                  color: Color(0xFF0097B2),
+                  color: AppColors.primary,
                   size: 22,
                 ),
               ),
@@ -96,7 +97,7 @@ class VoucherCard extends StatelessWidget {
                           'Điều Kiện',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF0097B2),
+                            color: AppColors.primary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -123,7 +124,7 @@ class VoucherCard extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0097B2),
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -162,7 +163,7 @@ class VoucherCard extends StatelessWidget {
                       voucher.isSaved ? Icons.bookmark : LucideIcons.bookmark,
                       size: 14,
                       color: voucher.isSaved
-                          ? const Color(0xFF0097B2)
+                          ? AppColors.primary
                           : const Color(0xFF475569),
                     ),
                     label: Text(
@@ -171,14 +172,14 @@ class VoucherCard extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: voucher.isSaved
-                            ? const Color(0xFF0097B2)
+                            ? AppColors.primary
                             : const Color(0xFF475569),
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
                         color: voucher.isSaved
-                            ? const Color(0xFF0097B2)
+                            ? AppColors.primary
                             : const Color(0xFFCBD5E1),
                       ),
                       shape: RoundedRectangleBorder(

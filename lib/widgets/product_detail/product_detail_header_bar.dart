@@ -62,7 +62,7 @@ class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWid
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primary,
+      color: AppColors.header,
       child: SafeArea(
         bottom: false,
         child: Container(

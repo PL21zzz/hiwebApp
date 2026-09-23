@@ -6,8 +6,9 @@ import '../../theme/app_colors.dart';
 class VoucherCoinsCard extends StatelessWidget {
   final bool useCoins;
   final ValueChanged<bool> onUseCoinsChanged;
+  final VoidCallback? onVoucherPressed;
 
-  const VoucherCoinsCard({super.key, required this.useCoins, required this.onUseCoinsChanged});
+  const VoucherCoinsCard({super.key, required this.useCoins, required this.onUseCoinsChanged, this.onVoucherPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,17 @@ class VoucherCoinsCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
       child: Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Row(children: [Icon(LucideIcons.ticket, color: AppColors.primary, size: 18), SizedBox(width: 8), Text('VietMade Voucher', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)))]),
-          Text(CheckoutMockData.vietMadeVoucherLabel, style: const TextStyle(fontSize: 11, color: Color(0xFF16A34A))),
-        ]),
+        InkWell(
+          onTap: onVoucherPressed,
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            const Row(children: [Icon(LucideIcons.ticket, color: AppColors.primary, size: 18), SizedBox(width: 8), Text('VietMade Voucher', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)))]),
+            const Row(children: [
+              Text(CheckoutMockData.vietMadeVoucherLabel, style: TextStyle(fontSize: 11, color: AppColors.primary)),
+              SizedBox(width: 3),
+              Icon(LucideIcons.chevronRight, size: 14, color: AppColors.primary),
+            ]),
+          ]),
+        ),
         const SizedBox(height: 12),
         const Divider(height: 1, color: Color(0xFFF1F5F9)),
         const SizedBox(height: 8),

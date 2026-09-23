@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/support/support_request_model.dart';
 import '../../../services/user/support_request_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../../widgets/common/reusable_info_card.dart';
 import '../../../widgets/common/vietmade_header.dart';
 import '../../../widgets/user/support/support_request_modal.dart';
@@ -96,7 +97,7 @@ class SupportRequestScreen extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () => SupportRequestModal.show(context),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0097B2),
+                                backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 minimumSize: const Size(double.infinity, 44),

@@ -132,7 +132,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: isMe ? const Color(0xFF116B81) : Colors.white,
+                  color: isMe ? AppColors.primary : Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: const Radius.circular(14),
                     topRight: const Radius.circular(14),
@@ -190,7 +190,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           children: [
             // 1. Header Bar
             Container(
-              color: AppColors.primary,
+              color: AppColors.header,
               child: SafeArea(
                 bottom: false,
                 child: Padding(

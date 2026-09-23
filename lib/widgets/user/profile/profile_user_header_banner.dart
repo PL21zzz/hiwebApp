@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/user_model.dart';
 import '../../../screens/user/address/address_screen.dart';
 import '../../../services/auth_service.dart';
+import '../../../theme/app_colors.dart';
 import 'profile_user_avatar.dart';
 
 class ProfileUserHeaderBanner extends StatelessWidget {
@@ -30,14 +31,14 @@ class ProfileUserHeaderBanner extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: const Color(0xFF0097B2)),
+            Icon(icon, size: 14, color: AppColors.primary),
             const SizedBox(width: 4),
             Text(
               label,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF0097B2),
+                color: AppColors.primary,
               ),
             ),
           ],

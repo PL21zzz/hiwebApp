@@ -3,10 +3,10 @@ import '../services/auth_service.dart';
 import '../widgets/common/vietmade_bottom_nav_bar.dart';
 import 'auth/account_screen.dart';
 import 'auth/login_screen.dart';
-import 'cart/cart_screen.dart';
 import 'category/categories_screen.dart';
 import 'home_screen.dart';
 import 'video/video_feed_screen.dart';
+import 'notification/notifications_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final int initialIndex;
@@ -48,7 +48,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     HomeScreen(),
     CategoriesScreen(),
     VideoFeedScreen(),
-    CartScreen(),
+    NotificationsScreen(),
     AccountScreen(),
   ];
 
@@ -63,14 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         selectedIndex: _currentIndex,
         onTap: (index) {
           if (index == 3) {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const CartScreen(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            setState(() => _currentIndex = index);
           } else if (index == 4) {
             if (!AuthService.instance.isLoggedIn) {
               Navigator.of(context).push(

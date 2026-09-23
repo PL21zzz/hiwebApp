@@ -8,7 +8,7 @@ class AuthHeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primary,
+      color: AppColors.header,
       child: SafeArea(
         bottom: false,
         child: Padding(

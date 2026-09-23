@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../models/checkout/checkout_mock_data.dart';
 import '../../models/product/product_detail_model.dart';
+import '../../models/user/address/address_model.dart';
+import '../../models/user/voucher/voucher_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/user/address_service.dart';
 import '../../theme/app_colors.dart';
@@ -11,6 +13,7 @@ import '../../widgets/checkout/shipping_info_card.dart';
 import '../../widgets/checkout/shop_item_card.dart';
 import '../../widgets/checkout/voucher_coins_card.dart';
 import '../../widgets/common/top_notification.dart';
+import '../../widgets/user/cart/cart_voucher_bottom_sheet.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final ProductDetailModel productDetail;
@@ -95,6 +98,47 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _phoneController.text.trim().isNotEmpty &&
       _addressController.text.trim().isNotEmpty;
 
+  void _showVietMadeVouchers() {
+    CartVoucherBottomSheet.show(
+      context,
+      title: 'VietMade Voucher',
+      vouchers: VoucherItemModel.mockVouchers
+          .where((voucher) => voucher.category == 'vietmade')
+          .toList(),
+    );
+  }
+
+  void _showShopVouchers() {
+    CartVoucherBottomSheet.show(
+      context,
+      title: 'Voucher của shop',
+      vouchers: VoucherItemModel.mockVouchers
+          .where((voucher) => voucher.category == 'shop')
+          .toList(),
+    );
+  }
+
+  void _openAddressSelection() {
+    final addresses = AddressService.instance.addresses;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _AddressSelectionSheet(
+        addresses: addresses,
+        onSelected: _selectAddress,
+      ),
+    );
+  }
+
+  void _selectAddress(AddressModel address) {
+    _nameController.text = address.fullName;
+    _emailController.text = address.email;
+    _phoneController.text = address.phone;
+    _addressController.text = address.fullAddress;
+    setState(() {});
+  }
+
   String _imageUrl() {
     final media = widget.productDetail.mediaList;
     final images = media.where((item) => !item.isVideo).toList();
@@ -153,7 +197,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.header,
         elevation: 0,
         leading: IconButton(icon: const Icon(LucideIcons.chevronLeft, color: Colors.white), onPressed: () => Navigator.of(context).pop()),
         title: const Text('Thanh toán', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
@@ -162,26 +206,164 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         child: Column(children: [
-          ShippingInfoCard(
-            isLoggedIn: AuthService.instance.isLoggedIn,
-            hideProductName: _hideProductName,
-            nameController: _nameController,
-            emailController: _emailController,
-            phoneController: _phoneController,
-            addressController: _addressController,
-            onHideProductNameChanged: (value) => setState(() => _hideProductName = value),
-            onChanged: () => setState(() {}),
+          ListenableBuilder(
+            listenable: AddressService.instance,
+            builder: (context, _) {
+              final address = AddressService.instance.defaultAddress;
+              if (address != null && _addressController.text != address.fullAddress) {
+                _nameController.text = address.fullName;
+                _emailController.text = address.email;
+                _phoneController.text = address.phone;
+                _addressController.text = address.fullAddress;
+              }
+              return ShippingInfoCard(
+                isLoggedIn: AuthService.instance.isLoggedIn,
+                selectedAddress: address,
+                onAddressPressed: _openAddressSelection,
+                hideProductName: _hideProductName,
+                nameController: _nameController,
+                emailController: _emailController,
+                phoneController: _phoneController,
+                addressController: _addressController,
+                onHideProductNameChanged: (value) => setState(() => _hideProductName = value),
+                onChanged: () => setState(() {}),
+              );
+            },
           ),
           const SizedBox(height: 12),
-          ShopItemCard(productDetail: widget.productDetail, selectedVariant: widget.selectedVariant, quantity: widget.quantity, imageUrl: _imageUrl(), formatCurrency: _formatCurrency),
+          ShopItemCard(productDetail: widget.productDetail, selectedVariant: widget.selectedVariant, quantity: widget.quantity, imageUrl: _imageUrl(), formatCurrency: _formatCurrency, onShopVoucherPressed: _showShopVouchers),
           const SizedBox(height: 12),
-          VoucherCoinsCard(useCoins: _useCoins, onUseCoinsChanged: (value) => setState(() => _useCoins = value)),
+          VoucherCoinsCard(useCoins: _useCoins, onUseCoinsChanged: (value) => setState(() => _useCoins = value), onVoucherPressed: _showVietMadeVouchers),
           const SizedBox(height: 12),
           PaymentMethodCard(paymentMethod: _paymentMethod, onPaymentMethodChanged: (value) => setState(() => _paymentMethod = value)),
           const SizedBox(height: 90),
         ]),
       ),
       bottomNavigationBar: CheckoutBottomBar(totalLabel: _formatCurrency(_totalPrice), savingsLabel: 'Tiết kiệm ${_formatCurrency(_savedAmount)}', isValid: _isFormValid, onPlaceOrder: _handlePlaceOrder),
+    );
+  }
+}
+
+class _AddressSelectionSheet extends StatelessWidget {
+  final List<AddressModel> addresses;
+  final ValueChanged<AddressModel> onSelected;
+
+  const _AddressSelectionSheet({
+    required this.addresses,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Container(
+        constraints: const BoxConstraints(maxHeight: 560),
+        decoration: const BoxDecoration(
+          color: Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              width: 38,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFCBD5E1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Chọn địa chỉ nhận hàng',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(LucideIcons.x, size: 20),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            if (addresses.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(28),
+                child: Text(
+                  'Bạn chưa thiết lập địa chỉ nào',
+                  style: TextStyle(color: Color(0xFF64748B)),
+                ),
+              )
+            else
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(14),
+                  itemCount: addresses.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    final address = addresses[index];
+                    return InkWell(
+                      onTap: () {
+                        onSelected(address);
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: address.isDefault
+                                ? AppColors.primary
+                                : const Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(LucideIcons.mapPin, size: 17, color: AppColors.primary),
+                            const SizedBox(width: 9),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${address.fullName}  |  ${address.phone}',
+                                    style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(address.fullAddress, style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+                                ],
+                              ),
+                            ),
+                            if (address.isDefault)
+                              const Text(
+                                'Mặc định',
+                                style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: AppColors.primary),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

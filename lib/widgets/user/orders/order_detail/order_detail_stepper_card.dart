@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../models/user/orders/order_detail_model.dart';
+import '../../../../theme/app_colors.dart';
 
 class OrderDetailStepperCard extends StatelessWidget {
   final OrderDetailModel detail;
@@ -16,7 +17,7 @@ class OrderDetailStepperCard extends StatelessWidget {
     required bool isCompleted,
     required bool isActive,
   }) {
-    final circleBg = isCompleted || isActive ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0);
+    final circleBg = isCompleted || isActive ? AppColors.primary : const Color(0xFFE2E8F0);
     final iconColor = isCompleted || isActive ? Colors.white : const Color(0xFF94A3B8);
     final textColor = isCompleted || isActive ? const Color(0xFF0F172A) : const Color(0xFF94A3B8);
 
@@ -50,7 +51,7 @@ class OrderDetailStepperCard extends StatelessWidget {
       child: Container(
         height: 2,
         margin: const EdgeInsets.only(bottom: 20),
-        color: isCompleted ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0),
+        color: isCompleted ? AppColors.primary : const Color(0xFFE2E8F0),
       ),
     );
   }
@@ -131,7 +132,7 @@ class OrderDetailStepperCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0097B2),
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../services/user/cart_service.dart';
+import '../../../theme/app_colors.dart';
 
 class CartCheckoutBottomBar extends StatelessWidget {
   final VoidCallback? onCheckoutPressed;
+  final VoidCallback? onVoucherPressed;
 
   const CartCheckoutBottomBar({
     super.key,
     this.onCheckoutPressed,
+    this.onVoucherPressed,
   });
 
   String _formatPrice(int value) {
@@ -15,11 +18,7 @@ class CartCheckoutBottomBar extends StatelessWidget {
   }
 
   String _formatSavings(int value) {
-    if (value >= 1000) {
-      final k = (value / 1000).round();
-      return 'Tiết kiệm ${k}k';
-    }
-    return 'Tiết kiệm $valueđ';
+    return 'Tiết kiệm ${_formatPrice(value)}';
   }
 
   @override
@@ -42,15 +41,20 @@ class CartCheckoutBottomBar extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Row 1: VietMade Voucher
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                child: Row(
-                  children: [
-                    const Icon(LucideIcons.ticket, size: 16, color: Color(0xFF0097B2)),
+          child: SafeArea(
+            top: false,
+            minimum: const EdgeInsets.only(bottom: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Row 1: VietMade Voucher
+              InkWell(
+                onTap: onVoucherPressed,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  child: Row(
+                    children: [
+                    const Icon(LucideIcons.ticket, size: 16, color: AppColors.primary),
                     const SizedBox(width: 8),
                     const Text(
                       'VietMade Voucher',
@@ -60,26 +64,27 @@ class CartCheckoutBottomBar extends StatelessWidget {
                         color: Color(0xFF0F172A),
                       ),
                     ),
-                    const Spacer(),
-                    Container(
+                      const Spacer(),
+                      Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF0F9FF),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF0284C7), width: 0.8),
+                        border: Border.all(color: AppColors.primary, width: 0.8),
                       ),
                       child: const Row(
                         children: [
                           Text(
                             'Miễn phí vận chuyển',
-                            style: TextStyle(fontSize: 11, color: Color(0xFF0284C7)),
+                            style: TextStyle(fontSize: 11, color: AppColors.primary),
                           ),
                           SizedBox(width: 2),
-                          Icon(LucideIcons.chevronRight, size: 13, color: Color(0xFF0284C7)),
+                          Icon(LucideIcons.chevronRight, size: 13, color: AppColors.primary),
                         ],
                       ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Divider(height: 1, color: Color(0xFFF1F5F9)),
@@ -119,7 +124,7 @@ class CartCheckoutBottomBar extends StatelessWidget {
                       scale: 0.8,
                       child: Switch(
                         value: cart.useXu,
-                        activeColor: const Color(0xFF0097B2),
+                        activeColor: AppColors.primary,
                         onChanged: (val) {
                           CartService.instance.toggleUseXu(val);
                         },
@@ -144,7 +149,7 @@ class CartCheckoutBottomBar extends StatelessWidget {
                           height: 28,
                           child: Checkbox(
                             value: isAllSelected,
-                            activeColor: const Color(0xFF0097B2),
+                            activeColor: AppColors.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -221,8 +226,9 @@ class CartCheckoutBottomBar extends StatelessWidget {
               ),
             ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    },
+  );
   }
 }

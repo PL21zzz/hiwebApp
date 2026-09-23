@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class OrderStatusTab {
   final String id;
@@ -91,7 +92,7 @@ class _OrderStatusTabsState extends State<OrderStatusTabs> {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: isSelected ? const Color(0xFF0097B2) : Colors.transparent,
+                    color: isSelected ? AppColors.primary : Colors.transparent,
                     width: 2.5,
                   ),
                 ),
@@ -103,7 +104,7 @@ class _OrderStatusTabsState extends State<OrderStatusTabs> {
                     tab.label,
                     style: TextStyle(
                       fontSize: 12.5,
-                      color: isSelected ? const Color(0xFF0097B2) : const Color(0xFF64748B),
+                      color: isSelected ? AppColors.primary : const Color(0xFF64748B),
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
@@ -112,7 +113,7 @@ class _OrderStatusTabsState extends State<OrderStatusTabs> {
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF0097B2).withValues(alpha: 0.1)
+                          ? AppColors.primary.withValues(alpha: 0.1)
                           : const Color(0xFFF1F5F9),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -121,7 +122,7 @@ class _OrderStatusTabsState extends State<OrderStatusTabs> {
                       style: TextStyle(
                         fontSize: 10.5,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                        color: isSelected ? const Color(0xFF0097B2) : const Color(0xFF94A3B8),
+                        color: isSelected ? AppColors.primary : const Color(0xFF94A3B8),
                       ),
                     ),
                   ),

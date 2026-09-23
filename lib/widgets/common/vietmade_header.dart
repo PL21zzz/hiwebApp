@@ -81,7 +81,7 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
         statusBarBrightness: Brightness.dark,
       ),
       child: Container(
-        color: AppColors.primary,
+        color: AppColors.header,
         child: SafeArea(
           bottom: false,
           child: Container(

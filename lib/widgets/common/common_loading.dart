@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/app_colors.dart';
 
 class CommonLoading extends StatelessWidget {
   final String message;
@@ -8,7 +9,7 @@ class CommonLoading extends StatelessWidget {
   const CommonLoading({
     super.key,
     this.message = 'Đang tải...',
-    this.color = const Color(0xFF0097B2),
+    this.color = AppColors.primary,
     this.size = 28,
   });
 

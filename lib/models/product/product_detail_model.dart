@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'product_model.dart';
+import '../user/cart/cart_item_model.dart';
 
 class ProductMediaModel {
   final String type; // 'video' | 'image'
@@ -216,6 +217,46 @@ class ProductDetailModel {
     );
   }
 
+  factory ProductDetailModel.fromCartItem(CartItemModel item) {
+    final mock = ProductDetailModel.mockSample;
+    return ProductDetailModel(
+      id: item.id,
+      name: item.name,
+      price: item.price.toDouble(),
+      originalPrice: item.originalPrice.toDouble(),
+      discountPercent: item.originalPrice > 0
+          ? ((item.originalPrice - item.price) * 100 / item.originalPrice).round()
+          : 0,
+      rating: mock.rating,
+      reviewCount: mock.reviewCount,
+      soldCount: mock.soldCount,
+      bestSellerBadge: mock.bestSellerBadge,
+      capacityOptions: const [],
+      vouchers: mock.vouchers,
+      mediaList: [
+        ProductMediaModel(
+          type: 'image',
+          url: item.imageUrl,
+          thumb: item.imageUrl,
+          title: item.name,
+        ),
+      ],
+      tickerItems: mock.tickerItems,
+      specifications: mock.specifications,
+      shortDescription: mock.shortDescription,
+      fullDescription: mock.fullDescription,
+      reviews: mock.reviews,
+      shopProfile: ShopProfileModel(
+        name: item.shopName,
+        avatarUrl: mock.shopProfile.avatarUrl,
+        lastActive: mock.shopProfile.lastActive,
+        rating: mock.shopProfile.rating,
+        responseRate: mock.shopProfile.responseRate,
+      ),
+      otherShopProducts: mock.otherShopProducts,
+    );
+  }
+
   // Mock data instance matching Cetaphil Product Detail
   static const ProductDetailModel mockSample = ProductDetailModel(
     id: 'p1',
@@ -419,6 +460,42 @@ class ProductDetailModel {
           ),
         ],
         helpfulCount: 5,
+      ),
+      ProductReviewModel(
+        userName: 'Phương*** Linh',
+        userAvatar: '',
+        rating: 5,
+        date: 'Hữu ích (3)',
+        variant: 'Phân loại: 100g',
+        comment: 'Sản phẩm chính hãng, giao hàng nhanh, sẽ mua lại lần sau.',
+        helpfulCount: 3,
+      ),
+      ProductReviewModel(
+        userName: 'Huy*** Khoa',
+        userAvatar: '',
+        rating: 4,
+        date: 'Hữu ích (2)',
+        variant: 'Phân loại: 250g',
+        comment: 'Đóng gói kỹ, chất lượng ổn trong tầm giá.',
+        helpfulCount: 2,
+      ),
+      ProductReviewModel(
+        userName: 'Mai*** Chi',
+        userAvatar: '',
+        rating: 3,
+        date: 'Hữu ích (1)',
+        variant: 'Phân loại: 100g',
+        comment: 'Giao hơi lâu nhưng sản phẩm không bị hư hỏng.',
+        helpfulCount: 1,
+      ),
+      ProductReviewModel(
+        userName: 'Lan*** Anh',
+        userAvatar: '',
+        rating: 5,
+        date: 'Hữu ích (4)',
+        variant: 'Phân loại: 453g',
+        comment: 'Kem dễ dùng, da mềm hơn sau vài ngày.',
+        helpfulCount: 4,
       ),
     ],
     shopProfile: ShopProfileModel(

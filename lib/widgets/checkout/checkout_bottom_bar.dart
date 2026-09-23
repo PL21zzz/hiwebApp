@@ -15,6 +15,8 @@ class CheckoutBottomBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, -3))]),
       child: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.only(bottom: 4),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(totalLabel, style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.bold, color: Color(0xFFEF4444))),

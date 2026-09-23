@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../theme/app_colors.dart';
 
 class LocationSearchPickerModal extends StatefulWidget {
   final String title;
@@ -84,9 +85,11 @@ class _LocationSearchPickerModalState
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
           // Drag handle
           Container(
             width: 36,
@@ -214,7 +217,7 @@ class _LocationSearchPickerModalState
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                             color: isSelected
-                                ? const Color(0xFF0097B2)
+                                ? AppColors.primary
                                 : const Color(0xFF334155),
                           ),
                         ),
@@ -222,7 +225,7 @@ class _LocationSearchPickerModalState
                             ? const Icon(
                                 LucideIcons.check,
                                 size: 18,
-                                color: Color(0xFF0097B2),
+                                color: AppColors.primary,
                               )
                             : null,
                         onTap: () {
@@ -234,6 +237,7 @@ class _LocationSearchPickerModalState
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

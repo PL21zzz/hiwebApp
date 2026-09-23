@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../screens/auth/account_screen.dart';
 import '../../screens/auth/login_screen.dart';
-import '../../screens/cart/cart_screen.dart';
+import '../../screens/notification/notifications_screen.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
 
@@ -38,7 +38,7 @@ class VietmadeBottomNavBar extends StatelessWidget {
             Navigator.of(context).push(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    const CartScreen(),
+                    const NotificationsScreen(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),
@@ -110,8 +110,8 @@ class VietmadeBottomNavBar extends StatelessWidget {
             children: [
               _buildNavItem(context, icon: LucideIcons.home, label: 'Trang chủ', index: 0),
               _buildNavItem(context, icon: LucideIcons.layoutGrid, label: 'Danh mục', index: 1),
-              _buildNavItem(context, icon: LucideIcons.video, label: 'Video', index: 2),
-              _buildNavItem(context, icon: LucideIcons.shoppingCart, label: 'Giỏ hàng', index: 3),
+              _buildNavItem(context, icon: LucideIcons.clapperboard, label: 'Video', index: 2),
+              _buildNavItem(context, icon: LucideIcons.bell, label: 'Thông báo', index: 3),
               _buildNavItem(context, icon: LucideIcons.user, label: 'Tài khoản', index: 4),
             ],
           ),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/product/product_detail_model.dart';
 import '../../models/user/cart/cart_item_model.dart';
+import '../../models/user/voucher/voucher_model.dart';
 import '../../services/user/cart_service.dart';
 import '../../theme/app_colors.dart';
+import '../checkout/checkout_screen.dart';
 import '../../widgets/user/cart/cart_checkout_bottom_bar.dart';
 import '../../widgets/user/cart/cart_header_bar.dart';
 import '../../widgets/user/cart/cart_shop_group_card.dart';
+import '../../widgets/user/cart/cart_voucher_bottom_sheet.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -22,6 +26,24 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {
       _isEditing = !_isEditing;
     });
+  }
+
+  void _handleCheckout() {
+    final selectedItem = CartService.instance.items.firstWhere(
+      (item) => item.isSelected,
+    );
+
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => CheckoutScreen(
+          productDetail: ProductDetailModel.fromCartItem(selectedItem),
+          selectedVariant: selectedItem.variantInfo,
+          quantity: selectedItem.quantity,
+        ),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
   }
 
   @override
@@ -55,9 +77,8 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       CartCheckoutBottomBar(
-                        onCheckoutPressed: () {
-                          // TODO: Navigate to Order/Checkout screen
-                        },
+                        onCheckoutPressed: _handleCheckout,
+                        onVoucherPressed: _showVietMadeVouchers,
                       ),
                     ],
                   ),
@@ -78,9 +99,30 @@ class _CartScreenState extends State<CartScreen> {
         shopName: entry.key,
         items: entry.value,
         isEditing: _isEditing,
-        onToggleEdit: _toggleEdit,
+        onShopVoucherPressed: () => _showShopVouchers(entry.key),
       );
     }).toList();
+  }
+
+  void _showVietMadeVouchers() {
+    CartVoucherBottomSheet.show(
+      context,
+      title: 'VietMade Voucher',
+      vouchers: VoucherItemModel.mockVouchers
+          .where((voucher) => voucher.category == 'vietmade')
+          .toList(),
+    );
+  }
+
+  void _showShopVouchers(String shopName) {
+    CartVoucherBottomSheet.show(
+      context,
+      title: 'Voucher của $shopName',
+      shopName: shopName,
+      vouchers: VoucherItemModel.mockVouchers
+          .where((voucher) => voucher.category == 'shop')
+          .toList(),
+    );
   }
 
   Widget _buildEmptyState(BuildContext context) {
@@ -108,7 +150,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: Icon(
                   LucideIcons.shoppingBag,
                   size: 36,
-                  color: Color(0xFF0097B2),
+                  color: AppColors.primary,
                 ),
               ),
             ),

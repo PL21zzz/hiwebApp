@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/voucher/voucher_model.dart';
+import '../../../theme/app_colors.dart';
 import '../../../widgets/common/vietmade_header.dart';
 import '../../../widgets/user/voucher/voucher_card.dart';
 
@@ -128,9 +129,9 @@ class _VoucherVaultScreenState extends State<VoucherVaultScreen>
             child: TabBar(
               controller: _tabController,
               isScrollable: false,
-              indicatorColor: const Color(0xFF0097B2),
+              indicatorColor: AppColors.primary,
               indicatorWeight: 2.5,
-              labelColor: const Color(0xFF0097B2),
+              labelColor: AppColors.primary,
               unselectedLabelColor: const Color(0xFF475569),
               labelStyle: const TextStyle(
                 fontSize: 12.5,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../models/user/address/address_model.dart';
 import '../../theme/app_colors.dart';
 
 class ShippingInfoCard extends StatelessWidget {
@@ -11,6 +12,8 @@ class ShippingInfoCard extends StatelessWidget {
   final TextEditingController addressController;
   final ValueChanged<bool> onHideProductNameChanged;
   final VoidCallback onChanged;
+  final AddressModel? selectedAddress;
+  final VoidCallback? onAddressPressed;
 
   const ShippingInfoCard({
     super.key,
@@ -22,10 +25,21 @@ class ShippingInfoCard extends StatelessWidget {
     required this.addressController,
     required this.onHideProductNameChanged,
     required this.onChanged,
+    this.selectedAddress,
+    this.onAddressPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isLoggedIn) {
+      return _LoggedInAddressCard(
+        address: selectedAddress,
+        onPressed: onAddressPressed,
+        hideProductName: hideProductName,
+        onHideProductNameChanged: onHideProductNameChanged,
+      );
+    }
+
     return _CardShell(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,6 +62,76 @@ class ShippingInfoCard extends StatelessWidget {
           const SizedBox(height: 10),
           _Input(controller: addressController, hint: 'Địa chỉ nhận hàng *', maxLines: 2, onChanged: onChanged),
           const SizedBox(height: 10),
+          Row(
+            children: [
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: Checkbox(
+                  value: hideProductName,
+                  activeColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  onChanged: (value) => onHideProductNameChanged(value ?? false),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text('Che tên sản phẩm khi giao hàng', style: TextStyle(fontSize: 12.5, color: Color(0xFF1E293B))),
+              const SizedBox(width: 4),
+              const Icon(LucideIcons.helpCircle, size: 14, color: Color(0xFF94A3B8)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoggedInAddressCard extends StatelessWidget {
+  final AddressModel? address;
+  final VoidCallback? onPressed;
+  final bool hideProductName;
+  final ValueChanged<bool> onHideProductNameChanged;
+
+  const _LoggedInAddressCard({
+    required this.address,
+    required this.onPressed,
+    required this.hideProductName,
+    required this.onHideProductNameChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasAddress = address != null;
+    return _CardShell(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                const Icon(LucideIcons.mapPin, size: 16, color: AppColors.primary),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: hasAddress
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${address!.fullName}  (+84) ${address!.phone}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                            const SizedBox(height: 4),
+                            Text(address!.email, style: const TextStyle(fontSize: 10.5, color: Color(0xFF64748B))),
+                            const SizedBox(height: 3),
+                            Text(address!.fullAddress, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10.5, color: Color(0xFF64748B))),
+                          ],
+                        )
+                      : const Text('Chưa thiết lập địa chỉ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF64748B))),
+                ),
+                const Icon(LucideIcons.chevronRight, size: 18, color: Color(0xFF94A3B8)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
           Row(
             children: [
               SizedBox(

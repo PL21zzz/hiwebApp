@@ -140,7 +140,7 @@ class LoginFormCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF116B81),
+                    color: AppColors.primary,
                   ),
                 ),
               ),
@@ -216,7 +216,7 @@ class LoginFormCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF116B81),
+                    color: AppColors.primary,
                   ),
                 ),
               ),

@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import '../../../models/product/product_detail_model.dart';
 import '../../../models/product/product_model.dart';
 import '../../../screens/product/shop_detail_screen.dart';
+import '../../../theme/app_colors.dart';
 import '../overview/fullscreen_video_modal.dart';
 import 'horizontal_product_list_section.dart';
 
 class ProductReviewsTab extends StatefulWidget {
   final ScrollController? scrollController;
   final ProductDetailModel? productDetail;
+  final VoidCallback? onViewAllReviews;
 
   const ProductReviewsTab({
     super.key,
     this.scrollController,
     this.productDetail,
+    this.onViewAllReviews,
   });
 
   @override
@@ -232,102 +235,91 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
         // --- 1. Shop Profile Card ---
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.all(14),
-          child: Column(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: const Color(0xFF0284C7),
-                    child: Text(
-                      _detail.shopProfile.name.isNotEmpty
-                          ? _detail.shopProfile.name[0].toUpperCase()
-                          : 'P',
+              CircleAvatar(
+                radius: 17,
+                backgroundColor: AppColors.primary,
+                child: Text(
+                  _detail.shopProfile.name.isNotEmpty
+                      ? _detail.shopProfile.name[0].toUpperCase()
+                      : 'P',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 9),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _detail.shopProfile.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 11.5,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Color(0xFF1E293B),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 2),
+                    Text(
+                      '${_detail.shopProfile.followerCount} Theo dõi  ·  ${_detail.shopProfile.totalSold} Đã bán  ·  ${_detail.shopProfile.rating.toStringAsFixed(1)}',
+                      style: const TextStyle(
+                        fontSize: 9.5,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
                       children: [
+                        const Icon(Icons.access_time, size: 10, color: Color(0xFF94A3B8)),
+                        const SizedBox(width: 3),
                         Text(
-                          _detail.shopProfile.name,
+                          'Tham gia: ${_detail.shopProfile.joinedDuration}',
                           style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
+                            fontSize: 9.5,
+                            color: Color(0xFF94A3B8),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 1.5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE0F2FE),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                              child: const Text(
-                                'Chính hãng',
-                                style: TextStyle(
-                                  fontSize: 9.5,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF0284C7),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Đánh giá ${_detail.shopProfile.rating}',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Color(0xFF64748B),
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ShopDetailScreen(
-                            shop: _detail.shopProfile,
-                          ),
-                        ),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF0284C7)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ShopDetailScreen(
+                        shop: _detail.shopProfile,
                       ),
                     ),
-                    child: const Text(
-                      'Xem Shop',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0284C7),
-                      ),
-                    ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppColors.primary),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                ],
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text(
+                  'Xem Shop',
+                  style: TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
             ],
           ),
@@ -411,7 +403,7 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                     ),
                   ),
                   Text(
-                    'Hữu ích cho bạn',
+                    'Hiển thị 3 đánh giá',
                     style: const TextStyle(
                       fontSize: 9.5,
                       color: Color(0xFF94A3B8),
@@ -423,6 +415,7 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
 
               Column(
                 children: _detail.reviews
+                    .take(3)
                     .map((review) => _buildReviewCard(review))
                     .toList(),
               ),
@@ -432,7 +425,7 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                 width: double.infinity,
                 height: 32,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: widget.onViewAllReviews,
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.zero,
                     side: const BorderSide(color: Color(0xFFE2E8F0)),

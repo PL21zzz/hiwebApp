@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/orders/order_model.dart';
 import '../../../screens/user/orders/order_detail_screen.dart';
+import '../../../theme/app_colors.dart';
 
 class OrderCard extends StatelessWidget {
   final OrderModel order;
@@ -29,7 +30,7 @@ class OrderCard extends StatelessWidget {
       case 'canceled':
         return const Color(0xFFDC2626); // Red
       default:
-        return const Color(0xFF0097B2);
+        return AppColors.primary;
     }
   }
 
@@ -231,7 +232,7 @@ class OrderCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(LucideIcons.clock, size: 13, color: Color(0xFF0097B2)),
+                    const Icon(LucideIcons.clock, size: 13, color: AppColors.primary),
                     const SizedBox(width: 6),
                     const Text(
                       'Thời gian đặt hàng: 1 phút trước',
@@ -242,7 +243,7 @@ class OrderCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(LucideIcons.mapPin, size: 13, color: Color(0xFF0097B2)),
+                    const Icon(LucideIcons.mapPin, size: 13, color: AppColors.primary),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
@@ -279,10 +280,10 @@ class OrderCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF0097B2),
+                      color: AppColors.primary,
                     ),
                   ),
-                  Icon(LucideIcons.chevronRight, size: 16, color: Color(0xFF0097B2)),
+                  Icon(LucideIcons.chevronRight, size: 16, color: AppColors.primary),
                 ],
               ),
             ),

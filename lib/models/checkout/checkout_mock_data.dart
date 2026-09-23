@@ -1,5 +1,5 @@
 class CheckoutMockData {
-  static const int coinsBalance = 150000;
+  static const int coinsBalance = 150;
   static const int shippingFee = 22000;
   static const String shippingDate = 'Dự kiến từ 15/09 - 17/09';
   static const String shippingMethod = 'Giao hàng tiêu chuẩn';

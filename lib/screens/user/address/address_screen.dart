@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/address/address_model.dart';
 import '../../../services/user/address_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../../widgets/user/address/add_address_modal.dart';
 import '../../../widgets/common/confirm_dialog.dart';
 import '../../../widgets/common/reusable_info_card.dart';
@@ -88,7 +89,7 @@ class AddressScreen extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () => AddAddressModal.show(context),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0097B2),
+                                backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 minimumSize: const Size(double.infinity, 44),
@@ -128,11 +129,19 @@ class AddressScreen extends StatelessWidget {
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: address.isDefault ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0),
+          color: address.isDefault ? AppColors.primary : const Color(0xFFE2E8F0),
           width: address.isDefault ? 1.5 : 1,
         ),
       ),
-      child: Column(
+      child: InkWell(
+        onTap: isSelectMode
+            ? () {
+                onSelectAddress?.call(address);
+                Navigator.of(context).pop();
+              }
+            : null,
+        borderRadius: BorderRadius.circular(10),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -191,7 +200,7 @@ class AddressScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     'Thiết lập mặc định',
-                    style: TextStyle(fontSize: 11.5, color: Color(0xFF0097B2)),
+                    style: TextStyle(fontSize: 11.5, color: AppColors.primary),
                   ),
                 ),
               const SizedBox(width: 12),
@@ -217,6 +226,7 @@ class AddressScreen extends StatelessWidget {
             ],
           ),
         ],
+        ),
       ),
     );
   }

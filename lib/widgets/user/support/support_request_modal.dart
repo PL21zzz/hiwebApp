@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../models/user/support/support_request_model.dart';
 import '../../../services/user/support_request_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../common/top_notification.dart';
 import '../../common/vietmade_modal_container.dart';
 
@@ -125,10 +126,10 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
             shape: BoxShape.circle,
             color: isActive
                 ? Colors.white
-                : (isCompleted ? const Color(0xFF0097B2) : const Color(0xFFF1F5F9)),
+                : (isCompleted ? AppColors.primary : const Color(0xFFF1F5F9)),
             border: Border.all(
               color: isActive || isCompleted
-                  ? const Color(0xFF0097B2)
+                  ? AppColors.primary
                   : const Color(0xFFCBD5E1),
               width: 1.8,
             ),
@@ -141,7 +142,7 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: isActive ? const Color(0xFF0097B2) : const Color(0xFF64748B),
+                      color: isActive ? AppColors.primary : const Color(0xFF64748B),
                     ),
                   ),
           ),
@@ -152,7 +153,7 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
           style: TextStyle(
             fontSize: 10.5,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            color: isActive ? const Color(0xFF0097B2) : const Color(0xFF64748B),
+            color: isActive ? AppColors.primary : const Color(0xFF64748B),
           ),
         ),
       ],
@@ -164,7 +165,7 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
       child: Container(
         height: 2,
         margin: const EdgeInsets.only(bottom: 16),
-        color: isFinished ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0),
+        color: isFinished ? AppColors.primary : const Color(0xFFE2E8F0),
       ),
     );
   }
@@ -449,7 +450,7 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
                 onPressed: _goToStep3,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 42),
-                  backgroundColor: const Color(0xFF0097B2),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -561,7 +562,7 @@ class _SupportRequestModalState extends State<SupportRequestModal> {
                 ),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 42),
-                  backgroundColor: const Color(0xFF0097B2),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(

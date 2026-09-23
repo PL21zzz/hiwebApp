@@ -54,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: const Color(0xFF116B81), width: 1.2),
+                        border: Border.all(color: AppColors.primary, width: 1.2),
                       ),
                       child: Row(
                         children: [
@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF116B81),
+                          color: AppColors.primary,
                         ),
                       ),
                     ),

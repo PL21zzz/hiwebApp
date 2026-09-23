@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../theme/app_colors.dart';
 
 class ReusableInfoCard extends StatelessWidget {
   final String title;
@@ -54,7 +55,7 @@ class ReusableInfoCard extends StatelessWidget {
                 Icon(
                   titleIcon,
                   size: 20,
-                  color: const Color(0xFF0097B2),
+                  color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -62,7 +63,7 @@ class ReusableInfoCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF0097B2),
+                    color: AppColors.primary,
                   ),
                 ),
               ],
@@ -146,7 +147,7 @@ class ReusableInfoCard extends StatelessWidget {
                         ElevatedButton(
                           onPressed: onButtonPressed,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0097B2),
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(
