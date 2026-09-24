@@ -20,7 +20,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void initState() {
     super.initState();
-    CategoryService.instance.fetchRootCategories();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CategoryService.instance.fetchRootCategories();
+    });
   }
 
   @override

@@ -96,47 +96,26 @@ class ShopProfileModel {
   final int productCount;
   final String welcomeMessage;
 
+  static const List<String> mockRankBadges = ['Top Shop', 'Chính Hãng', 'Uy Tín'];
+  static const List<String> mockCategoryNames = ['Tất cả sản phẩm', 'Dưỡng da', 'Trang điểm', 'Chăm sóc tóc'];
+
   const ShopProfileModel({
     required this.name,
     required this.avatarUrl,
     required this.lastActive,
     required this.rating,
     required this.responseRate,
-    this.followerCount = 50,
-    this.totalSold = '2.3K',
-    this.joinedDuration = '1 năm trước',
+    this.followerCount = 12500,
+    this.totalSold = '15.8k+',
+    this.joinedDuration = '3 năm',
     this.isFavorite = true,
     this.coverUrl =
-        'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
-    this.videoCount = 1,
-    this.productCount = 18,
-    this.welcomeMessage = 'Chào bạn, shop có thể giúp gì cho bạn?',
+        'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+    this.videoCount = 24,
+    this.productCount = 158,
+    this.welcomeMessage =
+        'Chào mừng bạn đến với shop chính hãng! Chuyên cung cấp sản phẩm cao cấp 100%.',
   });
-
-  static const List<String> mockRankBadges = [
-    '#1 Bán chạy',
-    '#2 Bán chạy',
-    '#3 Bán chạy',
-    '#4 Bán chạy',
-    '#5 Bán chạy',
-    '#6 Bán chạy',
-  ];
-
-  static const List<String> mockCategoryNames = [
-    'Handmade',
-    'Quà tặng',
-    'Trang trí',
-    'Chăm sóc cá nhân',
-    'Dưỡng da & Chăm sóc da',
-    'Y tế & Thực phẩm chức năng',
-  ];
-}
-
-class ProductSpecificationModel {
-  final String title;
-  final String value;
-
-  const ProductSpecificationModel({required this.title, required this.value});
 }
 
 class ProductDetailModel {
@@ -155,7 +134,7 @@ class ProductDetailModel {
   final List<String> vouchers;
   final List<ProductMediaModel> mediaList;
   final List<TickerItemModel> tickerItems;
-  final List<ProductSpecificationModel> specifications;
+  final Map<String, String> specifications;
   final String shortDescription;
   final String fullDescription;
   final List<ProductReviewModel> reviews;
@@ -171,7 +150,7 @@ class ProductDetailModel {
     required this.rating,
     required this.reviewCount,
     required this.soldCount,
-    this.isFavorite = false,
+    this.isFavorite = true,
     required this.bestSellerBadge,
     required this.capacityOptions,
     this.variantLabel = 'Dung tích',
@@ -229,7 +208,44 @@ class ProductDetailModel {
                   : const ['S', 'M', 'L']),
       variantLabel: inferredLabel,
       vouchers: mock.vouchers,
-      mediaList: mock.mediaList,
+      mediaList: [
+        ProductMediaModel(
+          type: 'video',
+          url: 'assets/videos/videodetail.mp4',
+          thumb: product.imageUrl.isNotEmpty ? product.imageUrl : mock.mediaList[0].thumb,
+          title: 'Video sản phẩm 1',
+        ),
+        ProductMediaModel(
+          type: 'video',
+          url: 'assets/videos/videodetail.mp4',
+          thumb: mock.mediaList[1].thumb,
+          title: 'Video hướng dẫn 2',
+        ),
+        ProductMediaModel(
+          type: 'video',
+          url: 'assets/videos/videodetail.mp4',
+          thumb: mock.mediaList[2].thumb,
+          title: 'Video thực tế 3',
+        ),
+        ProductMediaModel(
+          type: 'image',
+          url: product.imageUrl.isNotEmpty ? product.imageUrl : mock.mediaList[3].url,
+          thumb: product.imageUrl.isNotEmpty ? product.imageUrl : mock.mediaList[3].thumb,
+          title: 'Ảnh 1',
+        ),
+        ProductMediaModel(
+          type: 'image',
+          url: mock.mediaList[4].url,
+          thumb: mock.mediaList[4].thumb,
+          title: 'Ảnh 2',
+        ),
+        ProductMediaModel(
+          type: 'image',
+          url: mock.mediaList[5].url,
+          thumb: mock.mediaList[5].thumb,
+          title: 'Ảnh 3',
+        ),
+      ],
       tickerItems: mock.tickerItems,
       specifications: mock.specifications,
       shortDescription: mock.shortDescription,
@@ -302,21 +318,21 @@ class ProductDetailModel {
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
+            'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500',
         title: 'Video sản phẩm 1',
       ),
       ProductMediaModel(
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
+            'https://images.unsplash.com/photo-1608248597261-833258657640?w=500',
         title: 'Video hướng dẫn 2',
       ),
       ProductMediaModel(
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
+            'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500',
         title: 'Video thực tế 3',
       ),
       ProductMediaModel(
@@ -358,71 +374,39 @@ class ProductDetailModel {
         text: 'Flash Sale kết thúc trong 2h',
       ),
       TickerItemModel(
-        icon: LucideIcons.checkCircle2,
+        icon: LucideIcons.truck,
         iconColor: Color(0xFF16A34A),
         bgColor: Color(0xFFF0FDF4),
-        text: 'Đánh giá 4.9/5 từ 128 đánh giá',
-      ),
-      TickerItemModel(
-        icon: LucideIcons.truck,
-        iconColor: Color(0xFF9333EA),
-        bgColor: Color(0xFFFAF5FF),
-        text: 'Miễn phí giao hàng toàn quốc',
-      ),
-      TickerItemModel(
-        icon: LucideIcons.eye,
-        iconColor: Color(0xFF0891B2),
-        bgColor: Color(0xFFECFEFF),
-        text: '6 người đang xem',
-      ),
-      TickerItemModel(
-        icon: LucideIcons.hourglass,
-        iconColor: Color(0xFFCA8A04),
-        bgColor: Color(0xFFFEFCE8),
-        text: 'Số lượng có hạn',
+        text: 'Miễn phí vận chuyển toàn quốc',
       ),
     ],
-    specifications: [
-      ProductSpecificationModel(
-        title: 'Thương hiệu:',
-        value: 'không thương hiệu',
-      ),
-      ProductSpecificationModel(title: 'Số lượng sản phẩm còn:', value: '157'),
-      ProductSpecificationModel(title: 'Xuất xứ:', value: 'Ấn Độ'),
-      ProductSpecificationModel(title: 'Kho hàng tại:', value: 'Nghệ An'),
-    ],
+    specifications: {
+      'Thương hiệu': 'Cetaphil',
+      'Xuất xứ thương hiệu': 'Canada',
+      'Nơi sản xuất': 'Canada',
+      'Dạng sản phẩm': 'Kem (Cream)',
+      'Dung tích': '453g',
+      'Hạn sử dụng': '36 tháng kể từ ngày sản xuất',
+    },
     shortDescription:
-        'Ezamic Gel Azelaic Acid 20% giúp dưỡng ẩm cho da, hỗ trợ điều trị mụn, mờ thâm, làm mờ sưng viêm, sạch da, ngừa mụn.\n\n'
-        'Hoạt chất: Azelaic Acid 20%\n\n'
-        'Hỗ trợ:\n'
-        '- Giúp dưỡng ẩm cho da, mờ thâm mụn rất nhanh nếu\n'
-        '- Mờ thâm đen và thâm đỏ sau mụn.\n'
-        '- Giảm mụn vừa và nhẹ.',
+        'Kem dưỡng ẩm Cetaphil Moisturizing Cream giúp cấp ẩm tức thì và duy trì độ ẩm suốt 48 giờ cho làn da khô đến rất khô, da nhạy cảm.',
     fullDescription:
-        'Ezamic Gel Azelaic Acid 20% giúp dưỡng ẩm cho da, hỗ trợ điều trị mụn, mờ thâm, làm mờ sưng viêm, sạch da, ngừa mụn.\n\n'
-        'Hoạt chất: Azelaic Acid 20%\n\n'
-        'Hỗ trợ:\n'
-        '- Giúp dưỡng ẩm cho da, mờ thâm mụn rất nhanh nếu\n'
-        '- Mờ thâm đen và thâm đỏ sau mụn.\n'
-        '- Giảm mụn vừa và nhẹ.\n\n'
-        'HƯỚNG DẪN SỬ DỤNG:\n'
-        'Thoa đều gel dưỡng ẩm lên vùng da khô cần chăm sóc hàng ngày sau khi làm sạch da. Sử dụng 1-2 lần/ngày vào buổi sáng và tối.',
+        'Công thức được bác sĩ da liễu thử nghiệm lâm sàng chứa thành phần Niacinamide (Vitamin B3), Panthenol (Pro-Vitamin B5) và Glycerin dưỡng ẩm giúp tăng cường hàng rào bảo vệ da nhạy cảm.\n\nĐặc điểm nổi bật:\n- Phục hồi hàng rào bảo vệ da hoàn toàn chỉ trong 1 tuần.\n- Không chứa hương liệu, không paraben, không làm bít tắc lỗ chân lông.\n- Phù hợp cho cả da mặt và toàn thân.',
     reviews: [
       ProductReviewModel(
-        userName: 'Mình*** Anh',
-        userAvatar: '',
+        userName: 'Nguyễn Văn A',
+        userAvatar:
+            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
         rating: 5,
-        date: 'Hữu ích (12)',
-        variant: 'Phân loại: 453g',
+        date: '20/08/2026',
+        variant: '453g',
         comment:
-            'Kem dưỡng ẩm tốt, chất kem mịn và thấm khá nhanh. Đóng gói cẩn thận, hàng nhận được giống hình.',
+          'Sản phẩm dùng rất thích, dưỡng ẩm cực tốt cho mùa đông. Giao hàng siêu nhanh!',
+        photos: [
+          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+        ],
         media: [
-          ProductReviewMediaModel(
-            url:
-                'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
-            isVideo: true,
-            videoUrl: 'assets/videos/videodetail.mp4',
-          ),
           ProductReviewMediaModel(
             url:
                 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
@@ -430,179 +414,73 @@ class ProductDetailModel {
           ProductReviewMediaModel(
             url:
                 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+          ),
+          ProductReviewMediaModel(
+            url:
+                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+            isVideo: true,
+            videoUrl:
+                'assets/videos/videodetail.mp4',
           ),
         ],
         helpfulCount: 12,
+        shopResponse:
+          'Cảm ơn bạn đã tin tưởng mua sắm tại Pharmacy! Chúc bạn luôn có làn da khỏe đẹp.',
       ),
       ProductReviewModel(
-        userName: 'Ngọc*** Hà',
-        userAvatar: '',
-        rating: 5,
-        date: 'Hữu ích (8)',
-        variant: 'Phân loại: 453g',
-        comment:
-            'Giao nhanh hơn dự kiến. Mình dùng buổi tối thấy da mềm hơn, không bị cảm giác quá bí.',
-        media: [
-          ProductReviewMediaModel(
-            url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
-          ),
-        ],
-        helpfulCount: 8,
-      ),
-      ProductReviewModel(
-        userName: 'Thu*** Trang',
-        userAvatar: '',
+        userName: 'Trần Thị B',
+        userAvatar:
+            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
         rating: 4,
-        date: 'Hữu ích (5)',
-        variant: 'Phân loại: 250g',
-        comment:
-            'Sản phẩm ổn, bao bì chắc chắn. Mùi nhẹ, mình thích. Trừ một sao vì hộp bên ngoài hơi móp khi nhận.',
+        date: '15/08/2026',
+        variant: '250g',
+        comment: 'Kem thấm nhanh, không bết dính. Đóng gói cẩn thận.',
+        photos: [
+          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+        ],
         media: [
-          ProductReviewMediaModel(
-            url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
-          ),
           ProductReviewMediaModel(
             url:
                 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
           ),
-          ProductReviewMediaModel(
-            url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
-          ),
         ],
         helpfulCount: 5,
-      ),
-      ProductReviewModel(
-        userName: 'Phương*** Linh',
-        userAvatar: '',
-        rating: 5,
-        date: 'Hữu ích (3)',
-        variant: 'Phân loại: 100g',
-        comment: 'Sản phẩm chính hãng, giao hàng nhanh, sẽ mua lại lần sau.',
-        helpfulCount: 3,
-      ),
-      ProductReviewModel(
-        userName: 'Huy*** Khoa',
-        userAvatar: '',
-        rating: 4,
-        date: 'Hữu ích (2)',
-        variant: 'Phân loại: 250g',
-        comment: 'Đóng gói kỹ, chất lượng ổn trong tầm giá.',
-        helpfulCount: 2,
-      ),
-      ProductReviewModel(
-        userName: 'Mai*** Chi',
-        userAvatar: '',
-        rating: 3,
-        date: 'Hữu ích (1)',
-        variant: 'Phân loại: 100g',
-        comment: 'Giao hơi lâu nhưng sản phẩm không bị hư hỏng.',
-        helpfulCount: 1,
-      ),
-      ProductReviewModel(
-        userName: 'Lan*** Anh',
-        userAvatar: '',
-        rating: 5,
-        date: 'Hữu ích (4)',
-        variant: 'Phân loại: 453g',
-        comment: 'Kem dễ dùng, da mềm hơn sau vài ngày.',
-        helpfulCount: 4,
       ),
     ],
     shopProfile: ShopProfileModel(
       name: 'Phương Thảo Pharmacy',
       avatarUrl:
-          'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=200&q=80',
-      lastActive: '5 phút trước',
+          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+      lastActive: 'Online 5 phút trước',
       rating: 4.9,
-      responseRate: '98%',
+      responseRate: '99%',
     ),
     otherShopProducts: [
       ProductModel(
-        id: 'osp1',
-        name: 'Acnedap Gel 15g Ngăn Ngừa Mụn Thâm Nhọt',
-        price: 235000,
-        originalPrice: 345000,
-        discountPercent: 32,
-        rating: 5,
-        soldCount: '3.6k+',
-        location: 'Nghệ An',
-        imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
-        category: 'Dưỡng da',
-        isFavorite: true,
-      ),
-      ProductModel(
-        id: 'osp2',
-        name: 'Kem Dưỡng Ẩm Zebor Gel Azelaic Acid 20%',
-        price: 165000,
-        originalPrice: 235000,
-        discountPercent: 32,
-        rating: 5,
-        soldCount: '3k+',
-        location: 'Nghệ An',
-        imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
-        category: 'Dưỡng da',
-        isFavorite: true,
-      ),
-      ProductModel(
-        id: 'osp3',
-        name: 'Acnedap Gel 15g Ngăn Ngừa Mụn Thâm Nhọt',
-        price: 235000,
-        originalPrice: 345000,
-        discountPercent: 32,
-        rating: 5,
-        soldCount: '3.6k+',
-        location: 'Nghệ An',
-        imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
-        category: 'Dưỡng da',
-        isFavorite: true,
-      ),
-      ProductModel(
-        id: 'osp4',
-        name: 'Serum Giảm Thâm Acne-Derm Azelaic Acid 20%',
-        price: 185000,
-        originalPrice: 260000,
-        discountPercent: 29,
+        id: 'p2',
+        name: 'Sữa rửa mặt Cetaphil Gentle Skin Cleanser 500ml',
+        price: 380000,
+        originalPrice: 420000,
+        discountPercent: 10,
         rating: 4.9,
-        soldCount: '2.1k+',
+        soldCount: '1.8k',
         location: 'Hà Nội',
         imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
-        category: 'Dưỡng da',
-        isFavorite: true,
-      ),
-      ProductModel(
-        id: 'osp5',
-        name: 'Kem Dưỡng Phục Hồi Da Skinavis Moisturizer 50ml',
-        price: 420000,
-        originalPrice: 550000,
-        discountPercent: 24,
-        rating: 5,
-        soldCount: '1.8k+',
-        location: 'Nghệ An',
-        imageUrl:
             'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
         category: 'Dưỡng da',
-        isFavorite: true,
       ),
       ProductModel(
-        id: 'osp6',
-        name: 'Gel Dưỡng Ngừa Mụn Megaduo Gel 15g',
-        price: 115000,
-        originalPrice: 160000,
-        discountPercent: 28,
+        id: 'p3',
+        name: 'Nước hoa hồng Cerave Hydrating Toner 200ml',
+        price: 320000,
+        originalPrice: 350000,
+        discountPercent: 9,
         rating: 4.8,
-        soldCount: '5.2k+',
-        location: 'Nghệ An',
+        soldCount: '950',
+        location: 'Hà Nội',
         imageUrl:
             'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
         category: 'Dưỡng da',
-        isFavorite: true,
       ),
     ],
   );

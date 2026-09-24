@@ -98,7 +98,7 @@ class OrderMockData {
       items: [
         OrderItemModel(
           name: '[Nhập khẩu] Nước Uống Hỗ Trợ Giải Rượu Condition CJ Hàn Quốc 75ml - Giảm Đau Đầu, Giải Độc Gan, Tỉnh Táo',
-          imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/order_product_mock_qiuzdo.webp',
+          imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
           quantity: 1,
           price: 49000,
         ),
@@ -116,7 +116,7 @@ class OrderMockData {
       items: [
         OrderItemModel(
           name: 'Áo Phông Nam Nữ Unisex Chất Liệu Cotton 100% Co Giãn 4 Chiều Thoáng Mát',
-          imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/order_product_mock_qiuzdo.webp',
+          imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
           quantity: 2,
           price: 120000,
         ),
@@ -134,7 +134,7 @@ class OrderMockData {
       items: [
         OrderItemModel(
           name: 'Trà Sâm Đứa Đặc Sản Miền Tây Hộp 500g',
-          imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/order_product_mock_qiuzdo.webp',
+          imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
           quantity: 1,
           price: 150000,
         ),

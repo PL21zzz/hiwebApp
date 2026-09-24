@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/auth/screens/account_screen.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
 import 'package:hiweb_app_management/features/chat/screens/messages_screen.dart';
@@ -206,13 +206,14 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                             (route) => false,
                           );
                         } else {
-                          Navigator.of(context).push(
+                          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) =>
-                                  const AccountScreen(),
+                                  const MainNavigationScreen(initialIndex: 4),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
+                            (route) => false,
                           );
                         }
                       },

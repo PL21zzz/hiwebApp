@@ -35,13 +35,21 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
     _controller?.dispose();
     _controller = null;
 
-    final controller = widget.video.videoUrl.startsWith('assets/')
-      ? VideoPlayerController.asset(widget.video.videoUrl)
-      : VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl));
+    final controller =
+        widget.video.videoUrl.startsWith('assets/')
+            ? VideoPlayerController.asset(widget.video.videoUrl)
+            : VideoPlayerController.networkUrl(
+              Uri.parse(widget.video.videoUrl),
+            );
     _controller = controller;
 
     try {
-      await controller.initialize().timeout(const Duration(seconds: 4));
+      final initialization = controller.initialize();
+      if (widget.video.videoUrl.startsWith('assets/')) {
+        await initialization;
+      } else {
+        await initialization.timeout(const Duration(seconds: 20));
+      }
       if (!mounted || _controller != controller) {
         controller.dispose();
         return;
@@ -118,7 +126,9 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
         fit: StackFit.expand,
         children: [
           // 1. Background Video / Thumbnail
-          if (_isInitialized && _controller != null && _controller!.value.isInitialized)
+          if (_isInitialized &&
+              _controller != null &&
+              _controller!.value.isInitialized)
             FittedBox(
               fit: BoxFit.cover,
               clipBehavior: Clip.hardEdge,
@@ -132,16 +142,23 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
             Image.network(
               widget.video.thumbnailUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFF1E293B),
-                child: const Center(
-                  child: Icon(Icons.play_circle_outline, size: 48, color: Colors.white70),
-                ),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(
+                    color: const Color(0xFF1E293B),
+                    child: const Center(
+                      child: Icon(
+                        Icons.play_circle_outline,
+                        size: 48,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
             ),
 
           // 2. Play Icon Overlay when paused
-          if (_isInitialized && _controller != null && !_controller!.value.isPlaying)
+          if (_isInitialized &&
+              _controller != null &&
+              !_controller!.value.isPlaying)
             Center(
               child: Container(
                 padding: const EdgeInsets.all(16),

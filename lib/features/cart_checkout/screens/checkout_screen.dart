@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/cart_checkout/models/checkout_mock_data.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
 import 'package:hiweb_app_management/features/user/address/models/address_model.dart';
+import 'package:hiweb_app_management/features/user/address/screens/address_screen.dart';
 import 'package:hiweb_app_management/features/user/orders/models/order_model.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/features/user/address/services/address_service.dart';
@@ -48,11 +49,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _useCoins = false;
   bool _isPlacingOrder = false;
   String _paymentMethod = 'cod';
+  String _selectedCountryCode = '+84';
 
   @override
   void initState() {
     super.initState();
+    _nameController.addListener(_onFormChanged);
+    _emailController.addListener(_onFormChanged);
+    _phoneController.addListener(_onFormChanged);
+    _addressController.addListener(_onFormChanged);
+    AddressService.instance.addListener(_onAddressServiceChanged);
     _autoFillUserInfo();
+  }
+
+  void _onFormChanged() {
+    if (mounted) setState(() {});
+  }
+
+  void _onAddressServiceChanged() {
+    if (mounted) {
+      _autoFillUserInfo();
+      setState(() {});
+    }
   }
 
   void _autoFillUserInfo() {
@@ -77,10 +95,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _phoneController.text = user.phoneNumber;
       _emailController.text = user.email;
     }
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    AddressService.instance.removeListener(_onAddressServiceChanged);
+    _nameController.removeListener(_onFormChanged);
+    _emailController.removeListener(_onFormChanged);
+    _phoneController.removeListener(_onFormChanged);
+    _addressController.removeListener(_onFormChanged);
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -171,6 +195,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return CheckoutMockData.fallbackImage;
   }
 
+  String _normalizePhone(String input) {
+    var digits = input.replaceAll(RegExp(r'\D'), '');
+    if (digits.length == 9) {
+      return '0$digits';
+    }
+    return digits;
+  }
+
   Future<void> _handlePlaceOrder() async {
     if (_isPlacingOrder) return;
     if (!_isFormValid) {
@@ -187,7 +219,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (!AuthService.instance.isLoggedIn) {
       final names = _nameController.text.trim().split(' ');
       final email = _emailController.text.trim();
-      final phone = _phoneController.text.trim();
+      final phone = _normalizePhone(_phoneController.text.trim());
       final username = email.split('@').first;
       if (!AuthService.instance.isUserNameTaken(username) &&
           !AuthService.instance.isEmailTaken(email) &&
@@ -339,6 +371,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   emailController: _emailController,
                   phoneController: _phoneController,
                   addressController: _addressController,
+                  selectedCountryCode: _selectedCountryCode,
+                  onCountryCodeChanged:
+                      (val) => setState(() => _selectedCountryCode = val),
                   onHideProductNameChanged:
                       (value) => setState(() => _hideProductName = value),
                   onChanged: () => setState(() {}),
@@ -443,10 +478,26 @@ class _AddressSelectionSheet extends StatelessWidget {
             const Divider(height: 1),
             if (addresses.isEmpty)
               const Padding(
-                padding: EdgeInsets.all(28),
-                child: Text(
-                  'Bạn chưa thiết lập địa chỉ nào',
-                  style: TextStyle(color: Color(0xFF64748B)),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                child: Column(
+                  children: [
+                    Icon(LucideIcons.mapPinOff, size: 36, color: Color(0xFF94A3B8)),
+                    SizedBox(height: 10),
+                    Text(
+                      'Bạn chưa thiết lập địa chỉ nào',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Thêm địa chỉ để VietMade giao hàng nhanh chóng và chính xác hơn.',
+                      style: TextStyle(fontSize: 11.5, color: Color(0xFF94A3B8)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               )
             else
@@ -524,6 +575,45 @@ class _AddressSelectionSheet extends StatelessWidget {
                   },
                 ),
               ),
+
+            // Bottom Add New Address Button (Styled identically to AddressScreen button)
+            Container(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const AddressScreen(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  minimumSize: const Size(double.infinity, 44),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  '+ Thêm địa chỉ mới',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

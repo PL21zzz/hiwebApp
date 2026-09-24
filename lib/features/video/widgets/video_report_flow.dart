@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/surfaces/app_bottom_sheet.dart';
@@ -13,7 +12,6 @@ class VideoReportFlow extends StatefulWidget {
       context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      useSafeArea: false,
       builder: (_) => const VideoReportFlow(),
     );
   }
@@ -41,32 +39,42 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
   @override
   Widget build(BuildContext context) {
     final isDetail = _selectedReason != null;
-    final topInset = defaultTargetPlatform == TargetPlatform.iOS ? 0.0 : 24.0;
-    final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.primary,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-      child: Container(
-        width: double.infinity,
-        height: MediaQuery.sizeOf(context).height * 0.92,
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return Container(
+      height: MediaQuery.sizeOf(context).height * 0.80,
+      decoration: const BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              color: AppColors.primary,
-              padding: EdgeInsets.only(top: topInset),
-              child: _ReportHeader(
-                title: isDetail ? _selectedReason! : 'Báo cáo video này',
-                onBack:
-                    isDetail
-                        ? () => setState(() => _selectedReason = null)
-                        : () => Navigator.of(context).pop(),
+            // Top Drag Handle Indicator
+            const SizedBox(height: 8),
+            Center(
+              child: Container(
+                width: 38,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFCBD5E1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
+            const SizedBox(height: 4),
+
+            // Clean White Header (Phương án B)
+            _ReportHeader(
+              title: isDetail ? _selectedReason! : 'Báo cáo video này',
+              showBack: isDetail,
+              onBack: () => setState(() => _selectedReason = null),
+            ),
+            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+
+            // Content Section
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(bottom: bottomInset),
@@ -81,7 +89,7 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
 
   Widget _buildReasons() {
     return ListView.separated(
-      padding: EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(vertical: 4),
       itemCount: const StaticContentRepository().videoReportReasons.length,
       separatorBuilder:
           (_, __) => const Divider(height: 1, color: Color(0xFFF1F5F9)),
@@ -95,24 +103,25 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
                             .videoReportReasons[index],
               ),
           child: SizedBox(
-            height: 59,
+            height: 52,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       const StaticContentRepository().videoReportReasons[index],
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 12.5,
                         color: Color(0xFF0F172A),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                   const Icon(
-                    Icons.chevron_right,
-                    color: Color(0xFF64748B),
-                    size: 21,
+                    LucideIcons.chevronRight,
+                    color: Color(0xFF94A3B8),
+                    size: 18,
                   ),
                 ],
               ),
@@ -126,8 +135,9 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
   Widget _buildDetail(BuildContext context) {
     final length = _descriptionController.text.trim().length;
     final isValid = length >= 10 && length <= 50;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 17, 16, 0),
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -135,7 +145,7 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
             TextSpan(
               text: 'Nhập mô tả báo cáo',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF0F172A),
               ),
@@ -150,53 +160,53 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
           const SizedBox(height: 10),
           TextField(
             controller: _descriptionController,
-            maxLines: 5,
+            maxLines: 4,
             maxLength: 50,
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              hintText: 'Vui lòng nhập từ 10-50 ký tự',
+              hintText: 'Vui lòng nhập chi tiết từ 10-50 ký tự',
               hintStyle: const TextStyle(
-                fontSize: 10,
+                fontSize: 11,
                 color: Color(0xFF94A3B8),
               ),
               counterText: '$length/50',
               counterStyle: const TextStyle(
-                fontSize: 8,
+                fontSize: 10,
                 color: Color(0xFF94A3B8),
               ),
-              contentPadding: const EdgeInsets.fromLTRB(10, 11, 10, 6),
+              contentPadding: const EdgeInsets.all(12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(
-                  color: AppColors.primary,
-                  width: 0.8,
+                  color: Color(0xFFCBD5E1),
+                  width: 1,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: AppColors.primary),
+                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Center(
             child: SizedBox(
-              width: 200,
-              height: 31,
+              width: double.infinity,
+              height: 42,
               child: ElevatedButton(
                 onPressed: isValid ? _submit : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  disabledBackgroundColor: const Color(0xFF9DD9E8),
+                  disabledBackgroundColor: const Color(0xFFCBD5E1),
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text(
                   'Gửi báo cáo',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -209,33 +219,51 @@ class _VideoReportFlowState extends State<VideoReportFlow> {
 
 class _ReportHeader extends StatelessWidget {
   final String title;
+  final bool showBack;
   final VoidCallback onBack;
 
-  const _ReportHeader({required this.title, required this.onBack});
+  const _ReportHeader({
+    required this.title,
+    required this.showBack,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      color: AppColors.primary,
+    return SizedBox(
+      height: 46,
       child: Row(
         children: [
-          IconButton(
-            onPressed: onBack,
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints.tightFor(width: 40, height: 40),
-            icon: const Icon(Icons.chevron_left, color: Colors.white, size: 22),
-          ),
+          if (showBack)
+            IconButton(
+              onPressed: onBack,
+              icon: const Icon(
+                LucideIcons.chevronLeft,
+                color: Color(0xFF1E293B),
+                size: 20,
+              ),
+            )
+          else
+            const SizedBox(width: 46),
           Expanded(
             child: Text(
               title,
+              textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
+                color: Color(0xFF0F172A),
+                fontSize: 13.5,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+          ),
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              LucideIcons.x,
+              color: Color(0xFF64748B),
+              size: 18,
             ),
           ),
         ],

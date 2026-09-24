@@ -11,6 +11,18 @@ class ProfileUserOrdersCard extends StatelessWidget {
     this.onStatusTap,
   });
 
+  int _getCountForStatus(String statusId) {
+    if (statusId == 'pending_pickup') {
+      return OrderService.instance.countByStatus('confirmation') +
+          OrderService.instance.countByStatus('pending_pickup');
+    }
+    if (statusId == 'canceled') {
+      return OrderService.instance.countByStatus('canceled') +
+          OrderService.instance.countByStatus('returned');
+    }
+    return OrderService.instance.countByStatus(statusId);
+  }
+
   Widget _buildOrderStatusItem(OrderStatusOption option) {
     final tabIndex = switch (option.id) {
       'pending_pickup' => 2,
@@ -20,7 +32,7 @@ class ProfileUserOrdersCard extends StatelessWidget {
       _ => 0,
     };
 
-    final count = OrderService.instance.countByStatus(option.id);
+    final count = _getCountForStatus(option.id);
 
     return Expanded(
       child: InkWell(
@@ -87,55 +99,60 @@ class ProfileUserOrdersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Đơn hàng của tôi',
-                style: TextStyle(
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0F172A),
-                ),
-              ),
-              InkWell(
-                onTap: onStatusTap == null ? null : () => onStatusTap!(0),
-                child: const Text(
-                  'Tất cả đơn >',
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    color: Color(0xFF0284C7),
-                  ),
-                ),
+    return ListenableBuilder(
+      listenable: OrderService.instance,
+      builder: (context, _) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const StaticContentRepository().orderStatuses
-                .map((status) => _buildOrderStatusItem(status))
-                .toList(),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Đơn hàng của tôi',
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: onStatusTap == null ? null : () => onStatusTap!(0),
+                    child: const Text(
+                      'Tất cả đơn >',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Color(0xFF0284C7),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: const StaticContentRepository().orderStatuses
+                    .map((status) => _buildOrderStatusItem(status))
+                    .toList(),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

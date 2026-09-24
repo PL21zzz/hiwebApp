@@ -102,7 +102,7 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
 
               // Specifications Table
               Column(
-                children: detail.specifications.map((spec) {
+                children: detail.specifications.entries.map((entry) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Row(
@@ -111,7 +111,7 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                         SizedBox(
                           width: 155,
                           child: Text(
-                            spec.title,
+                            entry.key,
                             style: const TextStyle(
                               fontSize: 12.5,
                               color: Color(0xFF64748B),
@@ -120,7 +120,7 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
                         ),
                         Expanded(
                           child: Text(
-                            spec.value,
+                            entry.value,
                             style: const TextStyle(
                               fontSize: 12.5,
                               color: Color(0xFF1E293B),

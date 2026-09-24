@@ -51,7 +51,7 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638143/videodetail1_tkmffs.jpg',
+          'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
       authorName: '@DongGia15k',
       authorAvatar:
           'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
@@ -68,7 +68,7 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638136/videodetail2_zfkwdq.jpg',
+          'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800',
       authorName: '@GiaDungViet',
       authorAvatar:
           'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale2_gxg0q7.webp',
@@ -85,7 +85,7 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://res.cloudinary.com/dypm5avrx/video/upload/so_0/v1789638201/videodetail3_z6o8sg.jpg',
+          'https://images.unsplash.com/photo-1608248597261-833258657640?w=800',
       authorName: '@MayTreDanShop',
       authorAvatar:
           'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale3_t13kns.webp',
