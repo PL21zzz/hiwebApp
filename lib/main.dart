@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:device_preview/device_preview.dart';
-import 'theme/app_theme.dart';
-import 'screens/main_navigation_screen.dart';
+import 'package:hiweb_app_management/core/theme/app_theme.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

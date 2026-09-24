@@ -1,0 +1,479 @@
+import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
+import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
+import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'product_customization_section.dart';
+import 'package:hiweb_app_management/core/widgets/common/surfaces/app_bottom_sheet.dart';
+
+class BuyNowBottomSheet extends StatefulWidget {
+  final ProductDetailModel productDetail;
+  final String? initialCapacity;
+  final String initialCustomizationText;
+  final String? initialCustomizationImagePath;
+  final void Function(
+    String? selectedCapacity,
+    int quantity,
+    String customizationText,
+    String? customizationImagePath,
+  )
+  onConfirm;
+
+  const BuyNowBottomSheet({
+    super.key,
+    required this.productDetail,
+    this.initialCapacity,
+    this.initialCustomizationText = '',
+    this.initialCustomizationImagePath,
+    required this.onConfirm,
+  });
+
+  static Future<void> show(
+    BuildContext context, {
+    required ProductDetailModel productDetail,
+    String? initialCapacity,
+    String initialCustomizationText = '',
+    String? initialCustomizationImagePath,
+    required void Function(
+      String? selectedCapacity,
+      int quantity,
+      String customizationText,
+      String? customizationImagePath,
+    )
+    onConfirm,
+  }) {
+    return AppBottomSheet.show(
+      context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder:
+          (context) => BuyNowBottomSheet(
+            productDetail: productDetail,
+            initialCapacity: initialCapacity,
+            initialCustomizationText: initialCustomizationText,
+            initialCustomizationImagePath: initialCustomizationImagePath,
+            onConfirm: onConfirm,
+          ),
+    );
+  }
+
+  @override
+  State<BuyNowBottomSheet> createState() => _BuyNowBottomSheetState();
+}
+
+class _BuyNowBottomSheetState extends State<BuyNowBottomSheet> {
+  String? _selectedVariant;
+  int _quantity = 1;
+  late String _customizationText;
+  String? _customizationImagePath;
+
+  List<String> get _variants {
+    return widget.productDetail.effectiveVariantOptions;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialCapacity != null &&
+        _variants.contains(widget.initialCapacity)) {
+      _selectedVariant = widget.initialCapacity!;
+    }
+    _customizationText = widget.initialCustomizationText;
+    _customizationImagePath = widget.initialCustomizationImagePath;
+  }
+
+  String _formatCurrency(double price) {
+    final intPrice = price.toInt();
+    final str = intPrice.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) {
+        buffer.write('.');
+      }
+      buffer.write(str[i]);
+    }
+    return '${buffer.toString()}đ';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaList = widget.productDetail.mediaList;
+    final images =
+        mediaList.isNotEmpty
+            ? mediaList.map((m) => m.isVideo ? m.thumb : m.url).toList()
+            : const StaticContentRepository().buyNowFallbackImages;
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SafeArea(
+                    top: false,
+                    child: _buildSheetContent(images),
+                  ),
+                ),
+              ),
+              SafeArea(top: false, child: _buildPurchaseButton()),
+            ],
+          ),
+          Positioned(top: 14, right: 14, child: _buildCloseButton(context)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCloseButton(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.of(context).pop(),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: const BoxDecoration(
+          color: Color(0xFF64748B),
+          shape: BoxShape.circle,
+        ),
+        child: const Center(
+          child: Icon(LucideIcons.x, color: Colors.white, size: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSheetContent(List<String> images) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Top Header: Thumbnails row
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 48, 12),
+          child: SizedBox(
+            height: 72,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: images.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                return Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    image: DecorationImage(
+                      image: NetworkImage(images[index]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+
+        const Divider(height: 1, thickness: 1, color: Color(0xFFE2E8F0)),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product Name
+              Text(
+                widget.productDetail.name,
+                style: const TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E293B),
+                  height: 1.3,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+
+              // Price
+              Row(
+                children: [
+                  const Text(
+                    'Giá bán: ',
+                    style: TextStyle(fontSize: 13.5, color: Color(0xFF64748B)),
+                  ),
+                  Text(
+                    _formatCurrency(widget.productDetail.price),
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFEF4444),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+
+              // Stock
+              Text(
+                'Tồn kho: ${StaticContentRepository().buyNowStock}',
+                style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 14),
+
+              // Variants title
+              const Text(
+                'Phân loại',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                widget.productDetail.effectiveVariantLabel,
+                style: TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 8),
+
+              // Variant Chips
+              Wrap(
+                spacing: 10,
+                children:
+                    _variants.map((variant) {
+                      final isSelected = _selectedVariant == variant;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedVariant = variant;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSelected
+                                        ? const Color(0xFFF0F9FF)
+                                        : Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color:
+                                      isSelected
+                                          ? AppColors.primary
+                                          : const Color(0xFFCBD5E1),
+                                  width: isSelected ? 1.5 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                variant,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight:
+                                      isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                  color:
+                                      isSelected
+                                          ? AppColors.primary
+                                          : const Color(0xFF334155),
+                                ),
+                              ),
+                            ),
+                            if (isSelected)
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 14,
+                                  height: 14,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(7),
+                                      bottomLeft: Radius.circular(4),
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+              ),
+              const SizedBox(height: 18),
+
+              ProductCustomizationSection(
+                initialText: _customizationText,
+                initialImagePath: _customizationImagePath,
+                horizontalPadding: 0,
+                onTextChanged: (value) {
+                  setState(() => _customizationText = value);
+                },
+                onImageChanged: (value) {
+                  setState(() => _customizationImagePath = value);
+                },
+              ),
+              const SizedBox(height: 18),
+
+              // Quantity Stepper
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Số lượng:',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      _buildStepperButton(
+                        icon: Icons.remove,
+                        onTap:
+                            _quantity > 1
+                                ? () => setState(() => _quantity--)
+                                : null,
+                      ),
+                      Container(
+                        width: 50,
+                        height: 34,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                        ),
+                        child: Text(
+                          '$_quantity',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                      ),
+                      _buildStepperButton(
+                        icon: Icons.add,
+                        onTap: () => setState(() => _quantity++),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPurchaseButton() {
+    final customizationText = _customizationText.trim();
+    final isDisabled =
+        (_variants.isNotEmpty && _selectedVariant == null) ||
+        customizationText.isEmpty ||
+        _customizationImagePath == null;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: SizedBox(
+        height: 46,
+        child: ElevatedButton(
+          onPressed:
+              isDisabled
+                  ? null
+                  : () {
+                    Navigator.of(context).pop();
+                    widget.onConfirm(
+                      _selectedVariant,
+                      _quantity,
+                      customizationText,
+                      _customizationImagePath,
+                    );
+                  },
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                isDisabled ? const Color(0xFFCBD5E1) : AppColors.primary,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: const Color(0xFFCBD5E1),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+          child: const Text(
+            'MUA NGAY',
+            style: TextStyle(
+              fontSize: 14.5,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStepperButton({
+    required IconData icon,
+    required VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        width: 36,
+        height: 34,
+        decoration: BoxDecoration(
+          color: onTap == null ? const Color(0xFFF8FAFC) : Colors.white,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: const Color(0xFFCBD5E1)),
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color:
+              onTap == null ? const Color(0xFF94A3B8) : const Color(0xFF334155),
+        ),
+      ),
+    );
+  }
+}

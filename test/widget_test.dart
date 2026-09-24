@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hiweb_app_management/main.dart';
-import 'package:hiweb_app_management/screens/main_navigation_screen.dart';
-import 'package:hiweb_app_management/services/auth_service.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
+import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

@@ -1,0 +1,180 @@
+import 'package:flutter/foundation.dart';
+import 'package:hiweb_app_management/core/state/async_state.dart';
+import 'package:hiweb_app_management/features/cart_checkout/models/cart_item_model.dart';
+import 'package:hiweb_app_management/features/cart_checkout/repositories/cart_repository.dart';
+
+class CartService extends ChangeNotifier {
+  CartService._(CartRepository repository)
+      : _items = repository.getInitialItems();
+
+  static final CartService instance = CartService._(MockCartRepository());
+
+  final List<CartItemModel> _items;
+  bool _useXu = false;
+  final int _xuBalance = 150;
+  final int _shippingFee = 22000;
+  final int _shippingDiscount = 22000;
+  AsyncState<void> _actionState = const AsyncState.initial();
+
+  List<CartItemModel> get items => List.unmodifiable(_items);
+  AsyncState<List<CartItemModel>> get state => AsyncState.success(items);
+  AsyncState<void> get actionState => _actionState;
+  bool get isSubmitting => _actionState.isLoading;
+  bool get useXu => _useXu;
+  int get xuBalance => _xuBalance;
+  int get shippingFee => _shippingFee;
+  int get shippingDiscount => _shippingDiscount;
+
+  /// Total count of all items (quantities) in cart
+  int get totalItemCount {
+    return _items.fold(0, (sum, item) => sum + item.quantity);
+  }
+
+  /// Get quantity of a specific item in cart by ID or name
+  int getItemQuantity(String idOrName) {
+    final index = _items.indexWhere((i) => i.id == idOrName || i.name == idOrName);
+    return index != -1 ? _items[index].quantity : 0;
+  }
+
+  /// Total count of selected items for checkout
+  int get totalSelectedCount {
+    return _items
+        .where((item) => item.isSelected)
+        .fold(0, (sum, item) => sum + item.quantity);
+  }
+
+  /// Are all items selected?
+  bool get isAllSelected {
+    if (_items.isEmpty) return false;
+    return _items.every((item) => item.isSelected);
+  }
+
+  /// Subtotal of selected items at current price
+  int get itemsSubtotal {
+    return _items
+        .where((item) => item.isSelected)
+        .fold(0, (sum, item) => sum + (item.price * item.quantity));
+  }
+
+  /// Original price subtotal of selected items
+  int get originalSubtotal {
+    return _items
+        .where((item) => item.isSelected)
+        .fold(0, (sum, item) => sum + (item.originalPrice * item.quantity));
+  }
+
+  /// Effective shipping fee after discount
+  int get effectiveShippingFee {
+    if (totalSelectedCount == 0) return 0;
+    final net = _shippingFee - _shippingDiscount;
+    return net > 0 ? net : 0;
+  }
+
+  /// Discount amount from Xu
+  int get xuDiscountAmount {
+    return (_useXu && totalSelectedCount > 0) ? _xuBalance : 0;
+  }
+
+  /// Total money saved
+  int get totalSavings {
+    if (totalSelectedCount == 0) return 0;
+    final itemDiscount = originalSubtotal - itemsSubtotal;
+    return itemDiscount + _shippingDiscount + xuDiscountAmount;
+  }
+
+  /// Final checkout amount
+  int get finalTotal {
+    if (totalSelectedCount == 0) return 0;
+    final total = itemsSubtotal + effectiveShippingFee - xuDiscountAmount;
+    return total > 0 ? total : 0;
+  }
+
+  // --- ACTIONS ---
+
+  Future<bool> addToCart(CartItemModel newItem) async {
+    if (isSubmitting) return false;
+    _actionState = _actionState.loading(keepData: false);
+    notifyListeners();
+    await Future<void>.value();
+    final existingIndex = _items.indexWhere(
+      (item) => item.id == newItem.id || item.name == newItem.name,
+    );
+
+    if (existingIndex != -1) {
+      final existing = _items[existingIndex];
+      _items[existingIndex] = existing.copyWith(
+        quantity: existing.quantity + 1,
+        isSelected: true,
+      );
+    } else {
+      _items.add(newItem.copyWith(isSelected: true));
+    }
+    _actionState = AsyncState.success(null);
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> updateQuantity(String itemId, int delta) async {
+    if (isSubmitting) return false;
+    final index = _items.indexWhere((i) => i.id == itemId);
+    if (index != -1) {
+      final newQty = _items[index].quantity + delta;
+      if (newQty < 1) return false;
+      _actionState = _actionState.loading(keepData: false);
+      notifyListeners();
+      await Future<void>.value();
+      _items[index] = _items[index].copyWith(quantity: newQty);
+      _actionState = AsyncState.success(null);
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  void toggleItemSelection(String itemId) {
+    final index = _items.indexWhere((i) => i.id == itemId);
+    if (index != -1) {
+      _items[index] = _items[index].copyWith(
+        isSelected: !_items[index].isSelected,
+      );
+      notifyListeners();
+    }
+  }
+
+  void toggleShopSelection(String shopName, bool select) {
+    for (int i = 0; i < _items.length; i++) {
+      if (_items[i].shopName == shopName) {
+        _items[i] = _items[i].copyWith(isSelected: select);
+      }
+    }
+    notifyListeners();
+  }
+
+  void toggleSelectAll(bool select) {
+    for (int i = 0; i < _items.length; i++) {
+      _items[i] = _items[i].copyWith(isSelected: select);
+    }
+    notifyListeners();
+  }
+
+  void toggleUseXu(bool value) {
+    _useXu = value;
+    notifyListeners();
+  }
+
+  Future<bool> removeItem(String itemId) async {
+    if (isSubmitting) return false;
+    _actionState = _actionState.loading(keepData: false);
+    notifyListeners();
+    await Future<void>.value();
+    _items.removeWhere((i) => i.id == itemId);
+    _actionState = AsyncState.success(null);
+    notifyListeners();
+    return true;
+  }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
+}
