@@ -1,0 +1,19 @@
+{
+  "project": "hiweb_app_management",
+  "platform": "ios",
+  "github": {
+    "owner": "dungpk123",
+    "repo": "hiweb_app_management"
+  },
+  "provider": "github",
+  "codemagic": {},
+  "bitrise": {},
+  "ios": {},
+  "flutter": {
+    "version": "3.29.0",
+    "watch": {}
+  },
+  "reactNative": {},
+  "kmp": {},
+  "mobai": {}
+}
