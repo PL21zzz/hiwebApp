@@ -438,16 +438,27 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
                               minScale: 0.8,
                               maxScale: 4.0,
                               clipBehavior: Clip.none,
-                              child: Image.network(
-                                item.url,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stack) =>
-                                    const Icon(
-                                  LucideIcons.image,
-                                  color: Colors.white54,
-                                  size: 64,
-                                ),
-                              ),
+                              child: item.url.startsWith('http')
+                                  ? Image.network(
+                                    item.url,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stack) =>
+                                        const Icon(
+                                      LucideIcons.image,
+                                      color: Colors.white54,
+                                      size: 64,
+                                    ),
+                                  )
+                                  : Image.asset(
+                                    item.url,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stack) =>
+                                        const Icon(
+                                      LucideIcons.image,
+                                      color: Colors.white54,
+                                      size: 64,
+                                    ),
+                                  ),
                             ),
                           ),
                   ),
@@ -539,10 +550,20 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  Image.network(
-                                    media.thumb.isNotEmpty ? media.thumb : media.url,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  () {
+                                    final imgUrl =
+                                        media.thumb.isNotEmpty ? media.thumb : media.url;
+                                    if (imgUrl.startsWith('http')) {
+                                      return Image.network(
+                                        imgUrl,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
+                                    return Image.asset(
+                                      imgUrl,
+                                      fit: BoxFit.cover,
+                                    );
+                                  }(),
                                   if (media.isVideo)
                                     Container(
                                       color: Colors.black38,

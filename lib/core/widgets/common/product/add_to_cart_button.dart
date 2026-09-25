@@ -7,6 +7,7 @@ import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/features/cart_checkout/repositories/cart_repository.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
+import 'package:hiweb_app_management/core/widgets/common/buttons/pressable_scale.dart';
 
 enum CartButtonStyle {
   pillPlus, // Standard pill button with '+' badge (used in ProductCard)
@@ -78,7 +79,7 @@ class AddToCartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return PressableScale(
       onTap: () {
         if (customOnTap != null) {
           customOnTap!();

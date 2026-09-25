@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:hiweb_app_management/features/video/models/video_model.dart';
 
+class _HeartAnimationItem {
+  final Key key;
+  final Offset position;
+
+  _HeartAnimationItem({required this.key, required this.position});
+}
+
 class VideoItemPlayer extends StatefulWidget {
   final VideoItemModel video;
   final bool isActive;
   final bool isMuted;
+  final VoidCallback? onDoubleTapLike;
 
   const VideoItemPlayer({
     super.key,
     required this.video,
     required this.isActive,
     required this.isMuted,
+    this.onDoubleTapLike,
   });
 
   @override
@@ -23,6 +32,9 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
   bool _isInitialized = false;
   bool _isPlayingManually = true;
 
+  final List<_HeartAnimationItem> _hearts = [];
+  TapDownDetails? _doubleTapDetails;
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +43,14 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
     }
   }
 
+  void _onControllerUpdated() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   Future<void> _initController() async {
+    _controller?.removeListener(_onControllerUpdated);
     _controller?.dispose();
     _controller = null;
 
@@ -42,6 +61,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
               Uri.parse(widget.video.videoUrl),
             );
     _controller = controller;
+    controller.addListener(_onControllerUpdated);
 
     try {
       final initialization = controller.initialize();
@@ -51,6 +71,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
         await initialization.timeout(const Duration(seconds: 20));
       }
       if (!mounted || _controller != controller) {
+        controller.removeListener(_onControllerUpdated);
         controller.dispose();
         return;
       }
@@ -84,8 +105,8 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
           _controller!.play();
         }
       } else {
-        // Free video buffers immediately when user scrolls to another video
         _controller?.pause();
+        _controller?.removeListener(_onControllerUpdated);
         _controller?.dispose();
         _controller = null;
         _isInitialized = false;
@@ -99,6 +120,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
 
   @override
   void dispose() {
+    _controller?.removeListener(_onControllerUpdated);
     _controller?.dispose();
     _controller = null;
     super.dispose();
@@ -118,9 +140,38 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
     }
   }
 
+  void _handleDoubleTap() {
+    if (_doubleTapDetails != null) {
+      final pos = _doubleTapDetails!.localPosition;
+      final item = _HeartAnimationItem(
+        key: UniqueKey(),
+        position: pos,
+      );
+      setState(() {
+        _hearts.add(item);
+      });
+      if (widget.onDoubleTapLike != null) {
+        widget.onDoubleTapLike!();
+      }
+    }
+  }
+
+  void _removeHeart(Key key) {
+    setState(() {
+      _hearts.removeWhere((h) => h.key == key);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bool showBuffering =
+        _isInitialized &&
+        _controller != null &&
+        _controller!.value.isBuffering;
+
     return GestureDetector(
+      onDoubleTapDown: (details) => _doubleTapDetails = details,
+      onDoubleTap: _handleDoubleTap,
       onTap: _togglePlayPause,
       child: Stack(
         fit: StackFit.expand,
@@ -139,20 +190,70 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
               ),
             )
           else
-            Image.network(
-              widget.video.thumbnailUrl,
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (_, __, ___) => Container(
-                    color: const Color(0xFF1E293B),
-                    child: const Center(
-                      child: Icon(
-                        Icons.play_circle_outline,
-                        size: 48,
-                        color: Colors.white70,
+            Stack(
+              fit: StackFit.expand,
+              children: [
+                widget.video.thumbnailUrl.startsWith('http')
+                    ? Image.network(
+                      widget.video.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (_, __, ___) => Container(
+                            color: const Color(0xFF1E293B),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_circle_outline,
+                                size: 48,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                    )
+                    : Image.asset(
+                      widget.video.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (_, __, ___) => Container(
+                            color: const Color(0xFF1E293B),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_circle_outline,
+                                size: 48,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                    ),
+                Container(
+                  color: Colors.black26,
+                  child: const Center(
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
                   ),
+                ),
+              ],
+            ),
+
+          // 1b. Buffering Indicator
+          if (showBuffering)
+            Container(
+              color: Colors.black26,
+              child: const Center(
+                child: SizedBox(
+                  width: 36,
+                  height: 36,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
             ),
 
           // 2. Play Icon Overlay when paused
@@ -192,8 +293,120 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
               ),
             ),
           ),
+
+          // 4. Double-Tap Floating Heart Popups
+          ..._hearts.map(
+            (heart) => Positioned(
+              left: heart.position.dx - 40,
+              top: heart.position.dy - 40,
+              child: _FloatingHeartWidget(
+                key: heart.key,
+                onComplete: () => _removeHeart(heart.key),
+              ),
+            ),
+          ),
+
+          // 5. TikTok-style Video Seekbar Timeline at bottom edge
+          if (_isInitialized && _controller != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SizedBox(
+                height: 12,
+                child: VideoProgressIndicator(
+                  _controller!,
+                  allowScrubbing: true,
+                  padding: const EdgeInsets.only(top: 8),
+                  colors: const VideoProgressColors(
+                    playedColor: Color(0xFF0097B2),
+                    bufferedColor: Colors.white24,
+                    backgroundColor: Colors.white12,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
+    );
+  }
+}
+
+class _FloatingHeartWidget extends StatefulWidget {
+  final VoidCallback onComplete;
+
+  const _FloatingHeartWidget({super.key, required this.onComplete});
+
+  @override
+  State<_FloatingHeartWidget> createState() => _FloatingHeartWidgetState();
+}
+
+class _FloatingHeartWidgetState extends State<_FloatingHeartWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _scaleAnim;
+  late Animation<double> _opacityAnim;
+  late Animation<double> _translateYAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    _scaleAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.2, end: 1.3), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 60),
+    ]).animate(_animController);
+
+    _opacityAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 70),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 30),
+    ]).animate(_animController);
+
+    _translateYAnim = Tween<double>(begin: 0, end: -60).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
+    );
+
+    _animController.forward().then((_) {
+      widget.onComplete();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _translateYAnim.value),
+          child: Opacity(
+            opacity: _opacityAnim.value,
+            child: Transform.scale(
+              scale: _scaleAnim.value,
+              child: const Icon(
+                Icons.favorite_rounded,
+                color: Color(0xFFE53935),
+                size: 80,
+                shadows: [
+                  Shadow(
+                    color: Colors.black38,
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

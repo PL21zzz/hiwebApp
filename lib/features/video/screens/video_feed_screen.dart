@@ -63,6 +63,11 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
                     video: video,
                     isActive: index == _currentPage,
                     isMuted: _isMuted,
+                    onDoubleTapLike: () {
+                      setState(() {
+                        video.isLiked = true;
+                      });
+                    },
                   ),
 
                   // Right Actions Column (Avatar, Like, Comment, Save, Share, Report)

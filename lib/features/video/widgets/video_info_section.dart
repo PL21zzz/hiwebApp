@@ -173,28 +173,54 @@ class _VideoInfoSectionState extends State<VideoInfoSection> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    widget.video.authorAvatar.isNotEmpty
-                        ? widget.video.authorAvatar
-                        : widget.video.thumbnailUrl,
-                    width: 72,
-                    height: 72,
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (_, __, ___) => Container(
-                          width: 72,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF1F5F9),
-                            borderRadius: BorderRadius.circular(6),
+                  child: () {
+                    final imgUrl =
+                        widget.video.authorAvatar.isNotEmpty
+                            ? widget.video.authorAvatar
+                            : widget.video.thumbnailUrl;
+                    if (imgUrl.startsWith('http')) {
+                      return Image.network(
+                        imgUrl,
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (_, __, ___) => Container(
+                              width: 72,
+                              height: 72,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF1F5F9),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                LucideIcons.package,
+                                color: Color(0xFF94A3B8),
+                                size: 26,
+                              ),
+                            ),
+                      );
+                    }
+                    return Image.asset(
+                      imgUrl,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (_, __, ___) => Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Icon(
+                              LucideIcons.package,
+                              color: Color(0xFF94A3B8),
+                              size: 26,
+                            ),
                           ),
-                          child: const Icon(
-                            LucideIcons.package,
-                            color: Color(0xFF94A3B8),
-                            size: 26,
-                          ),
-                        ),
-                  ),
+                    );
+                  }(),
                 ),
                 Positioned(
                   top: 0,

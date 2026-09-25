@@ -1,6 +1,6 @@
 class UserModel {
   static const String googleLogoUrl =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789955590/logo_google_z2bxfc.png';
+      'assets/images/logo_google.png';
 
   final String id;
   final String userName;

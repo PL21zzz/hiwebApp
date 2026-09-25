@@ -57,18 +57,31 @@ class TopSearchesSection extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        item.imageUrl,
-                        width: 64,
-                        height: 64,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 64,
-                          height: 64,
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        ),
-                      ),
+                      child: item.imageUrl.startsWith('http')
+                          ? Image.network(
+                              item.imageUrl,
+                              width: 64,
+                              height: 64,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 64,
+                                height: 64,
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image, color: Colors.grey),
+                              ),
+                            )
+                          : Image.asset(
+                              item.imageUrl,
+                              width: 64,
+                              height: 64,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 64,
+                                height: 64,
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image, color: Colors.grey),
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 6),
                     Text(

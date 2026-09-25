@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
 class CoinDailyCheckinCard extends StatelessWidget {
   final int claimedDays;
@@ -13,16 +12,21 @@ class CoinDailyCheckinCard extends StatelessWidget {
     required this.onClaimTap,
   });
 
-  Widget _buildCheckInSlot(int dayIndex, String label, bool isToday, bool isClaimed) {
+  Widget _buildCheckInSlot(
+    int dayIndex,
+    String label,
+    bool isToday,
+    bool isClaimed,
+  ) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 3),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
         decoration: BoxDecoration(
           color: isToday ? const Color(0xFFF0F9FF) : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isToday ? AppColors.primary : const Color(0xFFE2E8F0),
+            color: isToday ? const Color(0xFF0097B2) : const Color(0xFFE2E8F0),
             width: isToday ? 1.5 : 1,
           ),
         ),
@@ -33,7 +37,10 @@ class CoinDailyCheckinCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: isToday ? AppColors.primary : const Color(0xFF475569),
+                color:
+                    isToday
+                        ? const Color(0xFF0097B2)
+                        : const Color(0xFF475569),
               ),
             ),
             const SizedBox(height: 6),
@@ -50,7 +57,10 @@ class CoinDailyCheckinCard extends StatelessWidget {
                   height: 22,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFFFFD765), width: 1.5),
+                    border: Border.all(
+                      color: const Color(0xFFFFD765),
+                      width: 1.5,
+                    ),
                   ),
                   child: const Center(
                     child: Text(
@@ -71,8 +81,13 @@ class CoinDailyCheckinCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10.5,
                 fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
-                color: isToday ? AppColors.primary : const Color(0xFF94A3B8),
+                color:
+                    isToday
+                        ? const Color(0xFF0097B2)
+                        : const Color(0xFF94A3B8),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -90,66 +105,85 @@ class CoinDailyCheckinCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // Title: "Điểm Danh Nhận Xu" (Italic & Bold Teal)
           const Text(
-            'Điểm danh nhận 100 xu mỗi ngày',
+            'Điểm Danh Nhận Xu',
             style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF0F172A),
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'Tích xu đổi hàng ngàn ưu đãi cực hot từ VietMade',
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0xFF64748B),
+              fontSize: 17,
+              fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic,
+              color: Color(0xFF0097B2),
             ),
           ),
           const SizedBox(height: 16),
 
-          // 5 Check-in Slots (Ngày 1 -> Ngày 5)
+          // 5 Check-in Slots (Hôm nay, Ngày 2 -> Ngày 5)
           Row(
             children: [
-              _buildCheckInSlot(1, 'Ngày 1', claimedDays == 1, claimedDays >= 1),
-              _buildCheckInSlot(2, 'Ngày 2', claimedDays == 2, claimedDays >= 2),
-              _buildCheckInSlot(3, 'Ngày 3', claimedDays == 3, claimedDays >= 3),
-              _buildCheckInSlot(4, 'Ngày 4', claimedDays == 4, claimedDays >= 4),
-              _buildCheckInSlot(5, 'Ngày 5', claimedDays == 5, claimedDays >= 5),
+              _buildCheckInSlot(
+                1,
+                'Hôm nay',
+                claimedDays == 1,
+                claimedDays >= 1,
+              ),
+              _buildCheckInSlot(
+                2,
+                'Ngày 2',
+                claimedDays == 2,
+                claimedDays >= 2,
+              ),
+              _buildCheckInSlot(
+                3,
+                'Ngày 3',
+                claimedDays == 3,
+                claimedDays >= 3,
+              ),
+              _buildCheckInSlot(
+                4,
+                'Ngày 4',
+                claimedDays == 4,
+                claimedDays >= 4,
+              ),
+              _buildCheckInSlot(
+                5,
+                'Ngày 5',
+                claimedDays == 5,
+                claimedDays >= 5,
+              ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
 
-          // Action Button: "Chạm để nhận xu"
-          ElevatedButton(
-            onPressed: onClaimTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFF59E0B),
-              foregroundColor: Colors.white,
-              elevation: 2,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 28,
-                vertical: 10,
+          // Action Button: "Nhận thêm 100 xu hôm nay!" (Full width Cyan Button)
+          SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: ElevatedButton(
+              onPressed: onClaimTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0097B2),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: Text(
-              hasClaimedToday ? 'Đã nhận hôm nay' : 'Chạm để nhận xu',
-              style: const TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+              child: Text(
+                hasClaimedToday
+                    ? 'Đã nhận hôm nay'
+                    : 'Nhận thêm 100 xu hôm nay!',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

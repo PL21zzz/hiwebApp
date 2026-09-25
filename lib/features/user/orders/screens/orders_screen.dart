@@ -6,14 +6,12 @@ import 'package:hiweb_app_management/features/user/orders/widgets/order_card.dar
 import 'package:hiweb_app_management/features/user/orders/widgets/order_empty_state.dart';
 import 'package:hiweb_app_management/features/user/orders/widgets/order_status_tabs.dart';
 import 'package:hiweb_app_management/features/home/screens/home_screen.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/order_item_skeleton.dart';
 
 class OrdersScreen extends StatefulWidget {
   final int initialTabIndex;
 
-  const OrdersScreen({
-    super.key,
-    this.initialTabIndex = 0,
-  });
+  const OrdersScreen({super.key, this.initialTabIndex = 0});
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -43,6 +41,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   ];
 
   late int _selectedTabIndex;
+  bool _isTabLoading = false;
 
   @override
   void initState() {
@@ -55,13 +54,41 @@ class _OrdersScreenState extends State<OrdersScreen> {
     if (mounted) setState(() {});
   }
 
+  void _onTabSelected(int index) {
+    if (index == _selectedTabIndex) return;
+    setState(() {
+      _selectedTabIndex = index;
+      _isTabLoading = true;
+    });
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        setState(() {
+          _isTabLoading = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _refreshOrders() async {
+    setState(() {
+      _isTabLoading = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (mounted) {
+      setState(() {
+        _isTabLoading = false;
+      });
+    }
+  }
+
   List<OrderStatusTab> _buildTabs() {
     final orderService = OrderService.instance;
 
     return List.generate(_statusIds.length, (index) {
-      final count = index == 0
-          ? orderService.orders.length
-          : orderService.countByStatus(_statusIds[index]);
+      final count =
+          index == 0
+              ? orderService.orders.length
+              : orderService.countByStatus(_statusIds[index]);
       return OrderStatusTab(
         id: _statusIds[index],
         label: _statusLabels[index],
@@ -74,7 +101,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final status = _statusIds[_selectedTabIndex];
     final orders = OrderService.instance.state.data ?? const <OrderModel>[];
     return status == 'all'
-      ? orders
+        ? orders
         : OrderService.instance.filterByStatus(status);
   }
 
@@ -129,18 +156,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
           OrderStatusTabs(
             tabs: tabs,
             selectedIndex: _selectedTabIndex,
-            onSelected: (index) => setState(() => _selectedTabIndex = index),
+            onSelected: _onTabSelected,
           ),
           const SizedBox(height: 8),
           Expanded(
-            child: orders.isEmpty
-                ? OrderEmptyState(onContinueShopping: _openHome)
-                : ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemCount: orders.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) => OrderCard(order: orders[index]),
-                  ),
+            child: RefreshIndicator(
+              onRefresh: _refreshOrders,
+              child:
+                  _isTabLoading
+                      ? const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: OrderListSkeleton(itemCount: 3),
+                      )
+                      : orders.isEmpty
+                      ? OrderEmptyState(onContinueShopping: _openHome)
+                      : ListView.separated(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        itemCount: orders.length,
+                        separatorBuilder:
+                            (_, __) => const SizedBox(height: 10),
+                        itemBuilder:
+                            (context, index) =>
+                                OrderCard(order: orders[index]),
+                      ),
+            ),
           ),
         ],
       ),

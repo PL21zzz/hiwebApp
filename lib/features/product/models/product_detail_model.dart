@@ -110,7 +110,7 @@ class ShopProfileModel {
     this.joinedDuration = '3 năm',
     this.isFavorite = true,
     this.coverUrl =
-        'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+        'assets/images/flash-sale1.webp',
     this.videoCount = 24,
     this.productCount = 158,
     this.welcomeMessage =
@@ -318,45 +318,45 @@ class ProductDetailModel {
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500',
+            'assets/images/flash-sale1.webp',
         title: 'Video sản phẩm 1',
       ),
       ProductMediaModel(
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://images.unsplash.com/photo-1608248597261-833258657640?w=500',
+            'assets/images/flash-sale2.webp',
         title: 'Video hướng dẫn 2',
       ),
       ProductMediaModel(
         type: 'video',
         url: 'assets/videos/videodetail.mp4',
         thumb:
-            'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500',
+            'assets/images/prd1.webp',
         title: 'Video thực tế 3',
       ),
       ProductMediaModel(
         type: 'image',
         url:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+            'assets/images/flash-sale1.webp',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+            'assets/images/flash-sale1.webp',
         title: 'Ảnh 1',
       ),
       ProductMediaModel(
         type: 'image',
         url:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+            'assets/images/flash-sale2.webp',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+            'assets/images/flash-sale2.webp',
         title: 'Ảnh 2',
       ),
       ProductMediaModel(
         type: 'image',
         url:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+            'assets/images/prd1.webp',
         thumb:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+            'assets/images/prd1.webp',
         title: 'Ảnh 3',
       ),
     ],
@@ -396,28 +396,28 @@ class ProductDetailModel {
       ProductReviewModel(
         userName: 'Nguyễn Văn A',
         userAvatar:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+            'assets/images/flash-sale1.webp',
         rating: 5,
         date: '20/08/2026',
         variant: '453g',
         comment:
           'Sản phẩm dùng rất thích, dưỡng ẩm cực tốt cho mùa đông. Giao hàng siêu nhanh!',
         photos: [
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+          'assets/images/flash-sale1.webp',
+          'assets/images/flash-sale2.webp',
         ],
         media: [
           ProductReviewMediaModel(
             url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+                'assets/images/flash-sale1.webp',
           ),
           ProductReviewMediaModel(
             url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+                'assets/images/flash-sale2.webp',
           ),
           ProductReviewMediaModel(
             url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+                'assets/images/prd1.webp',
             isVideo: true,
             videoUrl:
                 'assets/videos/videodetail.mp4',
@@ -430,18 +430,18 @@ class ProductDetailModel {
       ProductReviewModel(
         userName: 'Trần Thị B',
         userAvatar:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+            'assets/images/flash-sale2.webp',
         rating: 4,
         date: '15/08/2026',
         variant: '250g',
         comment: 'Kem thấm nhanh, không bết dính. Đóng gói cẩn thận.',
         photos: [
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+          'assets/images/flash-sale2.webp',
         ],
         media: [
           ProductReviewMediaModel(
             url:
-                'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+                'assets/images/flash-sale2.webp',
           ),
         ],
         helpfulCount: 5,
@@ -450,7 +450,7 @@ class ProductDetailModel {
     shopProfile: ShopProfileModel(
       name: 'Phương Thảo Pharmacy',
       avatarUrl:
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+          'assets/images/flash-sale1.webp',
       lastActive: 'Online 5 phút trước',
       rating: 4.9,
       responseRate: '99%',
@@ -466,7 +466,7 @@ class ProductDetailModel {
         soldCount: '1.8k',
         location: 'Hà Nội',
         imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp',
+            'assets/images/flash-sale2.webp',
         category: 'Dưỡng da',
       ),
       ProductModel(
@@ -479,7 +479,7 @@ class ProductDetailModel {
         soldCount: '950',
         location: 'Hà Nội',
         imageUrl:
-            'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/video1_dqeu7c.webp',
+            'assets/images/prd1.webp',
         category: 'Dưỡng da',
       ),
     ],

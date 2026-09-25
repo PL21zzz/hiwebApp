@@ -10,6 +10,8 @@ import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notificatio
 import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
 import 'package:hiweb_app_management/features/product/screens/product_detail_screen.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/flash_sale_skeleton.dart';
+
 class FlashSaleScreen extends StatefulWidget {
   const FlashSaleScreen({super.key});
 
@@ -27,6 +29,7 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
   Timer? _timer;
   int _remainingSeconds = 0;
   bool _isCurrentSlotActive = true;
+  bool _isLoading = true;
 
   final List<String> _categories = FlashSaleModel.mockCategories;
 
@@ -35,6 +38,19 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
     super.initState();
     _computeAvailableSlots();
     _startCountdownTimer();
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _computeAvailableSlots() {
@@ -245,16 +261,27 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6),
-                    child: Image.network(
-                      item.imageUrl,
-                      width: 95,
-                      height: 95,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.image, color: Colors.grey),
-                      ),
-                    ),
+                    child: item.imageUrl.startsWith('http')
+                        ? Image.network(
+                          item.imageUrl,
+                          width: 95,
+                          height: 95,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          ),
+                        )
+                        : Image.asset(
+                          item.imageUrl,
+                          width: 95,
+                          height: 95,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          ),
+                        ),
                   ),
                   if (isLive)
                     Positioned(
@@ -596,25 +623,31 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
 
             // 5. Product List + VietmadeFooter
             Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: products.length + 1, // 1 extra for VietmadeFooter
-                itemBuilder: (context, index) {
-                  if (index < products.length) {
-                    return _buildProductCard(products[index]);
-                  } else {
-                    // Footer at bottom of list with grey gap (AppColors.background)
-                    return Column(
-                      children: [
-                        Container(
-                          height: 120,
-                          color: AppColors.background,
-                        ),
-                        const VietmadeFooter(),
-                      ],
-                    );
-                  }
-                },
+              child: RefreshIndicator(
+                onRefresh: _simulateLoading,
+                color: const Color(0xFFE53935),
+                child: _isLoading
+                    ? const FlashSaleListSkeleton(itemCount: 4)
+                    : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: products.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < products.length) {
+                            return _buildProductCard(products[index]);
+                          } else {
+                            return Column(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  color: AppColors.background,
+                                ),
+                                const VietmadeFooter(),
+                              ],
+                            );
+                          }
+                        },
+                      ),
               ),
             ),
           ],

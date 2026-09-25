@@ -45,13 +45,13 @@ class ToolServiceOption {
 
 class ProfileMockData {
   static const String orderIconPending =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/icon_cholayhang_hrrci0.webp';
+      'assets/icons/icon_cholayhang.webp';
   static const String orderIconShipping =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/icon_dangvanchuyen_ptak0o.webp';
+      'assets/icons/icon_dangvanchuyen.webp';
   static const String orderIconDelivering =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/icon_danggiao_vz8fcq.webp';
+      'assets/icons/icon_danggiao.webp';
   static const String orderIconCanceled =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789957346/icon_dahuydatra_qiuzdo.webp';
+      'assets/icons/icon_dahuydatra.webp';
 
   static const List<OrderStatusOption> orderStatuses = [
     OrderStatusOption(

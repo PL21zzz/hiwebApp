@@ -135,14 +135,23 @@ class _OverviewMediaSectionState extends State<OverviewMediaSection>
                   }
                   return GestureDetector(
                     onTap: () => _openFullscreen(index),
-                    child: Image.network(
-                      item.url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const ColoredBox(
-                        color: Color(0xFFCBD5E1),
-                        child: Icon(LucideIcons.image, size: 48, color: Color(0xFF94A3B8)),
-                      ),
-                    ),
+                    child: item.url.startsWith('http')
+                        ? Image.network(
+                            item.url,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const ColoredBox(
+                              color: Color(0xFFCBD5E1),
+                              child: Icon(LucideIcons.image, size: 48, color: Color(0xFF94A3B8)),
+                            ),
+                          )
+                        : Image.asset(
+                            item.url,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const ColoredBox(
+                              color: Color(0xFFCBD5E1),
+                              child: Icon(LucideIcons.image, size: 48, color: Color(0xFF94A3B8)),
+                            ),
+                          ),
                   );
                 },
               ),

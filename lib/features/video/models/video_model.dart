@@ -51,10 +51,10 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
+          'assets/images/flash-sale1.webp',
       authorName: '@DongGia15k',
       authorAvatar:
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+          'assets/images/flash-sale1.webp',
       caption:
           'Đồ xinh đồng giá 15K ✨ Nhiều mẫu mới cập nhật mỗi ngày. Cam kết hàng chính hãng 100%, chất lượng cao, đổi trả dễ dàng trong 7 ngày. Xem ngay các ưu đãi đặc biệt hôm nay!',
       productTitle: 'Xem sản phẩm (1)',
@@ -68,10 +68,10 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800',
+          'assets/images/flash-sale2.webp',
       authorName: '@GiaDungViet',
       authorAvatar:
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale2_gxg0q7.webp',
+          'assets/images/flash-sale2.webp',
       caption:
           'Khám phá các sản phẩm thủ công mỹ nghệ độc đáo cho gia đình bạn ✨ Giá hạt dẻ giao hàng tận nơi siêu tốc trên toàn quốc. Đặt hàng ngay nhận mã giảm giá 20k!',
       productTitle: 'Xem sản phẩm (2)',
@@ -85,10 +85,10 @@ class VideoItemModel {
       videoUrl:
           'assets/videos/videodetail.mp4',
       thumbnailUrl:
-          'https://images.unsplash.com/photo-1608248597261-833258657640?w=800',
+          'assets/images/prd1.webp',
       authorName: '@MayTreDanShop',
       authorAvatar:
-          'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale3_t13kns.webp',
+          'assets/images/prd1.webp',
       caption:
           'Túi cói hoạ tiết sen siêu sang chảnh đi biển hay đi chơi đều đẹp. Chất liệu mây tre đan tự nhiên 100% bền bỉ, sản xuất thủ công bởi các nghệ nhân làng nghề lâu năm.',
       productTitle: 'Xem sản phẩm (1)',

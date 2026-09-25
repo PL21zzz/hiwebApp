@@ -75,32 +75,47 @@ class _BannerSliderState extends State<BannerSlider> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    _banners[index].imageUrl,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Container(
-                        color: AppColors.primary,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
+                  child: _banners[index].imageUrl.startsWith('http')
+                      ? Image.network(
+                          _banners[index].imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: AppColors.primary,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: AppColors.primary,
+                              child: const Center(
+                                child: Icon(Icons.image_not_supported, color: Colors.white),
+                              ),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          _banners[index].imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: AppColors.primary,
+                              child: const Center(
+                                child: Icon(Icons.image_not_supported, color: Colors.white),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppColors.primary,
-                        child: const Center(
-                          child: Icon(Icons.image_not_supported, color: Colors.white),
-                        ),
-                      );
-                    },
-                  ),
                 ),
               );
             },

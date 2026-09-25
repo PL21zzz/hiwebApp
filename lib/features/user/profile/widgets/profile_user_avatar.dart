@@ -53,15 +53,25 @@ class ProfileUserAvatar extends StatelessWidget {
                                   (context, error, stackTrace) =>
                                       _buildInitialAvatarText(initialLetter),
                             )
-                            : Image.file(
-                              File(avatarUrl),
-                              width: 57,
-                              height: 57,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (context, error, stackTrace) =>
-                                      _buildInitialAvatarText(initialLetter),
-                            ))
+                            : (avatarUrl.startsWith('assets/')
+                                ? Image.asset(
+                                  avatarUrl,
+                                  width: 57,
+                                  height: 57,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          _buildInitialAvatarText(initialLetter),
+                                )
+                                : Image.file(
+                                  File(avatarUrl),
+                                  width: 57,
+                                  height: 57,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          _buildInitialAvatarText(initialLetter),
+                                )))
                         : _buildInitialAvatarText(initialLetter),
               ),
             ),

@@ -398,7 +398,12 @@ class _CommentAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: size / 2,
       backgroundColor: const Color(0xFFE2E8F0),
-      backgroundImage: avatarUrl == null ? null : NetworkImage(avatarUrl!),
+      backgroundImage:
+          avatarUrl == null
+              ? null
+              : (avatarUrl!.startsWith('http')
+                      ? NetworkImage(avatarUrl!)
+                      : AssetImage(avatarUrl!) as ImageProvider),
       child: child,
     );
   }

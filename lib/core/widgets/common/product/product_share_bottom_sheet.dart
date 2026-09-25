@@ -94,7 +94,7 @@ class ProductShareBottomSheet extends StatelessWidget {
       return imgMedia.url;
     }
     if (product != null) return product!.imageUrl;
-    return 'https://via.placeholder.com/150';
+    return 'assets/images/prd1.webp';
   }
 
   double get _price {
@@ -374,22 +374,39 @@ class ProductShareBottomSheet extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
-                                child: Image.network(
-                                  _imageUrl,
-                                  width: 52,
-                                  height: 52,
-                                  fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (_, __, ___) => Container(
+                                child: _imageUrl.startsWith('http')
+                                    ? Image.network(
+                                        _imageUrl,
                                         width: 52,
                                         height: 52,
-                                        color: Colors.grey.shade200,
-                                        child: const Icon(
-                                          LucideIcons.video,
-                                          size: 20,
-                                        ),
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (_, __, ___) => Container(
+                                              width: 52,
+                                              height: 52,
+                                              color: Colors.grey.shade200,
+                                              child: const Icon(
+                                                LucideIcons.video,
+                                                size: 20,
+                                              ),
+                                            ),
+                                      )
+                                    : Image.asset(
+                                        _imageUrl,
+                                        width: 52,
+                                        height: 52,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (_, __, ___) => Container(
+                                              width: 52,
+                                              height: 52,
+                                              color: Colors.grey.shade200,
+                                              child: const Icon(
+                                                LucideIcons.video,
+                                                size: 20,
+                                              ),
+                                            ),
                                       ),
-                                ),
                               ),
                               Container(
                                 width: 22,
@@ -438,22 +455,39 @@ class ProductShareBottomSheet extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(6),
-                            child: Image.network(
-                              _imageUrl,
-                              width: 52,
-                              height: 52,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (_, __, ___) => Container(
+                            child: _imageUrl.startsWith('http')
+                                ? Image.network(
+                                    _imageUrl,
                                     width: 52,
                                     height: 52,
-                                    color: Colors.grey.shade200,
-                                    child: const Icon(
-                                      LucideIcons.image,
-                                      size: 20,
-                                    ),
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (_, __, ___) => Container(
+                                          width: 52,
+                                          height: 52,
+                                          color: Colors.grey.shade200,
+                                          child: const Icon(
+                                            LucideIcons.image,
+                                            size: 20,
+                                          ),
+                                        ),
+                                  )
+                                : Image.asset(
+                                    _imageUrl,
+                                    width: 52,
+                                    height: 52,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (_, __, ___) => Container(
+                                          width: 52,
+                                          height: 52,
+                                          color: Colors.grey.shade200,
+                                          child: const Icon(
+                                            LucideIcons.image,
+                                            size: 20,
+                                          ),
+                                        ),
                                   ),
-                            ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(

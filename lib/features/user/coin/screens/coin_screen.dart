@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/features/user/coin/widgets/coin_daily_checkin_card.dart';
 import 'package:hiweb_app_management/features/user/coin/widgets/coin_game_banner_card.dart';
 
@@ -45,6 +43,7 @@ class _CoinScreenState extends State<CoinScreen> {
   Widget build(BuildContext context) {
     final user = AuthService.instance.currentUser;
     final coins = user?.coins ?? 50;
+    const headerColor = Color(0xFF0097B2);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light.copyWith(
@@ -54,13 +53,13 @@ class _CoinScreenState extends State<CoinScreen> {
         backgroundColor: const Color(0xFFF1F5F9),
         body: Column(
           children: [
-            // Top Header Section
+            // Top Cyan Header Section
             Container(
-              color: AppColors.header,
+              color: headerColor,
               child: SafeArea(
                 bottom: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
+                  padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
                   child: Column(
                     children: [
                       // Back Button & Screen Title
@@ -69,15 +68,15 @@ class _CoinScreenState extends State<CoinScreen> {
                           GestureDetector(
                             onTap: () => Navigator.of(context).pop(),
                             child: const Padding(
-                              padding: EdgeInsets.all(4),
+                              padding: EdgeInsets.symmetric(vertical: 4),
                               child: Icon(
                                 LucideIcons.chevronLeft,
                                 color: Colors.white,
-                                size: 22,
+                                size: 24,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           const Text(
                             'Ưu đãi VietMade xu',
                             style: TextStyle(
@@ -88,9 +87,9 @@ class _CoinScreenState extends State<CoinScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
-                      // Coin Balance Info Card
+                      // Coin Balance Info Row
                       Row(
                         children: [
                           Container(
@@ -124,7 +123,7 @@ class _CoinScreenState extends State<CoinScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             '$coins',
                             style: const TextStyle(
@@ -135,14 +134,14 @@ class _CoinScreenState extends State<CoinScreen> {
                           ),
                           const Spacer(),
 
-                          // History Button
+                          // History Button ("Lịch sử >")
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
+                              horizontal: 14,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.25),
+                              color: Colors.white.withValues(alpha: 0.22),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Row(
@@ -150,12 +149,12 @@ class _CoinScreenState extends State<CoinScreen> {
                                 Text(
                                   'Lịch sử',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 12.5,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(width: 2),
+                                SizedBox(width: 4),
                                 Icon(
                                   LucideIcons.chevronRight,
                                   size: 14,
@@ -172,34 +171,41 @@ class _CoinScreenState extends State<CoinScreen> {
               ),
             ),
 
-            // Scrollable Content
+            // Scrollable Body Content
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(
-                        children: [
-                          // 1. Daily Check-in Card (Extracted Component)
-                          CoinDailyCheckinCard(
-                            claimedDays: _claimedDays,
-                            hasClaimedToday: _hasClaimedToday,
-                            onClaimTap: _claimDailyCoins,
-                          ),
-                          const SizedBox(height: 14),
-
-                          // 2. Game Banner Card (Extracted Component)
-                          const CoinGameBannerCard(),
-                        ],
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 1. Daily Check-in Card
+                      CoinDailyCheckinCard(
+                        claimedDays: _claimedDays,
+                        hasClaimedToday: _hasClaimedToday,
+                        onClaimTap: _claimDailyCoins,
                       ),
-                    ),
+                      const SizedBox(height: 20),
 
-                    const SizedBox(height: 60),
+                      // 2. Section Header: "1CLICK - NHẬN XU"
+                      const Text(
+                        '1CLICK - NHẬN XU',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: headerColor,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
 
-                    // 3. VietMade Footer (Full Width, edge to edge)
-                    const VietmadeFooter(),
-                  ],
+                      // 3. Game Banner Card
+                      const CoinGameBannerCard(),
+
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
             ),

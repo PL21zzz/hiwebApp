@@ -126,7 +126,20 @@ class _ProductImage extends StatelessWidget {
   const _ProductImage({required this.imageUrl});
 
   @override
-  Widget build(BuildContext context) => Container(width: 58, height: 58, decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFFE2E8F0)), image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)));
+  Widget build(BuildContext context) => Container(
+        width: 58,
+        height: 58,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          image: DecorationImage(
+            image: (imageUrl.startsWith('http')
+                ? NetworkImage(imageUrl)
+                : AssetImage(imageUrl)) as ImageProvider,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
 }
 
 class _QuantityBadge extends StatelessWidget {

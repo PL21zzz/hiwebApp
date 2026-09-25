@@ -144,17 +144,29 @@ class OrderCard extends StatelessWidget {
                     border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
                   ),
                   alignment: Alignment.center,
-                  child: Image.network(
-                    item.imageUrl,
-                    width: 52,
-                    height: 52,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      LucideIcons.package,
-                      size: 28,
-                      color: Color(0xFFCBD5E1),
-                    ),
-                  ),
+                  child: item.imageUrl.startsWith('http')
+                      ? Image.network(
+                        item.imageUrl,
+                        width: 52,
+                        height: 52,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          LucideIcons.package,
+                          size: 28,
+                          color: Color(0xFFCBD5E1),
+                        ),
+                      )
+                      : Image.asset(
+                        item.imageUrl,
+                        width: 52,
+                        height: 52,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          LucideIcons.package,
+                          size: 28,
+                          color: Color(0xFFCBD5E1),
+                        ),
+                      ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

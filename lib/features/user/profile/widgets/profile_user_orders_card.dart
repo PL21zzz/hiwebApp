@@ -46,13 +46,21 @@ class ProfileUserOrdersCard extends StatelessWidget {
                 SizedBox(
                   height: 38,
                   child: Center(
-                    child: Image.network(
-                      option.imageUrl,
-                      height: 32,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.inventory_2, size: 28, color: Colors.grey),
-                    ),
+                    child: option.imageUrl.startsWith('http')
+                        ? Image.network(
+                            option.imageUrl,
+                            height: 32,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.inventory_2, size: 28, color: Colors.grey),
+                          )
+                        : Image.asset(
+                            option.imageUrl,
+                            height: 32,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.inventory_2, size: 28, color: Colors.grey),
+                          ),
                   ),
                 ),
                 if (count > 0)

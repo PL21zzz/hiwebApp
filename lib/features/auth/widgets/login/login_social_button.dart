@@ -25,13 +25,21 @@ class LoginSocialButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(
-              UserModel.googleLogoUrl,
-              width: 18,
-              height: 18,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.g_mobiledata, size: 20),
-            ),
+            UserModel.googleLogoUrl.startsWith('http')
+                ? Image.network(
+                    UserModel.googleLogoUrl,
+                    width: 18,
+                    height: 18,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.g_mobiledata, size: 20),
+                  )
+                : Image.asset(
+                    UserModel.googleLogoUrl,
+                    width: 18,
+                    height: 18,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.g_mobiledata, size: 20),
+                  ),
             const SizedBox(width: 8),
             const Text(
               'Đăng nhập bằng Google',

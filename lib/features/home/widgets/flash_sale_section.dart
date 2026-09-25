@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 import 'package:hiweb_app_management/features/product/screens/flash_sale_screen.dart';
+import 'package:hiweb_app_management/features/video/models/video_model.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
 class FlashSaleSection extends StatefulWidget {
@@ -61,14 +62,23 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
             borderRadius: BorderRadius.circular(6),
             child: AspectRatio(
               aspectRatio: 0.78,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const ColoredBox(
-                  color: Color(0xFFE2E8F0),
-                  child: Icon(Icons.broken_image, color: Color(0xFF94A3B8)),
-                ),
-              ),
+              child: imageUrl.startsWith('http')
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const ColoredBox(
+                        color: Color(0xFFE2E8F0),
+                        child: Icon(Icons.broken_image, color: Color(0xFF94A3B8)),
+                      ),
+                    )
+                  : Image.asset(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const ColoredBox(
+                        color: Color(0xFFE2E8F0),
+                        child: Icon(Icons.broken_image, color: Color(0xFF94A3B8)),
+                      ),
+                    ),
             ),
           ),
           if (badgeText != null)
@@ -86,8 +96,6 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
     );
   }
 
-  Widget _videoTile() => const Expanded(child: _HomeVideoTile());
-
   void _openVideoTab() {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -103,6 +111,10 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
     final hours = _twoDigits(_remainingSeconds ~/ 3600);
     final minutes = _twoDigits((_remainingSeconds % 3600) ~/ 60);
     final seconds = _twoDigits(_remainingSeconds % 60);
+
+    final videos = VideoItemModel.mockVideos;
+    final v1 = videos.isNotEmpty ? videos[0] : null;
+    final v2 = videos.length > 1 ? videos[1] : null;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -146,9 +158,9 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        _imageTile(imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp', badgeText: 'ĐÃ BÁN 4100'),
+                        _imageTile(imageUrl: 'assets/images/flash-sale1.webp', badgeText: 'ĐÃ BÁN 4100'),
                         const SizedBox(width: 6),
-                        _imageTile(imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549364/flash-sale2_fvgamt.webp', badgeText: 'ĐÃ BÁN 2800'),
+                        _imageTile(imageUrl: 'assets/images/flash-sale2.webp', badgeText: 'ĐÃ BÁN 2800'),
                       ],
                     ),
                   ],
@@ -178,7 +190,19 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(children: [_videoTile(), const SizedBox(width: 6), _videoTile()]),
+                    Row(
+                      children: [
+                        if (v1 != null)
+                          _HomeVideoTile(videoUrl: v1.videoUrl, thumbnailUrl: v1.thumbnailUrl)
+                        else
+                          const SizedBox.shrink(),
+                        const SizedBox(width: 6),
+                        if (v2 != null)
+                          _HomeVideoTile(videoUrl: v2.videoUrl, thumbnailUrl: v2.thumbnailUrl)
+                        else
+                          const SizedBox.shrink(),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -191,49 +215,117 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
 }
 
 class _HomeVideoTile extends StatefulWidget {
-  const _HomeVideoTile();
+  final String videoUrl;
+  final String thumbnailUrl;
+
+  const _HomeVideoTile({
+    required this.videoUrl,
+    required this.thumbnailUrl,
+  });
 
   @override
   State<_HomeVideoTile> createState() => _HomeVideoTileState();
 }
 
 class _HomeVideoTileState extends State<_HomeVideoTile> {
-  late final VideoPlayerController _controller;
+  VideoPlayerController? _controller;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/videos/videodetail.mp4')
-      ..initialize().then((_) {
-        if (!mounted) return;
-        _controller
-          ..setLooping(true)
-          ..setVolume(0)
-          ..play();
-        setState(() {});
+    _initPlayer();
+  }
+
+  Future<void> _initPlayer() async {
+    final controller = widget.videoUrl.startsWith('assets/')
+        ? VideoPlayerController.asset(widget.videoUrl)
+        : VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    _controller = controller;
+
+    try {
+      final initialization = controller.initialize();
+      if (widget.videoUrl.startsWith('assets/')) {
+        await initialization;
+      } else {
+        await initialization.timeout(const Duration(seconds: 15));
+      }
+      if (!mounted || _controller != controller) {
+        controller.dispose();
+        return;
+      }
+      controller
+        ..setLooping(true)
+        ..setVolume(0)
+        ..play();
+      setState(() {
+        _isInitialized = true;
       });
+    } catch (e) {
+      debugPrint('Error initializing home video tile: $e');
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return const AspectRatio(aspectRatio: 0.78, child: ColoredBox(color: Color(0xFFE2E8F0)));
-    }
-    return AspectRatio(
-      aspectRatio: 0.78,
-      child: FittedBox(
-        fit: BoxFit.cover,
-        clipBehavior: Clip.hardEdge,
-        child: SizedBox(
-          width: _controller.value.size.width,
-          height: _controller.value.size.height,
-          child: VideoPlayer(_controller),
+    return Expanded(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: AspectRatio(
+          aspectRatio: 0.78,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 1. Instant Thumbnail Background
+              widget.thumbnailUrl.startsWith('http')
+                  ? Image.network(
+                      widget.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE2E8F0)),
+                    )
+                  : Image.asset(
+                      widget.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE2E8F0)),
+                    ),
+
+              // 2. Video layer once loaded
+              if (_isInitialized && _controller != null && _controller!.value.isInitialized)
+                FittedBox(
+                  fit: BoxFit.cover,
+                  clipBehavior: Clip.hardEdge,
+                  child: SizedBox(
+                    width: _controller!.value.size.width,
+                    height: _controller!.value.size.height,
+                    child: VideoPlayer(_controller!),
+                  ),
+                ),
+
+              // 3. Mini Play Badge Icon Overlay
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 11,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

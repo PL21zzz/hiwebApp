@@ -9,5 +9,5 @@ class CheckoutMockData {
   static const String coinsLabel = 'Dùng 150 VietMade Xu';
   static const String productVariantPrefix = 'Đã chọn: ';
   static const String fallbackImage =
-      'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp';
+      'assets/images/flash-sale1.webp';
 }

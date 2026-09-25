@@ -10,15 +10,15 @@ class BannerModel {
   static const List<BannerModel> mockBanners = [
     BannerModel(
       id: 'b1',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide1_dhs27i.webp',
+      imageUrl: 'assets/images/slide1.webp',
     ),
     BannerModel(
       id: 'b2',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide2_cjt32o.webp',
+      imageUrl: 'assets/images/slide2.webp',
     ),
     BannerModel(
       id: 'b3',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789547604/slide3_navayf.webp',
+      imageUrl: 'assets/images/slide3.webp',
     ),
   ];
 }

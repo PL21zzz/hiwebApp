@@ -59,7 +59,9 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
               maxScale: 4,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(item.url, fit: BoxFit.contain),
+                child: item.url.startsWith('http')
+                    ? Image.network(item.url, fit: BoxFit.contain)
+                    : Image.asset(item.url, fit: BoxFit.contain),
               ),
             ),
           ),
@@ -89,7 +91,9 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                 backgroundColor: const Color(0xFFE879F9),
                 backgroundImage:
                     review.userAvatar.isNotEmpty
-                        ? NetworkImage(review.userAvatar)
+                        ? (review.userAvatar.startsWith('http')
+                            ? NetworkImage(review.userAvatar)
+                            : AssetImage(review.userAvatar) as ImageProvider)
                         : null,
                 child:
                     review.userAvatar.isEmpty
@@ -193,22 +197,39 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Image.network(
-                            item.url,
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) => Container(
-                                  width: 64,
-                                  height: 64,
-                                  color: const Color(0xFFE2E8F0),
-                                  child: const Icon(
-                                    Icons.image,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                          ),
+                          child: item.url.startsWith('http')
+                              ? Image.network(
+                                item.url,
+                                width: 64,
+                                height: 64,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (context, error, stackTrace) => Container(
+                                      width: 64,
+                                      height: 64,
+                                      color: const Color(0xFFE2E8F0),
+                                      child: const Icon(
+                                        Icons.image,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                              )
+                              : Image.asset(
+                                item.url,
+                                width: 64,
+                                height: 64,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (context, error, stackTrace) => Container(
+                                      width: 64,
+                                      height: 64,
+                                      color: const Color(0xFFE2E8F0),
+                                      child: const Icon(
+                                        Icons.image,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                              ),
                         ),
                         if (item.isVideo)
                           const Positioned.fill(

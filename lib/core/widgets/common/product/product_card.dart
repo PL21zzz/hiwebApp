@@ -49,14 +49,23 @@ class ProductCard extends StatelessWidget {
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        ),
-                      ),
+                      child: product.imageUrl.startsWith('http')
+                          ? Image.network(
+                              product.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image, color: Colors.grey),
+                              ),
+                            )
+                          : Image.asset(
+                              product.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image, color: Colors.grey),
+                              ),
+                            ),
                     ),
                     if (product.discountPercent > 0)
                       Positioned(

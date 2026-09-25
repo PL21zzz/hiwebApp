@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/core/widgets/common/buttons/pressable_scale.dart';
 
 class CheckoutBottomBar extends StatelessWidget {
   final String totalLabel;
@@ -23,7 +24,9 @@ class CheckoutBottomBar extends StatelessWidget {
             Text(totalLabel, style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.bold, color: Color(0xFFEF4444))),
             Text(savingsLabel, style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8))),
           ]),
-          SizedBox(width: 140, height: 42, child: ElevatedButton(onPressed: isValid && !isSubmitting ? onPlaceOrder : null, style: ElevatedButton.styleFrom(backgroundColor: isValid ? AppColors.primary : const Color(0xFFCBD5E1), foregroundColor: Colors.white, disabledBackgroundColor: const Color(0xFF94A3B8), elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))), child: isSubmitting ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('ĐẶT HÀNG', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, letterSpacing: 0.4)))),
+          PressableScale(
+            child: SizedBox(width: 140, height: 42, child: ElevatedButton(onPressed: isValid && !isSubmitting ? onPlaceOrder : null, style: ElevatedButton.styleFrom(backgroundColor: isValid ? AppColors.primary : const Color(0xFFCBD5E1), foregroundColor: Colors.white, disabledBackgroundColor: const Color(0xFF94A3B8), elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))), child: isSubmitting ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('ĐẶT HÀNG', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, letterSpacing: 0.4)))),
+          ),
         ]),
       ),
     );

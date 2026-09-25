@@ -4,7 +4,6 @@ import 'package:hiweb_app_management/features/user/support/models/support_reques
 import 'package:hiweb_app_management/features/user/support/services/support_request_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/cards/reusable_info_card.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
 import 'package:hiweb_app_management/features/user/support/widgets/support_request_modal.dart';
 
@@ -121,8 +120,7 @@ class SupportRequestScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 60),
-                  const VietmadeFooter(),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

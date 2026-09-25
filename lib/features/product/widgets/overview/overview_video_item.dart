@@ -105,7 +105,9 @@ class _OverviewVideoItemState extends State<OverviewVideoItem> {
               ),
             )
           else
-            Image.network(widget.thumbUrl, fit: BoxFit.cover),
+            widget.thumbUrl.startsWith('http')
+                ? Image.network(widget.thumbUrl, fit: BoxFit.cover)
+                : Image.asset(widget.thumbUrl, fit: BoxFit.cover),
           if (!_isPlaying) ...[
             Container(color: Colors.black.withValues(alpha: 0.25)),
             Center(

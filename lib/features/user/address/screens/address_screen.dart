@@ -6,7 +6,6 @@ import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/features/user/address/widgets/add_address_modal.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/confirm_dialog.dart';
 import 'package:hiweb_app_management/core/widgets/common/cards/reusable_info_card.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
 
 class AddressScreen extends StatelessWidget {
@@ -114,8 +113,7 @@ class AddressScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 60),
-                  const VietmadeFooter(),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

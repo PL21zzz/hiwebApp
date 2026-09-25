@@ -57,7 +57,11 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
       barrierColor: Colors.black87,
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
-        child: InteractiveViewer(child: Image.network(item.url, fit: BoxFit.contain)),
+        child: InteractiveViewer(
+          child: item.url.startsWith('http')
+              ? Image.network(item.url, fit: BoxFit.contain)
+              : Image.asset(item.url, fit: BoxFit.contain),
+        ),
       ),
     );
   }
@@ -181,7 +185,25 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
           const SizedBox(height: 8),
           SizedBox(height: 64, child: ListView.separated(scrollDirection: Axis.horizontal, itemCount: media.length, separatorBuilder: (_, __) => const SizedBox(width: 6), itemBuilder: (_, index) {
             final item = media[index];
-            return GestureDetector(onTap: () => _openMedia(item), child: Stack(children: [ClipRRect(borderRadius: BorderRadius.circular(5), child: Image.network(item.url, width: 64, height: 64, fit: BoxFit.cover)), if (item.isVideo) const Positioned.fill(child: Center(child: Icon(Icons.play_circle_fill, color: Colors.white, size: 25)))]));
+            return GestureDetector(
+              onTap: () => _openMedia(item),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: item.url.startsWith('http')
+                        ? Image.network(item.url, width: 64, height: 64, fit: BoxFit.cover)
+                        : Image.asset(item.url, width: 64, height: 64, fit: BoxFit.cover),
+                  ),
+                  if (item.isVideo)
+                    const Positioned.fill(
+                      child: Center(
+                        child: Icon(Icons.play_circle_fill, color: Colors.white, size: 25),
+                      ),
+                    ),
+                ],
+              ),
+            );
           })),
         ],
         if (review.shopResponse != null) ...[

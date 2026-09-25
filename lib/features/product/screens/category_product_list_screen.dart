@@ -10,6 +10,8 @@ import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_bottom_nav_bar.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/filter_drawer.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/product_card_skeleton.dart';
+
 class CategoryProductListScreen extends StatefulWidget {
   final String categoryTitle;
 
@@ -27,6 +29,25 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
   String _selectedSortOption = 'Mới nhất';
   OverlayEntry? _sortOverlayEntry;
   bool _isSortMenuOpen = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   static const List<String> _sortOptions = CategoryModel.sortOptions;
 
@@ -105,6 +126,7 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
                               _selectedSortOption = option;
                             });
                             _removeSortMenu();
+                            _simulateLoading();
                           },
                           child: Container(
                             width: double.infinity,
@@ -305,26 +327,33 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
 
             // Scrollable Content Area: Product Grid 2 + Grey Gap + Footer
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // Product Grid 2 (6 items, blue box background #BCEDF4)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(6),
-                      color: AppColors.productBoxBg,
-                      child: const ProductGrid(itemCount: 6),
-                    ),
+              child: RefreshIndicator(
+                onRefresh: _simulateLoading,
+                color: AppColors.primary,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // Product Grid 2 (6 items, blue box background #BCEDF4)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(6),
+                        color: AppColors.productBoxBg,
+                        child: _isLoading
+                            ? const ProductGridSkeleton(itemCount: 6)
+                            : const ProductGrid(itemCount: 6),
+                      ),
 
-                    // Grey spacer (60px) before footer
-                    Container(
-                      height: 60,
-                      color: AppColors.background,
-                    ),
+                      // Grey spacer (60px) before footer
+                      Container(
+                        height: 60,
+                        color: AppColors.background,
+                      ),
 
-                    // VietmadeFooter
-                    const VietmadeFooter(),
-                  ],
+                      // VietmadeFooter
+                      const VietmadeFooter(),
+                    ],
+                  ),
                 ),
               ),
             ),

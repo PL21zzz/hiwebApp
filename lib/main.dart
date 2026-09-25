@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:hiweb_app_management/core/theme/app_theme.dart';
 import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
+import 'package:hiweb_app_management/core/widgets/common/network/offline_banner_overlay.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,10 @@ class VietMadeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
+      builder: (context, child) {
+        final previewChild = DevicePreview.appBuilder(context, child);
+        return OfflineBannerOverlay(child: previewChild);
+      },
       title: 'VIETMADE.vn',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,

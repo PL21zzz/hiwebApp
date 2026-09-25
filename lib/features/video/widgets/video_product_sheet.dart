@@ -493,8 +493,24 @@ class _ProductCardItem extends StatelessWidget {
   }
 
   Widget _buildImage(String source) {
-    if (source.startsWith('assets/')) {
-      return Image.asset(source, width: 56, height: 56, fit: BoxFit.cover);
+    if (!source.startsWith('http')) {
+      return Image.asset(
+        source,
+        width: 56,
+        height: 56,
+        fit: BoxFit.cover,
+        errorBuilder:
+            (_, __, ___) => Container(
+              width: 56,
+              height: 56,
+              color: const Color(0xFFF1F5F9),
+              child: const Icon(
+                LucideIcons.package,
+                color: Color(0xFF94A3B8),
+                size: 26,
+              ),
+            ),
+      );
     }
 
     return Image.network(

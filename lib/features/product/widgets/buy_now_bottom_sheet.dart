@@ -5,6 +5,7 @@ import 'package:hiweb_app_management/features/product/models/product_detail_mode
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'product_customization_section.dart';
 import 'package:hiweb_app_management/core/widgets/common/surfaces/app_bottom_sheet.dart';
+import 'package:hiweb_app_management/core/widgets/common/buttons/pressable_scale.dart';
 
 class BuyNowBottomSheet extends StatefulWidget {
   final ProductDetailModel productDetail;
@@ -176,7 +177,10 @@ class _BuyNowBottomSheetState extends State<BuyNowBottomSheet> {
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: const Color(0xFFE2E8F0)),
                     image: DecorationImage(
-                      image: NetworkImage(images[index]),
+                      image:
+                          images[index].startsWith('http')
+                              ? NetworkImage(images[index])
+                              : AssetImage(images[index]) as ImageProvider,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -414,37 +418,39 @@ class _BuyNowBottomSheetState extends State<BuyNowBottomSheet> {
           ),
         ],
       ),
-      child: SizedBox(
-        height: 46,
-        child: ElevatedButton(
-          onPressed:
-              isDisabled
-                  ? null
-                  : () {
-                    Navigator.of(context).pop();
-                    widget.onConfirm(
-                      _selectedVariant,
-                      _quantity,
-                      customizationText,
-                      _customizationImagePath,
-                    );
-                  },
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                isDisabled ? const Color(0xFFCBD5E1) : AppColors.primary,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: const Color(0xFFCBD5E1),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+      child: PressableScale(
+        child: SizedBox(
+          height: 46,
+          child: ElevatedButton(
+            onPressed:
+                isDisabled
+                    ? null
+                    : () {
+                      Navigator.of(context).pop();
+                      widget.onConfirm(
+                        _selectedVariant,
+                        _quantity,
+                        customizationText,
+                        _customizationImagePath,
+                      );
+                    },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  isDisabled ? const Color(0xFFCBD5E1) : AppColors.primary,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: const Color(0xFFCBD5E1),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
             ),
-          ),
-          child: const Text(
-            'MUA NGAY',
-            style: TextStyle(
-              fontSize: 14.5,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+            child: const Text(
+              'MUA NGAY',
+              style: TextStyle(
+                fontSize: 14.5,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
         ),

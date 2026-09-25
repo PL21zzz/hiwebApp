@@ -12,17 +12,17 @@ class TopSearchModel {
   static const List<TopSearchModel> mockTopSearches = [
     TopSearchModel(
       id: 'ts1',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789607758/search1_juc8bw.webp',
+      imageUrl: 'assets/images/flash-sale1.webp',
       label: 'netflix',
     ),
     TopSearchModel(
       id: 'ts2',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789607758/search2_vaai20.webp',
+      imageUrl: 'assets/images/flash-sale2.webp',
       label: 'netflix',
     ),
     TopSearchModel(
       id: 'ts3',
-      imageUrl: 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789607758/search3_gecpey.webp',
+      imageUrl: 'assets/images/prd1.webp',
       label: 'netflix',
     ),
   ];

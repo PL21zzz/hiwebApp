@@ -53,13 +53,21 @@ class _ShopBannerHeaderState extends State<ShopBannerHeader> {
       children: [
         // Background Cover Photo with Dark Overlay
         Positioned.fill(
-          child: Image.network(
-            widget.shop.coverUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: const Color(0xFF1E293B),
-            ),
-          ),
+          child: widget.shop.coverUrl.startsWith('http')
+              ? Image.network(
+                widget.shop.coverUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: const Color(0xFF1E293B),
+                ),
+              )
+              : Image.asset(
+                widget.shop.coverUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: const Color(0xFF1E293B),
+                ),
+              ),
         ),
         Positioned.fill(
           child: Container(

@@ -6,6 +6,7 @@ import 'package:hiweb_app_management/features/cart_checkout/models/cart_item_mod
 import 'package:hiweb_app_management/features/user/voucher/repositories/voucher_repository.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/screens/checkout_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/widgets/cart_checkout_bottom_bar.dart';
 import 'package:hiweb_app_management/features/cart_checkout/widgets/cart_header_bar.dart';
@@ -176,9 +177,14 @@ class _CartScreenState extends State<CartScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                }
+                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const MainNavigationScreen(initialIndex: 0),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                  (route) => false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,

@@ -33,6 +33,16 @@ class _VideoRightActionsState extends State<VideoRightActions> {
   }
 
   @override
+  void didUpdateWidget(covariant VideoRightActions oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.video.isLiked != _isLiked) {
+      setState(() {
+        _isLiked = widget.video.isLiked;
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _followTimer?.cancel();
     super.dispose();
@@ -91,19 +101,34 @@ class _VideoRightActionsState extends State<VideoRightActions> {
                     color: Colors.white,
                   ),
                   child: ClipOval(
-                    child: Image.network(
-                      widget.video.authorAvatar,
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (_, __, ___) => Container(
-                            color: Colors.cyan.shade600,
-                            child: const Icon(
-                              LucideIcons.shoppingBag,
-                              color: Colors.white,
-                              size: 22,
+                    child:
+                        widget.video.authorAvatar.startsWith('http')
+                            ? Image.network(
+                              widget.video.authorAvatar,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => Container(
+                                    color: Colors.cyan.shade600,
+                                    child: const Icon(
+                                      LucideIcons.shoppingBag,
+                                      color: Colors.white,
+                                      size: 22,
+                                    ),
+                                  ),
+                            )
+                            : Image.asset(
+                              widget.video.authorAvatar,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => Container(
+                                    color: Colors.cyan.shade600,
+                                    child: const Icon(
+                                      LucideIcons.shoppingBag,
+                                      color: Colors.white,
+                                      size: 22,
+                                    ),
+                                  ),
                             ),
-                          ),
-                    ),
                   ),
                 ),
                 if (!_isFollowing)
