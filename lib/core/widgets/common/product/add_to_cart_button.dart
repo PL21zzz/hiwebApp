@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/product/models/product_model.dart';
 import 'package:hiweb_app_management/features/cart_checkout/models/cart_item_model.dart';
-import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/features/cart_checkout/repositories/cart_repository.dart';
@@ -36,19 +35,10 @@ class AddToCartButton extends StatelessWidget {
     if (!AuthService.instance.isLoggedIn) {
       TopNotification.show(
         context,
-        message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
+        message: 'Bạn chưa đăng nhập!',
         isError: true,
       );
-
-      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const LoginScreen(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (route) => false,
-      );
+      return;
     } else {
       final CartItemModel itemToAdd;
       if (product != null) {

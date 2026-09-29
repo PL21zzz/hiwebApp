@@ -139,7 +139,7 @@ class SimilarProductCard extends StatelessWidget {
                           child: Text(
                             _brandName,
                             style: const TextStyle(
-                              fontSize: 10.5,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF475569),
                             ),
@@ -153,14 +153,17 @@ class SimilarProductCard extends StatelessWidget {
                     const SizedBox(height: 2),
 
                     // Product Title (2 lines max)
-                    SizedBox(
-                      height: 26,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.textScalerOf(context).scale(13.5) * 1.2 * 2,
+                        maxHeight: MediaQuery.textScalerOf(context).scale(13.5) * 1.2 * 2,
+                      ),
                       child: Text(
                         product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 11,
+                          fontSize: 13.5,
                           fontWeight: FontWeight.normal,
                           color: Color(0xFF1E293B),
                           height: 1.2,
@@ -171,39 +174,43 @@ class SimilarProductCard extends StatelessWidget {
                     const SizedBox(height: 2),
 
                     // Price Row (Current Red Price + Original Strikethrough Price)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
-                          style: const TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFE53935),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                            style: const TextStyle(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFE53935),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Text(
-                              '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
-                              style: const TextStyle(
-                                fontSize: 9.5,
-                                color: Color(0xFF94A3B8),
+                          const SizedBox(width: 4),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Text(
+                                '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF94A3B8),
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                height: 1.0,
-                                color: const Color(0xFF94A3B8),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 1.0,
+                                  color: const Color(0xFF94A3B8),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 2),
@@ -220,7 +227,7 @@ class SimilarProductCard extends StatelessWidget {
                         Text(
                           product.rating.toStringAsFixed(1),
                           style: const TextStyle(
-                            fontSize: 10,
+                            fontSize: 11.5,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF334155),
                           ),
@@ -229,7 +236,7 @@ class SimilarProductCard extends StatelessWidget {
                         Text(
                           '| ${product.soldCount} Đã bán',
                           style: const TextStyle(
-                            fontSize: 9.5,
+                            fontSize: 11,
                             color: Color(0xFF64748B),
                           ),
                         ),

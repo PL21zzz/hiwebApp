@@ -294,22 +294,26 @@ class _ProductReviewsTabState extends State<ProductReviewsTab> {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Text(
-                          '${_detail.shopProfile.followerCount} Theo dõi  ·  ${_detail.shopProfile.totalSold} Đã bán  ·  ${_detail.shopProfile.rating.toStringAsFixed(1)}',
-                          style: const TextStyle(
-                            fontSize: 9.5,
-                            color: Color(0xFF64748B),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            '${_detail.shopProfile.followerCount} Theo dõi  ·  ${_detail.shopProfile.totalSold} Đã bán  ·  ${_detail.shopProfile.rating.toStringAsFixed(1)}',
+                            style: const TextStyle(
+                              fontSize: 9.5,
+                              color: Color(0xFF64748B),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 2),
-                        const Icon(
-                          Icons.star_rounded,
-                          size: 14,
-                          color: Color(0xFFEAB308),
-                        ),
-                      ],
+                          const SizedBox(width: 2),
+                          const Icon(
+                            Icons.star_rounded,
+                            size: 14,
+                            color: Color(0xFFEAB308),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Row(

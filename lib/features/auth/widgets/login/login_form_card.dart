@@ -57,20 +57,20 @@ class LoginFormCard extends StatelessWidget {
           const Text(
             'Đăng nhập',
             style: TextStyle(
-              fontSize: 18.5,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E293B),
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 4),
           const Text(
             'Đăng nhập vào tài khoản của bạn.',
             style: TextStyle(
-              fontSize: 11.5,
+              fontSize: 13,
               color: Color(0xFF64748B),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
 
           // Email / Username Input
           AuthTextField(
@@ -79,10 +79,8 @@ class LoginFormCard extends StatelessWidget {
             controller: emailController,
             prefixIcon: LucideIcons.user,
             errorText: emailError,
-            labelFontSize: 11.5,
-            inputFontSize: 12.5,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
 
           // Password Input
           AuthTextField(
@@ -92,18 +90,16 @@ class LoginFormCard extends StatelessWidget {
             obscureText: !isPasswordVisible,
             prefixIcon: LucideIcons.lock,
             errorText: passwordError,
-            labelFontSize: 11.5,
-            inputFontSize: 12.5,
             suffixIcon: GestureDetector(
               onTap: onTogglePasswordVisibility,
               child: Icon(
                 isPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
-                size: 16,
+                size: 18,
                 color: const Color(0xFF94A3B8),
               ),
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
 
           // Remember Me & Forgot Password
           Row(
@@ -123,11 +119,11 @@ class LoginFormCard extends StatelessWidget {
                       onChanged: onRememberMeChanged,
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 6),
                   const Text(
                     'Ghi nhớ đăng nhập',
                     style: TextStyle(
-                      fontSize: 11.5,
+                      fontSize: 13,
                       color: Color(0xFF334155),
                     ),
                   ),
@@ -138,7 +134,7 @@ class LoginFormCard extends StatelessWidget {
                 child: const Text(
                   'Quên mật khẩu?',
                   style: TextStyle(
-                    fontSize: 11.5,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primary,
                   ),
@@ -146,12 +142,12 @@ class LoginFormCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
           // Main Login Button
           SizedBox(
             width: double.infinity,
-            height: 40,
+            height: 44,
             child: ElevatedButton(
               onPressed: onLoginPressed,
               style: ElevatedButton.styleFrom(
@@ -159,19 +155,19 @@ class LoginFormCard extends StatelessWidget {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: const Text(
                 'Đăng nhập',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
           // Divider "HOẶC"
           const Row(
@@ -180,11 +176,11 @@ class LoginFormCard extends StatelessWidget {
                 child: Divider(color: Color(0xFFE2E8F0), thickness: 0.8),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   'HOẶC',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 11.5,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF94A3B8),
                   ),
@@ -195,11 +191,11 @@ class LoginFormCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
           // Google Button
           LoginSocialButton(onPressed: onGoogleLoginPressed),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
 
           // Register Link
           Row(
@@ -207,14 +203,14 @@ class LoginFormCard extends StatelessWidget {
             children: [
               const Text(
                 'Chưa có tài khoản? ',
-                style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 13.5, color: Color(0xFF64748B)),
               ),
               GestureDetector(
                 onTap: onRegisterTap,
                 child: const Text(
                   'Đăng ký',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
                   ),

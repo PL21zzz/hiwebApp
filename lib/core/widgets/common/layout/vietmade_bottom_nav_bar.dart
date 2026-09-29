@@ -93,28 +93,30 @@ class VietmadeBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE2E8F0),
-            width: 1,
+    return MediaQuery.withNoTextScaling(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: Color(0xFFE2E8F0),
+              width: 1,
+            ),
           ),
         ),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 56,
-          child: Row(
-            children: [
-              _buildNavItem(context, icon: LucideIcons.home, label: 'Trang chủ', index: 0),
-              _buildNavItem(context, icon: LucideIcons.layoutGrid, label: 'Danh mục', index: 1),
-              _buildNavItem(context, icon: LucideIcons.clapperboard, label: 'Video', index: 2),
-              _buildNavItem(context, icon: LucideIcons.bell, label: 'Thông báo', index: 3),
-              _buildNavItem(context, icon: LucideIcons.user, label: 'Tài khoản', index: 4),
-            ],
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 56,
+            child: Row(
+              children: [
+                _buildNavItem(context, icon: LucideIcons.home, label: 'Trang chủ', index: 0),
+                _buildNavItem(context, icon: LucideIcons.layoutGrid, label: 'Danh mục', index: 1),
+                _buildNavItem(context, icon: LucideIcons.clapperboard, label: 'Video', index: 2),
+                _buildNavItem(context, icon: LucideIcons.bell, label: 'Thông báo', index: 3),
+                _buildNavItem(context, icon: LucideIcons.user, label: 'Tài khoản', index: 4),
+              ],
+            ),
           ),
         ),
       ),

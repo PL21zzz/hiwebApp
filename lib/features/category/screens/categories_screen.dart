@@ -190,9 +190,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        childAspectRatio: 0.92,
+                        childAspectRatio: 0.85,
                         crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
+                        mainAxisSpacing: 4,
                       ),
                       itemCount: subcategories.length + 1, // 1 extra for "Xem Tất Cả"
                       itemBuilder: (context, index) {

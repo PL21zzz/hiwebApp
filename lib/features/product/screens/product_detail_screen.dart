@@ -13,7 +13,6 @@ import 'package:hiweb_app_management/features/product/widgets/overview/product_o
 import 'package:hiweb_app_management/features/product/widgets/product_detail_bottom_bar.dart';
 import 'package:hiweb_app_management/features/product/widgets/product_detail_header_bar.dart';
 import 'package:hiweb_app_management/features/product/widgets/reviews/product_reviews_tab.dart';
-import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
 import 'product_reviews_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/screens/checkout_screen.dart';
@@ -191,18 +190,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (!AuthService.instance.isLoggedIn) {
       TopNotification.show(
         context,
-        message: 'Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!',
+        message: 'Bạn chưa đăng nhập!',
         isError: true,
-      );
-
-      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => const LoginScreen(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (route) => false,
       );
       return;
     }
@@ -331,6 +320,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     bottom: 14,
                     child: GestureDetector(
                       onTap: () {
+                        if (!AuthService.instance.isLoggedIn) {
+                          TopNotification.show(
+                            context,
+                            message: 'Bạn chưa đăng nhập!',
+                            isError: true,
+                          );
+                          return;
+                        }
                         Navigator.of(context).push(
                           PageRouteBuilder(
                             pageBuilder:

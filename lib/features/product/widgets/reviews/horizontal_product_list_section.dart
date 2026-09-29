@@ -95,7 +95,7 @@ class _HorizontalProductListSectionState
 
           // Horizontal Products ListView
           SizedBox(
-            height: 245,
+            height: 260,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -254,7 +254,7 @@ class _HorizontalProductListSectionState
                             children: [
                               // Yêu thích badge + Name inline
                               SizedBox(
-                                height: 32,
+                                height: 38,
                                 child: RichText(
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -290,7 +290,7 @@ class _HorizontalProductListSectionState
                                       TextSpan(
                                         text: product.name,
                                         style: const TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 13.5,
                                           color: Color(0xFF334155),
                                           fontWeight: FontWeight.w400,
                                           height: 1.25,
@@ -304,39 +304,43 @@ class _HorizontalProductListSectionState
                               // Price row (Red current price + grey original price with centered horizontal strikethrough line)
                               SizedBox(
                                 height: 20,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
-                                      style: const TextStyle(
-                                        fontSize: 12.5,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFFE53935),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                        style: const TextStyle(
+                                          fontSize: 13.5,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFE53935),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Text(
-                                          '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
-                                          style: const TextStyle(
-                                            fontSize: 9.5,
-                                            color: Color(0xFF94A3B8),
+                                      const SizedBox(width: 4),
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Text(
+                                            '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                            style: const TextStyle(
+                                              fontSize: 10.5,
+                                              color: Color(0xFF94A3B8),
+                                            ),
                                           ),
-                                        ),
-                                        Positioned(
-                                          left: 0,
-                                          right: 0,
-                                          child: Container(
-                                            height: 1.0,
-                                            color: const Color(0xFF94A3B8),
+                                          Positioned(
+                                            left: 0,
+                                            right: 0,
+                                            child: Container(
+                                              height: 1.0,
+                                              color: const Color(0xFF94A3B8),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 2),

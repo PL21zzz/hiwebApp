@@ -261,7 +261,8 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
               LayoutBuilder(
                 builder: (context, constraints) {
                   final cardWidth = (constraints.maxWidth - 10) / 2;
-                  const textSectionHeight = 144.0;
+                  final textSectionHeight =
+                      MediaQuery.textScalerOf(context).scale(172.0);
                   final childAspectRatio =
                       cardWidth / (cardWidth + textSectionHeight);
 
@@ -337,7 +338,8 @@ class _ProductDetailsTabState extends State<ProductDetailsTab> {
               LayoutBuilder(
                 builder: (context, constraints) {
                   final cardWidth = (constraints.maxWidth - 10) / 2;
-                  const textSectionHeight = 144.0;
+                  final textSectionHeight =
+                      MediaQuery.textScalerOf(context).scale(172.0);
                   final childAspectRatio =
                       cardWidth / (cardWidth + textSectionHeight);
 

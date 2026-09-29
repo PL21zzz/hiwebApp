@@ -23,7 +23,7 @@ class RegisterPasswordNote extends StatelessWidget {
       child: const Text(
         'Ít nhất 8 ký tự, gồm chữ thường, chữ hoa, số và ký tự đặc biệt @\$%^*&.',
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 11.5,
           color: Color(0xFF64748B),
           height: 1.25,
         ),

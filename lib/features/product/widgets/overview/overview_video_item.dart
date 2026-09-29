@@ -22,7 +22,7 @@ class OverviewVideoItem extends StatefulWidget {
   State<OverviewVideoItem> createState() => _OverviewVideoItemState();
 }
 
-class _OverviewVideoItemState extends State<OverviewVideoItem> {
+class _OverviewVideoItemState extends State<OverviewVideoItem> with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   bool _isPlaying = false;
@@ -30,7 +30,22 @@ class _OverviewVideoItemState extends State<OverviewVideoItem> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (widget.isCurrentPage) _initializePlayer();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_controller == null || !_isInitialized) return;
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      if (_isPlaying) {
+        _controller?.pause();
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      if (widget.isCurrentPage && _isPlaying) {
+        _controller?.play();
+      }
+    }
   }
 
   Future<void> _initializePlayer() async {
@@ -45,7 +60,9 @@ class _OverviewVideoItemState extends State<OverviewVideoItem> {
       await controller.seekTo(Duration.zero);
       await controller.setLooping(true);
       await controller.setVolume(widget.isMuted ? 0 : 1);
-      setState(() => _isInitialized = true);
+      if (mounted) {
+        setState(() => _isInitialized = true);
+      }
     } catch (error) {
       debugPrint('Error initializing product video: $error');
       if (_controller == controller) {
@@ -64,7 +81,9 @@ class _OverviewVideoItemState extends State<OverviewVideoItem> {
       }
       if (!widget.isCurrentPage && _isPlaying) {
         _controller?.pause();
-        setState(() => _isPlaying = false);
+        if (mounted) {
+          setState(() => _isPlaying = false);
+        }
       }
     } else if (widget.isCurrentPage && !oldWidget.isCurrentPage) {
       _initializePlayer();
@@ -73,6 +92,7 @@ class _OverviewVideoItemState extends State<OverviewVideoItem> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     super.dispose();
   }

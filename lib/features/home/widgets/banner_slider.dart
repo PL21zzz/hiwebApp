@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hiweb_app_management/core/services/app_lifecycle_service.dart';
 import 'package:hiweb_app_management/features/home/models/banner_model.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
@@ -22,7 +23,17 @@ class _BannerSliderState extends State<BannerSlider> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    AppLifecycleService.instance.addListener(_onLifecycleChanged);
     _startAutoSlide();
+  }
+
+  void _onLifecycleChanged() {
+    if (AppLifecycleService.instance.isPaused) {
+      _timer?.cancel();
+      _timer = null;
+    } else if (AppLifecycleService.instance.isResumed) {
+      _startAutoSlide();
+    }
   }
 
   void _startAutoSlide() {
@@ -41,6 +52,7 @@ class _BannerSliderState extends State<BannerSlider> {
 
   @override
   void dispose() {
+    AppLifecycleService.instance.removeListener(_onLifecycleChanged);
     _timer?.cancel();
     _pageController.dispose();
     super.dispose();

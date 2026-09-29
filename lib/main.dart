@@ -3,11 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:hiweb_app_management/core/theme/app_theme.dart';
-import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
+import 'package:hiweb_app_management/core/services/app_lifecycle_service.dart';
 import 'package:hiweb_app_management/core/widgets/common/network/offline_banner_overlay.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AppLifecycleService.instance;
+
+  // Lock device orientation to Portrait mode
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   // Custom status bar: transparent background & white icons
   SystemChrome.setSystemUIOverlayStyle(
@@ -24,7 +32,7 @@ void main() {
 
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: !kIsWeb && !kReleaseMode,
       builder: (context) => const VietMadeApp(),
     ),
   );
@@ -39,7 +47,19 @@ class VietMadeApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       builder: (context, child) {
         final previewChild = DevicePreview.appBuilder(context, child);
-        return OfflineBannerOverlay(child: previewChild);
+        return Builder(
+          builder: (innerContext) {
+            final mediaQuery = MediaQuery.of(innerContext);
+            final constrainedScaler = mediaQuery.textScaler.clamp(
+              minScaleFactor: 0.85,
+              maxScaleFactor: 1.35,
+            );
+            return MediaQuery(
+              data: mediaQuery.copyWith(textScaler: constrainedScaler),
+              child: OfflineBannerOverlay(child: previewChild),
+            );
+          },
+        );
       },
       title: 'VIETMADE.vn',
       debugShowCheckedModeBanner: false,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:hiweb_app_management/core/services/app_lifecycle_service.dart';
 import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 import 'package:hiweb_app_management/features/product/screens/flash_sale_screen.dart';
 import 'package:hiweb_app_management/features/video/models/video_model.dart';
@@ -20,10 +21,28 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
   @override
   void initState() {
     super.initState();
+    AppLifecycleService.instance.addListener(_onLifecycleChanged);
     _updateRemainingTime();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) _updateRemainingTime();
     });
+  }
+
+  void _onLifecycleChanged() {
+    if (AppLifecycleService.instance.isPaused) {
+      _timer?.cancel();
+      _timer = null;
+    } else if (AppLifecycleService.instance.isResumed) {
+      if (mounted) {
+        _updateRemainingTime();
+        _startTimer();
+      }
+    }
   }
 
   void _updateRemainingTime() {
@@ -42,6 +61,7 @@ class _FlashSaleSectionState extends State<FlashSaleSection> {
 
   @override
   void dispose() {
+    AppLifecycleService.instance.removeListener(_onLifecycleChanged);
     _timer?.cancel();
     super.dispose();
   }
@@ -227,14 +247,25 @@ class _HomeVideoTile extends StatefulWidget {
   State<_HomeVideoTile> createState() => _HomeVideoTileState();
 }
 
-class _HomeVideoTileState extends State<_HomeVideoTile> {
+class _HomeVideoTileState extends State<_HomeVideoTile> with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initPlayer();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_controller == null || !_isInitialized) return;
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _controller?.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      _controller?.play();
+    }
   }
 
   Future<void> _initPlayer() async {
@@ -258,9 +289,11 @@ class _HomeVideoTileState extends State<_HomeVideoTile> {
         ..setLooping(true)
         ..setVolume(0)
         ..play();
-      setState(() {
-        _isInitialized = true;
-      });
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
     } catch (e) {
       debugPrint('Error initializing home video tile: $e');
     }
@@ -268,6 +301,7 @@ class _HomeVideoTileState extends State<_HomeVideoTile> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     super.dispose();
   }

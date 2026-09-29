@@ -28,9 +28,9 @@ class AuthTextField extends StatelessWidget {
     this.errorText,
     this.onTap,
     this.onChanged,
-    this.verticalPadding = 9.0,
-    this.labelFontSize = 11.0,
-    this.inputFontSize = 12.0,
+    this.verticalPadding = 10.0,
+    this.labelFontSize = 13.5,
+    this.inputFontSize = 13.5,
   });
 
   @override

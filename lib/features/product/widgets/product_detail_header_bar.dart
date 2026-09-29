@@ -4,6 +4,9 @@ import 'package:hiweb_app_management/features/product/models/product_detail_mode
 import 'package:hiweb_app_management/features/search/screens/search_screen.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/product/product_share_bottom_sheet.dart';
+import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
+import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
+import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 
 class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedTabIndex;
@@ -124,6 +127,75 @@ class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWid
                     size: 19,
                   ),
                 ),
+              ),
+
+              // Cart Button (Only displays red badge if user is logged in)
+              ListenableBuilder(
+                listenable: Listenable.merge([
+                  CartService.instance,
+                  AuthService.instance,
+                ]),
+                builder: (context, _) {
+                  final count = AuthService.instance.isLoggedIn
+                      ? CartService.instance.totalItemCount
+                      : 0;
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CartScreen(),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Center(
+                              child: Icon(
+                                LucideIcons.shoppingCart,
+                                color: Colors.white,
+                                size: 19,
+                              ),
+                            ),
+                            if (count > 0)
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    minWidth: 14,
+                                    minHeight: 14,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 3),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFEF4444),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    count > 99 ? '99+' : '$count',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
 
               // Share Button (Custom Web SVG curved arrow share icon)

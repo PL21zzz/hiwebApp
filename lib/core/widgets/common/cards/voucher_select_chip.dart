@@ -16,20 +16,23 @@ class VoucherSelectChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.35)),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 10.5,
-              color: AppColors.primary,
-              fontWeight: FontWeight.w500,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 10.5,
+                color: AppColors.primary,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          const SizedBox(width: 3),
-          const Icon(LucideIcons.chevronRight, size: 13, color: AppColors.primary),
-        ],
+            const SizedBox(width: 3),
+            const Icon(LucideIcons.chevronRight, size: 13, color: AppColors.primary),
+          ],
+        ),
       ),
     );
   }

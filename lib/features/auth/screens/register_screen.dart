@@ -235,8 +235,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -254,65 +252,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isCompact = isAndroid || constraints.maxHeight < 680;
-                  final fieldSpacing = isCompact ? 3.0 : 6.0;
-                  final verticalInputPadding = isCompact ? 3.5 : 7.0;
+                  final isCompact = constraints.maxHeight < 650;
+                  final fieldSpacing = isCompact ? 5.0 : 9.0;
+                  final verticalInputPadding = isCompact ? 5.0 : 8.5;
                   final cardPadding = isCompact
-                      ? const EdgeInsets.fromLTRB(14, 8, 14, 8)
+                      ? const EdgeInsets.fromLTRB(14, 10, 14, 10)
                       : const EdgeInsets.fromLTRB(16, 14, 16, 14);
 
-                  return SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Container(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
+                  return Container(
+                    height: constraints.maxHeight,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      child: RegisterFormCard(
-                        userNameController: _userNameController,
-                        lastNameController: _lastNameController,
-                        firstNameController: _firstNameController,
-                        emailController: _emailController,
-                        phoneController: _phoneController,
-                        passwordController: _passwordController,
-                        confirmPasswordController: _confirmPasswordController,
-                        isPasswordVisible: _isPasswordVisible,
-                        isConfirmPasswordVisible: _isConfirmPasswordVisible,
-                        userNameError: _userNameError,
-                        lastNameError: _lastNameError,
-                        firstNameError: _firstNameError,
-                        emailError: _emailError,
-                        phoneError: _phoneError,
-                        passwordError: _passwordError,
-                        confirmPasswordError: _confirmPasswordError,
-                        onClearError: _clearError,
-                        onValidateConfirmPasswordLive: _validateConfirmPasswordLive,
-                        onTogglePasswordVisibility: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                        onToggleConfirmPasswordVisibility: () {
-                          setState(() {
-                            _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                          });
-                        },
-                        onRegisterPressed: _handleRegister,
-                        onLoginTap: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder: (context, anim1, anim2) =>
-                                  const LoginScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                            ),
-                          );
-                        },
-                        isCompact: isCompact,
-                        fieldSpacing: fieldSpacing,
-                        verticalInputPadding: verticalInputPadding,
-                        cardPadding: cardPadding,
+                      child: SizedBox(
+                        width: constraints.maxWidth > 400 ? 380 : constraints.maxWidth - 28,
+                        child: RegisterFormCard(
+                          userNameController: _userNameController,
+                          lastNameController: _lastNameController,
+                          firstNameController: _firstNameController,
+                          emailController: _emailController,
+                          phoneController: _phoneController,
+                          passwordController: _passwordController,
+                          confirmPasswordController: _confirmPasswordController,
+                          isPasswordVisible: _isPasswordVisible,
+                          isConfirmPasswordVisible: _isConfirmPasswordVisible,
+                          userNameError: _userNameError,
+                          lastNameError: _lastNameError,
+                          firstNameError: _firstNameError,
+                          emailError: _emailError,
+                          phoneError: _phoneError,
+                          passwordError: _passwordError,
+                          confirmPasswordError: _confirmPasswordError,
+                          onClearError: _clearError,
+                          onValidateConfirmPasswordLive: _validateConfirmPasswordLive,
+                          onTogglePasswordVisibility: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          onToggleConfirmPasswordVisibility: () {
+                            setState(() {
+                              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                            });
+                          },
+                          onRegisterPressed: _handleRegister,
+                          onLoginTap: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, anim1, anim2) =>
+                                    const LoginScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          isCompact: isCompact,
+                          fieldSpacing: fieldSpacing,
+                          verticalInputPadding: verticalInputPadding,
+                          cardPadding: cardPadding,
+                        ),
                       ),
                     ),
                   );

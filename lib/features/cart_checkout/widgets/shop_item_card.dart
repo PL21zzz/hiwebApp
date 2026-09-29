@@ -101,10 +101,19 @@ class ShopItemCard extends StatelessWidget {
                     text: TextSpan(
                       style: const TextStyle(fontSize: 11, color: Color(0xFF0F172A)),
                       children: [
-                        TextSpan(text: '${const StaticContentRepository().shippingFee}đ    '),
+                        TextSpan(
+                          text: '${formatCurrency(const StaticContentRepository().shippingFee.toDouble())}   ',
+                          style: const TextStyle(
+                            color: Color(0xFF94A3B8),
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
                         const TextSpan(
                           text: 'Miễn phí',
-                          style: TextStyle(color: AppColors.primary),
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

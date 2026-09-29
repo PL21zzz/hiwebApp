@@ -241,10 +241,51 @@ class _OverviewMediaSectionState extends State<OverviewMediaSection>
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          Image.network(item.thumb.isNotEmpty ? item.thumb : item.url, fit: BoxFit.cover),
+                          Builder(
+                            builder: (context) {
+                              final thumbPath =
+                                  item.thumb.isNotEmpty ? item.thumb : item.url;
+                              if (thumbPath.startsWith('http')) {
+                                return Image.network(
+                                  thumbPath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (_, __, ___) => const ColoredBox(
+                                        color: Color(0xFFCBD5E1),
+                                        child: Icon(
+                                          LucideIcons.image,
+                                          size: 20,
+                                          color: Color(0xFF94A3B8),
+                                        ),
+                                      ),
+                                );
+                              }
+                              return Image.asset(
+                                thumbPath,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (_, __, ___) => const ColoredBox(
+                                      color: Color(0xFFCBD5E1),
+                                      child: Icon(
+                                        LucideIcons.image,
+                                        size: 20,
+                                        color: Color(0xFF94A3B8),
+                                      ),
+                                    ),
+                              );
+                            },
+                          ),
                           if (item.isVideo) ...[
-                            Container(color: Colors.black.withValues(alpha: 0.25)),
-                            const Center(child: Icon(Icons.play_arrow, color: Colors.white, size: 18)),
+                            Container(
+                              color: Colors.black.withValues(alpha: 0.25),
+                            ),
+                            const Center(
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
                           ],
                         ],
                       ),

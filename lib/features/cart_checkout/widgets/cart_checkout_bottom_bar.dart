@@ -72,15 +72,18 @@ class CartCheckoutBottomBar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.primary, width: 0.8),
                       ),
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Miễn phí vận chuyển',
-                            style: TextStyle(fontSize: 11, color: AppColors.primary),
-                          ),
-                          SizedBox(width: 2),
-                          Icon(LucideIcons.chevronRight, size: 13, color: AppColors.primary),
-                        ],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Miễn phí vận chuyển',
+                              style: TextStyle(fontSize: 11, color: AppColors.primary),
+                            ),
+                            SizedBox(width: 2),
+                            Icon(LucideIcons.chevronRight, size: 13, color: AppColors.primary),
+                          ],
+                        ),
                       ),
                       ),
                     ],
@@ -171,28 +174,32 @@ class CartCheckoutBottomBar extends StatelessWidget {
                     const Spacer(),
 
                     // Total & Savings Note
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          _formatPrice(cart.finalTotal),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFEF4444),
-                          ),
-                        ),
-                        if (cart.totalSavings > 0)
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
                           Text(
-                            _formatSavings(cart.totalSavings),
+                            _formatPrice(cart.finalTotal),
                             style: const TextStyle(
-                              fontSize: 10.5,
-                              color: Color(0xFF94A3B8),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFEF4444),
                             ),
                           ),
-                      ],
+                          if (cart.totalSavings > 0)
+                            Text(
+                              _formatSavings(cart.totalSavings),
+                              style: const TextStyle(
+                                fontSize: 10.5,
+                                color: Color(0xFF94A3B8),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
 
                     // Checkout Button (THANH TOÁN (1))
                     SizedBox(
@@ -206,17 +213,20 @@ class CartCheckoutBottomBar extends StatelessWidget {
                           foregroundColor: Colors.white,
                           disabledBackgroundColor: const Color(0xFFCBD5E1),
                           elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(
-                          'THANH TOÁN ($selectedCount)',
-                          style: const TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.3,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'THANH TOÁN ($selectedCount)',
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.3,
+                            ),
                           ),
                         ),
                       ),

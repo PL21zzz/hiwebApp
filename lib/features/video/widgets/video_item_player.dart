@@ -27,7 +27,8 @@ class VideoItemPlayer extends StatefulWidget {
   State<VideoItemPlayer> createState() => _VideoItemPlayerState();
 }
 
-class _VideoItemPlayerState extends State<VideoItemPlayer> {
+class _VideoItemPlayerState extends State<VideoItemPlayer>
+    with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   bool _isPlayingManually = true;
@@ -38,8 +39,22 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (widget.isActive) {
       _initController();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_controller == null || !_isInitialized) return;
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _controller?.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      if (widget.isActive && _isPlayingManually) {
+        _controller?.play();
+      }
     }
   }
 
@@ -120,6 +135,7 @@ class _VideoItemPlayerState extends State<VideoItemPlayer> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.removeListener(_onControllerUpdated);
     _controller?.dispose();
     _controller = null;

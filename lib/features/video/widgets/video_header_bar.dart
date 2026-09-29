@@ -46,28 +46,26 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
       },
       behavior: HitTestBehavior.opaque,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Transform.translate(
-            offset: const Offset(0, 2),
-            child: Text(
-              label,
-              maxLines: 1,
-              softWrap: false,
-              style: TextStyle(
-                color:
-                    isActive
-                        ? Colors.white
-                        : Colors.white.withValues(alpha: 0.7),
-                fontSize: isActive ? 16 : 15,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-              ),
+          Text(
+            label,
+            maxLines: 1,
+            softWrap: false,
+            style: TextStyle(
+              color:
+                  isActive
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.7),
+              fontSize: isActive ? 16 : 15,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 4),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: isActive ? 32 : 0,
+            width: isActive ? 28 : 0,
             height: 3,
             decoration: BoxDecoration(
               color: isActive ? const Color(0xFF06B6D4) : Colors.transparent,
@@ -87,6 +85,8 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final textScaler = MediaQuery.textScalerOf(context);
+    final headerContentHeight = textScaler.scale(42.0).clamp(44.0, 56.0);
 
     return Positioned(
       top: 0,
@@ -102,90 +102,94 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
               bottom: 8,
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: _openFollowingTab,
                   behavior: HitTestBehavior.opaque,
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 30,
-                    height: 30,
-                    child: Icon(
-                      LucideIcons.userPlus,
-                      color: Colors.white,
-                      size: 20,
+                    height: headerContentHeight,
+                    child: const Center(
+                      child: Icon(
+                        LucideIcons.userPlus,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Expanded(
-                  child: Transform.translate(
-                    offset: const Offset(0, 3),
-                    child: SizedBox(
-                      height: 32,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        itemCount: _tabs.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 18),
-                        itemBuilder:
-                            (_, index) => _buildTabItem(index, _tabs[index]),
-                      ),
+                  child: SizedBox(
+                    height: headerContentHeight,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      itemCount: _tabs.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 18),
+                      itemBuilder:
+                          (_, index) => _buildTabItem(index, _tabs[index]),
                     ),
                   ),
                 ),
                 const SizedBox(width: 4),
 
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SearchScreen(),
+                SizedBox(
+                  height: headerContentHeight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SearchScreen(),
+                            ),
+                          );
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 2,
+                            vertical: 4,
                           ),
-                        );
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 2,
-                          vertical: 4,
-                        ),
-                        child: Icon(
-                          LucideIcons.search,
-                          color: Colors.white,
-                          size: 20,
+                          child: Icon(
+                            LucideIcons.search,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    ListenableBuilder(
-                      listenable: Listenable.merge([
-                        CartService.instance,
-                        AuthService.instance,
-                      ]),
-                      builder: (context, _) {
-                        final count =
-                            AuthService.instance.isLoggedIn
-                                ? CartService.instance.totalItemCount
-                                : 0;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const CartScreen(),
-                              ),
-                            );
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: _buildCartIcon(count),
-                        );
-                      },
-                    ),
-                  ],
+                      const SizedBox(width: 10),
+                      ListenableBuilder(
+                        listenable: Listenable.merge([
+                          CartService.instance,
+                          AuthService.instance,
+                        ]),
+                        builder: (context, _) {
+                          final count =
+                              AuthService.instance.isLoggedIn
+                                  ? CartService.instance.totalItemCount
+                                  : 0;
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CartScreen(),
+                                ),
+                              );
+                            },
+                            behavior: HitTestBehavior.opaque,
+                            child: _buildCartIcon(count),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

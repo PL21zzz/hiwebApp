@@ -9,6 +9,7 @@ import 'package:hiweb_app_management/features/search/screens/search_screen.dart'
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showMenu;
@@ -180,6 +181,14 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                           icon: LucideIcons.shoppingCart,
                           badgeCount: count,
                           onTap: () {
+                            if (!AuthService.instance.isLoggedIn) {
+                              TopNotification.show(
+                                context,
+                                message: 'Bạn chưa đăng nhập!',
+                                isError: true,
+                              );
+                              return;
+                            }
                             Navigator.of(context).push(
                               PageRouteBuilder(
                                 pageBuilder: (context, animation, secondaryAnimation) =>

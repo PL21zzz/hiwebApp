@@ -91,20 +91,20 @@ class RegisterFormCard extends StatelessWidget {
           const Text(
             'Đăng ký tài khoản',
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E293B),
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           const Text(
             'Tạo tài khoản VietMade.vn',
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 13,
               color: Color(0xFF64748B),
             ),
           ),
-          SizedBox(height: isCompact ? 6 : 10),
+          SizedBox(height: isCompact ? 10 : 14),
 
           // Tên đăng nhập
           AuthTextField(
@@ -187,7 +187,7 @@ class RegisterFormCard extends StatelessWidget {
               onTap: onTogglePasswordVisibility,
               child: Icon(
                 isPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
-                size: 16,
+                size: 18,
                 color: const Color(0xFF94A3B8),
               ),
             ),
@@ -208,21 +208,21 @@ class RegisterFormCard extends StatelessWidget {
               onTap: onToggleConfirmPasswordVisibility,
               child: Icon(
                 isConfirmPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
-                size: 16,
+                size: 18,
                 color: const Color(0xFF94A3B8),
               ),
             ),
           ),
-          SizedBox(height: isCompact ? 5 : 8),
+          SizedBox(height: isCompact ? 8 : 10),
 
           // Password Requirements Note Container
           RegisterPasswordNote(isCompact: isCompact),
-          SizedBox(height: isCompact ? 6 : 10),
+          SizedBox(height: isCompact ? 10 : 14),
 
           // Primary Register Button
           SizedBox(
             width: double.infinity,
-            height: isCompact ? 36 : 40,
+            height: 44,
             child: ElevatedButton(
               onPressed: onRegisterPressed,
               style: ElevatedButton.styleFrom(
@@ -230,19 +230,19 @@ class RegisterFormCard extends StatelessWidget {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: const Text(
                 'Đăng ký',
                 style: TextStyle(
-                  fontSize: 13.5,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          SizedBox(height: isCompact ? 6 : 10),
+          SizedBox(height: isCompact ? 10 : 14),
 
           // Footer Link to Login
           Row(
@@ -251,7 +251,7 @@ class RegisterFormCard extends StatelessWidget {
               const Text(
                 'Đã có tài khoản? ',
                 style: TextStyle(
-                  fontSize: 11.5,
+                  fontSize: 13.5,
                   color: Color(0xFF64748B),
                 ),
               ),
@@ -260,7 +260,7 @@ class RegisterFormCard extends StatelessWidget {
                 child: const Text(
                   'Đăng nhập',
                   style: TextStyle(
-                    fontSize: 11.5,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
                   ),

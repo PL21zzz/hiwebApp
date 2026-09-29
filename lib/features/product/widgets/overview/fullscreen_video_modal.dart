@@ -17,7 +17,7 @@ class FullscreenVideoModal extends StatefulWidget {
   State<FullscreenVideoModal> createState() => _FullscreenVideoModalState();
 }
 
-class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
+class _FullscreenVideoModalState extends State<FullscreenVideoModal> with WidgetsBindingObserver {
   late int _currentIndex;
   VideoPlayerController? _videoController;
   bool _isInitialized = false;
@@ -33,8 +33,23 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _currentIndex = widget.initialIndex;
     _setupMedia();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_videoController == null || !_isInitialized) return;
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      if (_isPlaying) {
+        _videoController?.pause();
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      if (_isPlaying) {
+        _videoController?.play();
+      }
+    }
   }
 
   void _setupMedia() {
@@ -62,7 +77,9 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
           controller.setLooping(true);
           controller.setVolume(_isMuted ? 0.0 : 1.0);
           controller.play();
-          setState(() => _isPlaying = true);
+          if (mounted) {
+            setState(() => _isPlaying = true);
+          }
         }
       }).catchError((err) {
         debugPrint('Error initializing video: $err');
@@ -78,6 +95,7 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _videoController?.removeListener(_videoListener);
     _transformationController.dispose();
     _videoController?.dispose();

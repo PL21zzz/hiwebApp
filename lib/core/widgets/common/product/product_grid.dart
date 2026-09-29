@@ -16,10 +16,11 @@ class ProductGrid extends StatelessWidget {
         ? itemCount!
       : products.length;
 
+    final textScaler = MediaQuery.textScalerOf(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         final cardWidth = (constraints.maxWidth - 8) / 2;
-        const textSectionHeight = 104.0;
+        final textSectionHeight = textScaler.scale(120.0);
         final childAspectRatio = cardWidth / (cardWidth + textSectionHeight);
 
         return GridView.builder(
