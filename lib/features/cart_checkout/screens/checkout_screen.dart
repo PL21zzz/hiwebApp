@@ -3,7 +3,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/cart_checkout/models/checkout_mock_data.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
 import 'package:hiweb_app_management/features/user/address/models/address_model.dart';
-import 'package:hiweb_app_management/features/user/address/screens/address_screen.dart';
 import 'package:hiweb_app_management/features/user/orders/models/order_model.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/features/user/address/services/address_service.dart';
@@ -18,6 +17,8 @@ import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notificatio
 import 'package:hiweb_app_management/features/cart_checkout/widgets/cart_voucher_bottom_sheet.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/vietmade_modal_container.dart';
 import 'package:hiweb_app_management/features/user/voucher/repositories/voucher_repository.dart';
+import '../widgets/checkout/checkout_address_selection_sheet.dart';
+import '../widgets/checkout/checkout_success_dialog.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final ProductDetailModel productDetail;
@@ -169,7 +170,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       context: context,
       title: 'Chọn địa chỉ nhận hàng',
       maxHeightRatio: 0.85,
-      child: _AddressSelectionSheet(
+      child: CheckoutAddressSelectionSheet(
         addresses: addresses,
         onSelected: _selectAddress,
       ),
@@ -254,74 +255,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (!mounted) return;
     setState(() => _isPlacingOrder = false);
 
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Color(0xFF10B981), size: 28),
-                SizedBox(width: 8),
-                Text(
-                  'Đặt hàng thành công!',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Cảm ơn ${_nameController.text.trim()} đã mua sắm tại VietMade.',
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sản phẩm: ${widget.productDetail.name}',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  '${CheckoutMockData.productVariantPrefix}${widget.selectedVariant ?? 'Chưa chọn'} | SL: ${widget.quantity}',
-                  style: const TextStyle(color: Color(0xFF64748B)),
-                ),
-                Text(
-                  'Tổng thanh toán: ${_formatCurrency(_totalPrice)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFEF4444),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Mã đơn: ${order.id}',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  'Địa chỉ giao: ${_addressController.text.trim()}',
-                  style: const TextStyle(color: Color(0xFF64748B)),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'VỀ TRANG CHỦ',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    CheckoutSuccessDialog.show(
+      context,
+      order: order,
+      recipientName: _nameController.text.trim(),
+      productName: widget.productDetail.name,
+      selectedVariant: widget.selectedVariant,
+      quantity: widget.quantity,
+      formattedTotalPrice: _formatCurrency(_totalPrice),
+      fullAddress: _addressController.text.trim(),
     );
   }
 
@@ -411,161 +353,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         isSubmitting: _isPlacingOrder,
         onPlaceOrder: _handlePlaceOrder,
       ),
-    );
-  }
-}
-
-class _AddressSelectionSheet extends StatelessWidget {
-  final List<AddressModel> addresses;
-  final ValueChanged<AddressModel> onSelected;
-
-  const _AddressSelectionSheet({
-    required this.addresses,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (addresses.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Center(
-              child: Column(
-                children: [
-                  Icon(LucideIcons.mapPinOff, size: 36, color: Color(0xFF94A3B8)),
-                  SizedBox(height: 10),
-                  Text(
-                    'Bạn chưa thiết lập địa chỉ nào',
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF64748B),
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Thêm địa chỉ để VietMade giao hàng nhanh chóng và chính xác hơn.',
-                    style: TextStyle(fontSize: 11.5, color: Color(0xFF94A3B8)),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: addresses.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final address = addresses[index];
-              return InkWell(
-                onTap: () {
-                  onSelected(address);
-                  Navigator.pop(context);
-                },
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color:
-                          address.isDefault
-                              ? AppColors.primary
-                              : const Color(0xFFE2E8F0),
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        LucideIcons.mapPin,
-                        size: 17,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(width: 9),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${address.fullName}  |  ${address.phone}',
-                              style: const TextStyle(
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1E293B),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              address.fullAddress,
-                              style: const TextStyle(
-                                fontSize: 11.5,
-                                color: Color(0xFF64748B),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (address.isDefault)
-                        const Text(
-                          'Mặc định',
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        const SizedBox(height: 16),
-
-        // Bottom Add New Address Button
-        SizedBox(
-          width: double.infinity,
-          height: 44,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const AddressScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text(
-              '+ Thêm địa chỉ mới',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

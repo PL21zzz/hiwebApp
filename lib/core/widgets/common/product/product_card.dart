@@ -4,6 +4,10 @@ import 'package:hiweb_app_management/features/product/models/product_model.dart'
 import 'package:hiweb_app_management/features/product/screens/product_detail_screen.dart';
 import 'package:hiweb_app_management/core/widgets/common/product/add_to_cart_button.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
+import 'package:hiweb_app_management/core/widgets/common/images/app_image.dart';
+
 class ProductCard extends StatelessWidget {
   final ProductModel product;
 
@@ -55,23 +59,10 @@ class ProductCard extends StatelessWidget {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: product.imageUrl.startsWith('http')
-                            ? Image.network(
-                                product.imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: Colors.grey.shade200,
-                                  child: const Icon(Icons.image, color: Colors.grey),
-                                ),
-                              )
-                            : Image.asset(
-                                product.imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: Colors.grey.shade200,
-                                  child: const Icon(Icons.image, color: Colors.grey),
-                                ),
-                              ),
+                        child: AppImage(
+                          imageUrl: product.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       if (product.discountPercent > 0)
                         Positioned(
@@ -130,7 +121,7 @@ class ProductCard extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                              CurrencyFormatter.format(product.price),
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
@@ -142,7 +133,7 @@ class ProductCard extends StatelessWidget {
                               alignment: Alignment.center,
                               children: [
                                 Text(
-                                  '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                  CurrencyFormatter.format(product.originalPrice),
                                   style: const TextStyle(
                                     fontSize: 10,
                                     color: Color(0xFFA1A1AA),

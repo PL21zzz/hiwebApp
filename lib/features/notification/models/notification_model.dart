@@ -1,4 +1,5 @@
-enum NotificationCategory { order, promotion, update }
+import '../enums/notification_category.dart';
+export '../enums/notification_category.dart';
 
 class NotificationModel {
   final String id;

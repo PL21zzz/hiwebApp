@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hiweb_app_management/features/user/orders/models/order_detail_model.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class OrderDetailPaymentCard extends StatelessWidget {
   final OrderDetailModel detail;
 
@@ -10,7 +12,7 @@ class OrderDetailPaymentCard extends StatelessWidget {
   });
 
   String _formatPrice(int value) {
-    return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
+    return CurrencyFormatter.format(value);
   }
 
   @override

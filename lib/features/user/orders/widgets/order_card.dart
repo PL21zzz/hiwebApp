@@ -4,6 +4,8 @@ import 'package:hiweb_app_management/features/user/orders/models/order_model.dar
 import 'package:hiweb_app_management/features/user/orders/screens/order_detail_screen.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class OrderCard extends StatelessWidget {
   final OrderModel order;
 
@@ -13,7 +15,7 @@ class OrderCard extends StatelessWidget {
   });
 
   String _formatPrice(int value) {
-    return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
+    return CurrencyFormatter.format(value);
   }
 
   Color _getStatusColor(String status) {

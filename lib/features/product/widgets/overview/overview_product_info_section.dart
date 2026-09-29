@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class OverviewProductInfoSection extends StatefulWidget {
   final ProductDetailModel detail;
 
@@ -20,10 +22,7 @@ class _OverviewProductInfoSectionState extends State<OverviewProductInfoSection>
     _isFavorite = widget.detail.isFavorite;
   }
 
-  String _formatPrice(double value) => value.toInt().toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (match) => '${match[1]}.',
-      );
+  String _formatPrice(double value) => CurrencyFormatter.format(value).replaceAll('đ', '');
 
   @override
   Widget build(BuildContext context) {

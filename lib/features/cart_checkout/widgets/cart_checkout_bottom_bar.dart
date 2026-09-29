@@ -3,6 +3,8 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class CartCheckoutBottomBar extends StatelessWidget {
   final VoidCallback? onCheckoutPressed;
   final VoidCallback? onVoucherPressed;
@@ -14,7 +16,7 @@ class CartCheckoutBottomBar extends StatelessWidget {
   });
 
   String _formatPrice(int value) {
-    return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
+    return CurrencyFormatter.format(value);
   }
 
   String _formatSavings(int value) {

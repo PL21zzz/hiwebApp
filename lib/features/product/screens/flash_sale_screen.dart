@@ -8,9 +8,11 @@ import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
-import 'package:hiweb_app_management/features/product/screens/product_detail_screen.dart';
-
 import 'package:hiweb_app_management/core/widgets/common/loading/flash_sale_skeleton.dart';
+import '../widgets/flash_sale/flash_sale_countdown_banner.dart';
+import '../widgets/flash_sale/flash_sale_time_slots.dart';
+import '../widgets/flash_sale/flash_sale_category_bar.dart';
+import '../widgets/flash_sale/flash_sale_product_card.dart';
 
 class FlashSaleScreen extends StatefulWidget {
   const FlashSaleScreen({super.key});
@@ -146,66 +148,6 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
     super.dispose();
   }
 
-  String _twoDigits(int n) => n.toString().padLeft(2, '0');
-
-  String _formatPrice(double price) {
-    return '${price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ';
-  }
-
-  Widget _buildTimeSlotTab(int tabIndex) {
-    if (tabIndex >= _availableSlots.length) {
-      // Empty slot tab placeholder
-      return Expanded(
-        child: Container(
-          color: const Color(0xFF33373D),
-        ),
-      );
-    }
-
-    final slot = _availableSlots[tabIndex];
-    final nowHour = DateTime.now().hour;
-    final isSelected = _selectedSlotIndex == tabIndex;
-
-    final isLive = nowHour >= slot.startHour && nowHour < slot.endHour;
-    final statusText = isLive ? 'Đang diễn ra' : 'Sắp diễn ra';
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedSlotIndex = tabIndex;
-            _updateTimer();
-          });
-        },
-        child: Container(
-          color: isSelected ? const Color(0xFFFF7300) : const Color(0xFF33373D),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                slot.label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                statusText,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFFCBD5E1),
-                  fontSize: 11,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _handlePurchaseAction() {
     TopNotification.show(
       context,
@@ -224,264 +166,8 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
     );
   }
 
-  Widget _buildProductCard(ProductModel item) {
-    final isLive = _isCurrentSlotActive;
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ProductDetailScreen(product: item),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Left: Image (Discount Badge ONLY shown if isLive == true)
-            SizedBox(
-              width: 95,
-              height: 95,
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: item.imageUrl.startsWith('http')
-                        ? Image.network(
-                          item.imageUrl,
-                          width: 95,
-                          height: 95,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.image, color: Colors.grey),
-                          ),
-                        )
-                        : Image.asset(
-                          item.imageUrl,
-                          width: 95,
-                          height: 95,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.image, color: Colors.grey),
-                          ),
-                        ),
-                  ),
-                  if (isLive)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                          vertical: 2,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE53935),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(6),
-                            bottomLeft: Radius.circular(6),
-                          ),
-                        ),
-                        child: Text(
-                          '-${item.discountPercent}%',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-
-            // Right: Content Section
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product Name
-                  Text(
-                    item.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1E293B),
-                      height: 1.25,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-
-                  // BÁN CHẠY Badge
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE53935),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: const Text(
-                      'BÁN CHẠY',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8.5,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Price Section
-                  if (isLive) ...[
-                    // Original Price
-                    Text(
-                      _formatPrice(item.originalPrice),
-                      style: const TextStyle(
-                        fontSize: 10.5,
-                        color: Color(0xFFA1A1AA),
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                    // Flash Sale Price
-                    Text(
-                      _formatPrice(item.price),
-                      style: const TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFFE53935),
-                      ),
-                    ),
-                  ] else ...[
-                    // Hidden Price for Upcoming Slot
-                    const Text(
-                      '???.000đ',
-                      style: TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFFE53935),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 6),
-
-                  // Bottom Row: Progress / Status Bar & Action Button
-                  Row(
-                    children: [
-                      // Progress Bar
-                      Expanded(
-                        child: Container(
-                          height: 22,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFED7AA),
-                            borderRadius: BorderRadius.circular(11),
-                          ),
-                          child: Stack(
-                            children: [
-                              FractionallySizedBox(
-                                widthFactor: isLive ? 0.75 : 0.45,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFFF6A00),
-                                    borderRadius: BorderRadius.circular(11),
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  isLive
-                                      ? 'ĐÃ BÁN ${item.soldCount}'
-                                      : 'SẮP MỞ BÁN',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 9.5,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-
-                      // Button: Mua ngay (live) vs Chi tiết (upcoming)
-                      ElevatedButton(
-                        onPressed: () {
-                          if (isLive) {
-                            _handlePurchaseAction();
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    ProductDetailScreen(product: item),
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isLive
-                              ? const Color(0xFFE53935)
-                              : const Color(0xFFFF7300),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          minimumSize: Size.zero,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: Text(
-                          isLive ? 'Mua ngay' : 'Chi tiết',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final hours = _twoDigits(_remainingSeconds ~/ 3600);
-    final minutes = _twoDigits((_remainingSeconds % 3600) ~/ 60);
-    final seconds = _twoDigits(_remainingSeconds % 60);
-    final statusTitle = _isCurrentSlotActive ? 'KẾT THÚC SAU' : 'BẮT ĐẦU SAU';
-
     final products = ProductModel.mockProducts;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -531,94 +217,32 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
             ),
 
             // 2. Countdown Banner (KẾT THÚC SAU / BẮT ĐẦU SAU)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    statusTitle,
-                    style: const TextStyle(
-                      color: Color(0xFFE53935),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '$hours : $minutes : $seconds',
-                    style: const TextStyle(
-                      color: Color(0xFFE53935),
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ],
-              ),
+            FlashSaleCountdownBanner(
+              isCurrentSlotActive: _isCurrentSlotActive,
+              remainingSeconds: _remainingSeconds,
             ),
 
             // 3. Time Slots Bar (Dynamic 4 Slots)
-            Container(
-              height: 52,
-              color: const Color(0xFF2B2F33),
-              child: Row(
-                children: [
-                  for (int i = 0; i < _availableSlots.length; i++) ...[
-                    if (i > 0)
-                      Container(width: 1, color: const Color(0xFF404448)),
-                    _buildTimeSlotTab(i),
-                  ],
-                ],
-              ),
+            FlashSaleTimeSlots(
+              availableSlots: _availableSlots,
+              selectedSlotIndex: _selectedSlotIndex,
+              onSlotSelected: (index) {
+                setState(() {
+                  _selectedSlotIndex = index;
+                  _updateTimer();
+                });
+              },
             ),
 
             // 4. Horizontal Category Scrollable Tabs Bar
-            Container(
-              height: 42,
-              color: Colors.white,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _categories.length,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedCategoryIndex == index;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedCategoryIndex = index;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: isSelected
-                            ? const Border(
-                                bottom: BorderSide(
-                                  color: Color(0xFFE53935),
-                                  width: 2.5,
-                                ),
-                              )
-                            : null,
-                      ),
-                      child: Text(
-                        _categories[index],
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected
-                              ? const Color(0xFFE53935)
-                              : const Color(0xFF475569),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            FlashSaleCategoryBar(
+              categories: _categories,
+              selectedCategoryIndex: _selectedCategoryIndex,
+              onCategorySelected: (index) {
+                setState(() {
+                  _selectedCategoryIndex = index;
+                });
+              },
             ),
 
             // 5. Product List + VietmadeFooter
@@ -634,7 +258,11 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
                         itemCount: products.length + 1,
                         itemBuilder: (context, index) {
                           if (index < products.length) {
-                            return _buildProductCard(products[index]);
+                            return FlashSaleProductCard(
+                              item: products[index],
+                              isLive: _isCurrentSlotActive,
+                              onPurchaseTap: _handlePurchaseAction,
+                            );
                           } else {
                             return Column(
                               children: [

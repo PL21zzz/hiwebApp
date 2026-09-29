@@ -3,6 +3,8 @@ import 'package:hiweb_app_management/features/product/models/product_model.dart'
 import 'package:hiweb_app_management/features/product/screens/product_detail_screen.dart';
 import 'package:hiweb_app_management/core/widgets/common/product/add_to_cart_button.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class ShopProductCard extends StatelessWidget {
   final ProductModel product;
   final String rankText;
@@ -14,7 +16,7 @@ class ShopProductCard extends StatelessWidget {
   });
 
   String _formatCurrency(double amount) {
-    return '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ';
+    return CurrencyFormatter.format(amount);
   }
 
   @override

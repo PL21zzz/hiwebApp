@@ -6,6 +6,8 @@ import 'package:hiweb_app_management/core/widgets/common/dialogs/confirm_dialog.
 import 'package:hiweb_app_management/core/widgets/common/cards/voucher_select_chip.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
+
 class CartShopGroupCard extends StatelessWidget {
   final String shopName;
   final List<CartItemModel> items;
@@ -21,7 +23,7 @@ class CartShopGroupCard extends StatelessWidget {
   });
 
   String _formatPrice(int value) {
-    return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
+    return CurrencyFormatter.format(value);
   }
 
   void _showDeleteConfirmDialog(BuildContext context, CartItemModel item) {

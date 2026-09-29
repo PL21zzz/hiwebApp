@@ -8,11 +8,8 @@ import 'package:hiweb_app_management/features/cart_checkout/repositories/cart_re
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 import 'package:hiweb_app_management/core/widgets/common/buttons/pressable_scale.dart';
 
-enum CartButtonStyle {
-  pillPlus, // Standard pill button with '+' badge (used in ProductCard)
-  circleOutline, // Small circle outline icon (used in ShopProductCard)
-  circleSolid, // Light blue circle icon (used in SimilarProductCard)
-}
+import 'package:hiweb_app_management/core/enums/cart_button_style.dart';
+export 'package:hiweb_app_management/core/enums/cart_button_style.dart';
 
 class AddToCartButton extends StatelessWidget {
   final CartButtonStyle style;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/product/models/product_model.dart';
 import 'package:hiweb_app_management/features/product/screens/product_detail_screen.dart';
+import 'package:hiweb_app_management/core/utils/currency_formatter.dart';
 
 class HorizontalProductListSection extends StatefulWidget {
   final String? title;
@@ -311,7 +312,7 @@ class _HorizontalProductListSectionState
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        '${product.price.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                        CurrencyFormatter.format(product.price),
                                         style: const TextStyle(
                                           fontSize: 13.5,
                                           fontWeight: FontWeight.bold,
@@ -323,7 +324,7 @@ class _HorizontalProductListSectionState
                                         alignment: Alignment.center,
                                         children: [
                                           Text(
-                                            '${product.originalPrice.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                                            CurrencyFormatter.format(product.originalPrice),
                                             style: const TextStyle(
                                               fontSize: 10.5,
                                               color: Color(0xFF94A3B8),

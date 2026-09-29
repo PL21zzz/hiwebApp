@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:video_player/video_player.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
+import 'fullscreen/fullscreen_top_bar.dart';
+import 'fullscreen/fullscreen_video_player_controls.dart';
+import 'fullscreen/fullscreen_thumbnail_bar.dart';
 
 class FullscreenVideoModal extends StatefulWidget {
   final List<ProductMediaModel> mediaList;
@@ -64,7 +67,7 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
 
     final item = widget.mediaList[_currentIndex];
     if (item.isVideo) {
-        final controller = item.url.startsWith('assets/')
+      final controller = item.url.startsWith('assets/')
           ? VideoPlayerController.asset(item.url)
           : VideoPlayerController.networkUrl(Uri.parse(item.url));
       _videoController = controller;
@@ -179,13 +182,6 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
     return Duration.zero;
   }
 
-  String _formatTime(Duration d) {
-    if (d.isNegative) d = Duration.zero;
-    final minutes = d.inMinutes;
-    final seconds = (d.inSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
-
   @override
   Widget build(BuildContext context) {
     final item = widget.mediaList[_currentIndex];
@@ -196,57 +192,12 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
         child: Column(
           children: [
             // Top Navigation Bar
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Close button X
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 26),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-
-                  // Title / Counter
-                  Text(
-                    '${_currentIndex + 1}/${widget.mediaList.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  // Zoom level controls (- 100% +)
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(LucideIcons.minus, color: Colors.white, size: 18),
-                        onPressed: _zoomOut,
-                      ),
-                      ValueListenableBuilder<Matrix4>(
-                        valueListenable: _transformationController,
-                        builder: (context, value, child) {
-                          final scale = value.getMaxScaleOnAxis();
-                          return Text(
-                            '${(scale * 100).toInt()}%',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.plus, color: Colors.white, size: 18),
-                        onPressed: _zoomIn,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            FullscreenTopBar(
+              currentIndex: _currentIndex,
+              totalCount: widget.mediaList.length,
+              transformationController: _transformationController,
+              onZoomIn: _zoomIn,
+              onZoomOut: _zoomOut,
             ),
 
             // Main Media Display Area with Nav Arrows
@@ -300,148 +251,42 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
                                       ),
                                     ),
 
-                                  // Standard Mobile Video Player Control Bar (matching sample)
+                                  // Standard Mobile Video Player Control Bar
                                   if (_isInitialized && _videoController != null)
-                                    Container(
-                                      color: Colors.black.withValues(alpha: 0.75),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              // Play / Pause Icon
-                                              GestureDetector(
-                                                onTap: _togglePlay,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                                  child: Icon(
-                                                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                                                    color: Colors.white,
-                                                    size: 22,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 4),
-
-                                              // Time format: 0:02 / 0:05
-                                              Builder(
-                                                builder: (context) {
-                                                  final dur = _getDuration();
-                                                  final pos = _getPosition();
-                                                  return Text(
-                                                    '${_formatTime(pos)} / ${_formatTime(dur)}',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 13,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-
-                                              const Spacer(),
-
-                                              // Volume Icon
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _isMuted = !_isMuted;
-                                                    _videoController?.setVolume(_isMuted ? 0.0 : 1.0);
-                                                  });
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(6),
-                                                  child: Icon(
-                                                    _isMuted ? LucideIcons.volumeX : LucideIcons.volume2,
-                                                    color: Colors.white,
-                                                    size: 18,
-                                                  ),
-                                                ),
-                                              ),
-
-                                              // Fullscreen Icon
-                                              const Padding(
-                                                padding: EdgeInsets.all(6),
-                                                child: Icon(
-                                                  Icons.fullscreen,
-                                                  color: Colors.white,
-                                                  size: 22,
-                                                ),
-                                              ),
-
-                                              // 3-dots Menu Icon
-                                              const Padding(
-                                                padding: EdgeInsets.all(6),
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          // Sleek White Progress Slider Bar
-                                          Builder(
-                                            builder: (context) {
-                                              final dur = _getDuration();
-                                              final pos = _getPosition();
-                                              final maxMs = dur.inMilliseconds.toDouble() > 0
-                                                  ? dur.inMilliseconds.toDouble()
-                                                  : 5000.0;
-                                              final currentMs = pos.inMilliseconds
-                                                  .toDouble()
-                                                  .clamp(0.0, maxMs);
-
-                                              return SizedBox(
-                                                height: 20,
-                                                child: SliderTheme(
-                                                  data: const SliderThemeData(
-                                                    thumbShape: RoundSliderThumbShape(
-                                                      enabledThumbRadius: 6,
-                                                    ),
-                                                    trackHeight: 3,
-                                                    activeTrackColor: Colors.white,
-                                                    inactiveTrackColor: Colors.white38,
-                                                    thumbColor: Colors.white,
-                                                    overlayShape: RoundSliderOverlayShape(
-                                                      overlayRadius: 10,
-                                                    ),
-                                                  ),
-                                                  child: Slider(
-                                                    value: currentMs,
-                                                    min: 0.0,
-                                                    max: maxMs,
-                                                    onChangeStart: (val) {
-                                                      setState(() {
-                                                        _isDragging = true;
-                                                        _dragPositionMs = val;
-                                                      });
-                                                    },
-                                                    onChanged: (val) {
-                                                      setState(() {
-                                                        _dragPositionMs = val;
-                                                      });
-                                                    },
-                                                    onChangeEnd: (val) {
-                                                      _videoController
-                                                          ?.seekTo(Duration(milliseconds: val.toInt()))
-                                                          .then((_) {
-                                                        if (mounted) {
-                                                          setState(() {
-                                                            _isDragging = false;
-                                                          });
-                                                        }
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
+                                    FullscreenVideoPlayerControls(
+                                      isPlaying: _isPlaying,
+                                      isMuted: _isMuted,
+                                      position: _getPosition(),
+                                      duration: _getDuration(),
+                                      onTogglePlay: _togglePlay,
+                                      onToggleMute: () {
+                                        setState(() {
+                                          _isMuted = !_isMuted;
+                                          _videoController?.setVolume(_isMuted ? 0.0 : 1.0);
+                                        });
+                                      },
+                                      onChangeStart: (val) {
+                                        setState(() {
+                                          _isDragging = true;
+                                          _dragPositionMs = val;
+                                        });
+                                      },
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _dragPositionMs = val;
+                                        });
+                                      },
+                                      onChangeEnd: (val) {
+                                        _videoController
+                                            ?.seekTo(Duration(milliseconds: val.toInt()))
+                                            .then((_) {
+                                          if (mounted) {
+                                            setState(() {
+                                              _isDragging = false;
+                                            });
+                                          }
+                                        });
+                                      },
                                     ),
                                 ],
                               ),
@@ -458,25 +303,25 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
                               clipBehavior: Clip.none,
                               child: item.url.startsWith('http')
                                   ? Image.network(
-                                    item.url,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stack) =>
-                                        const Icon(
-                                      LucideIcons.image,
-                                      color: Colors.white54,
-                                      size: 64,
-                                    ),
-                                  )
+                                      item.url,
+                                      fit: BoxFit.contain,
+                                      errorBuilder: (context, error, stack) =>
+                                          const Icon(
+                                        LucideIcons.image,
+                                        color: Colors.white54,
+                                        size: 64,
+                                      ),
+                                    )
                                   : Image.asset(
-                                    item.url,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stack) =>
-                                        const Icon(
-                                      LucideIcons.image,
-                                      color: Colors.white54,
-                                      size: 64,
+                                      item.url,
+                                      fit: BoxFit.contain,
+                                      errorBuilder: (context, error, stack) =>
+                                          const Icon(
+                                        LucideIcons.image,
+                                        color: Colors.white54,
+                                        size: 64,
+                                      ),
                                     ),
-                                  ),
                             ),
                           ),
                   ),
@@ -529,98 +374,15 @@ class _FullscreenVideoModalState extends State<FullscreenVideoModal> with Widget
             ),
 
             // Bottom Media Thumbnail Bar & Page Indicator
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              color: Colors.black87,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: 54,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: widget.mediaList.length,
-                      separatorBuilder: (context, index) => const SizedBox(width: 10),
-                      itemBuilder: (context, index) {
-                        final media = widget.mediaList[index];
-                        final isSelected = index == _currentIndex;
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _currentIndex = index;
-                              _setupMedia();
-                            });
-                          },
-                          child: Container(
-                            width: 54,
-                            height: 54,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: isSelected ? Colors.cyanAccent : Colors.white30,
-                                width: isSelected ? 2 : 1,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  () {
-                                    final imgUrl =
-                                        media.thumb.isNotEmpty ? media.thumb : media.url;
-                                    if (imgUrl.startsWith('http')) {
-                                      return Image.network(
-                                        imgUrl,
-                                        fit: BoxFit.cover,
-                                      );
-                                    }
-                                    return Image.asset(
-                                      imgUrl,
-                                      fit: BoxFit.cover,
-                                    );
-                                  }(),
-                                  if (media.isVideo)
-                                    Container(
-                                      color: Colors.black38,
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.play_arrow,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Page Pill Counter (1/6)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_currentIndex + 1}/${widget.mediaList.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            FullscreenThumbnailBar(
+              mediaList: widget.mediaList,
+              currentIndex: _currentIndex,
+              onSelectMedia: (index) {
+                setState(() {
+                  _currentIndex = index;
+                  _setupMedia();
+                });
+              },
             ),
           ],
         ),
