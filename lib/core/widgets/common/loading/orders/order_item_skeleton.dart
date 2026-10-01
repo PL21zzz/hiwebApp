@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'shimmer_box.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/shimmer_box.dart';
 
 class OrderItemSkeleton extends StatelessWidget {
   const OrderItemSkeleton({super.key});
@@ -17,7 +17,6 @@ class OrderItemSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Order Header Skeleton (Shop name & Status badge)
           Row(
             children: const [
               ShimmerBox(height: 14, width: 120),
@@ -28,8 +27,6 @@ class OrderItemSkeleton extends StatelessWidget {
           const SizedBox(height: 12),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           const SizedBox(height: 12),
-
-          // Order Product Row Skeleton
           Row(
             children: [
               const ShimmerBox(
@@ -55,8 +52,6 @@ class OrderItemSkeleton extends StatelessWidget {
           const SizedBox(height: 12),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           const SizedBox(height: 12),
-
-          // Total Price & Actions Skeleton
           Row(
             children: const [
               ShimmerBox(height: 12, width: 100),

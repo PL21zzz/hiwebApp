@@ -104,7 +104,7 @@ class ReviewItemCard extends StatelessWidget {
                         Text(
                           review.userName,
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 13.5,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1E293B),
                           ),
@@ -114,32 +114,34 @@ class ReviewItemCard extends StatelessWidget {
                           const Text(
                             'Đã mua hàng',
                             style: TextStyle(
-                              fontSize: 9,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
                               color: Color(0xFF0284C7),
                             ),
                           ),
                         ],
                       ],
                     ),
+                    const SizedBox(height: 2),
                     Row(
                       children: [
                         ...List.generate(
                           5,
                           (index) => Icon(
                             Icons.star,
-                            size: 11,
+                            size: 13,
                             color:
                                 index < review.rating
                                     ? const Color(0xFFEAB308)
                                     : const Color(0xFFCBD5E1),
                           ),
                         ),
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 6),
                         Text(
                           review.variant,
                           style: const TextStyle(
-                            fontSize: 9.5,
-                            color: Color(0xFF94A3B8),
+                            fontSize: 11.5,
+                            color: Color(0xFF64748B),
                           ),
                         ),
                       ],
@@ -149,7 +151,7 @@ class ReviewItemCard extends StatelessWidget {
               ),
               Text(
                 review.date,
-                style: const TextStyle(fontSize: 9.5, color: Color(0xFF94A3B8)),
+                style: const TextStyle(fontSize: 11.5, color: Color(0xFF94A3B8)),
               ),
             ],
           ),
@@ -159,9 +161,9 @@ class ReviewItemCard extends StatelessWidget {
             Text(
               review.comment,
               style: const TextStyle(
-                fontSize: 11.5,
+                fontSize: 13,
                 color: Color(0xFF334155),
-                height: 1.35,
+                height: 1.4,
               ),
             ),
 

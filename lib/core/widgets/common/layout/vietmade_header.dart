@@ -110,7 +110,15 @@ class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
                 // Brand Logo "VietMade.vn"
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            const MainNavigationScreen(initialIndex: 0),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                      (route) => false,
+                    );
                   },
                   child: RichText(
                     text: const TextSpan(

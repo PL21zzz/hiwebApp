@@ -7,6 +7,7 @@ import 'package:hiweb_app_management/core/widgets/common/product/product_share_b
 import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
+import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 
 class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedTabIndex;
@@ -141,6 +142,14 @@ class ProductDetailHeaderBar extends StatelessWidget implements PreferredSizeWid
                       : 0;
                   return InkWell(
                     onTap: () {
+                      if (!AuthService.instance.isLoggedIn) {
+                        TopNotification.show(
+                          context,
+                          message: 'Bạn chưa đăng nhập!',
+                          isError: true,
+                        );
+                        return;
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(

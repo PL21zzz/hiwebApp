@@ -122,7 +122,7 @@ class _CloudflareCaptchaModalState extends State<CloudflareCaptchaModal> {
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Bạn đã đăng nhập sai 5 lần. Vui lòng xác minh bạn là con người.',
+                      'Bạn đã đăng nhập sai 5 lần. Xác minh bạn không phải là người máy.',
                       style: TextStyle(
                         fontSize: 11,
                         color: Color(0xFF92400E),

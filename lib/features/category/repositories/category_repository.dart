@@ -59,11 +59,11 @@ class ApiCategoryRepository implements CategoryRepository {
       final title = json['name_vi']?.toString() ??
           json['name_en']?.toString() ??
           json['title']?.toString() ?? '';
-      final slug = json['slug']?.toString() ?? '';
+      final rawEmoji = json['emoji']?.toString();
       return SubcategoryModel(
         id: json['id']?.toString() ?? '',
         title: title,
-        emoji: _mapEmoji(json['emoji']?.toString(), title, slug, entry.key),
+        emoji: (rawEmoji != null && rawEmoji.isNotEmpty) ? rawEmoji : '📦',
         hasChevron: json['has_chevron'] == true,
         targetCategoryId: json['target_category_id']?.toString(),
       );

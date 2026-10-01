@@ -8,7 +8,7 @@ import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/flash_sale_skeleton.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 import '../widgets/flash_sale/flash_sale_countdown_banner.dart';
 import '../widgets/flash_sale/flash_sale_time_slots.dart';
 import '../widgets/flash_sale/flash_sale_category_bar.dart';
@@ -47,7 +47,7 @@ class _FlashSaleScreenState extends State<FlashSaleScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 450));
     if (mounted) {
       setState(() {
         _isLoading = false;

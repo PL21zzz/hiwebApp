@@ -6,7 +6,7 @@ import 'package:hiweb_app_management/features/user/orders/widgets/order_card.dar
 import 'package:hiweb_app_management/features/user/orders/widgets/order_empty_state.dart';
 import 'package:hiweb_app_management/features/user/orders/widgets/order_status_tabs.dart';
 import 'package:hiweb_app_management/features/home/screens/home_screen.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/order_item_skeleton.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 
 class OrdersScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -41,13 +41,22 @@ class _OrdersScreenState extends State<OrdersScreen> {
   ];
 
   late int _selectedTabIndex;
-  bool _isTabLoading = false;
+  bool _isTabLoading = true;
 
   @override
   void initState() {
     super.initState();
     _selectedTabIndex = widget.initialTabIndex.clamp(0, _statusIds.length - 1);
     OrderService.instance.addListener(_handleOrdersChanged);
+    _simulateInitialLoading();
+  }
+
+  Future<void> _simulateInitialLoading() async {
+    setState(() => _isTabLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isTabLoading = false);
+    }
   }
 
   void _handleOrdersChanged() {
@@ -60,7 +69,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       _selectedTabIndex = index;
       _isTabLoading = true;
     });
-    Future.delayed(const Duration(milliseconds: 600), () {
+    Future.delayed(const Duration(milliseconds: 450), () {
       if (mounted) {
         setState(() {
           _isTabLoading = false;

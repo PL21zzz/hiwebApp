@@ -45,7 +45,7 @@ class DrawerCategoryModel {
   });
 
   static const List<DrawerCategoryModel> mockDrawerCategories = [
-    DrawerCategoryModel(id: 'dc1', emoji: '🔧', title: 'Phụ kiện'),
+    DrawerCategoryModel(id: 'dc1', emoji: '🔧', title: 'Phụ kiện hdsajhdjansd'),
     DrawerCategoryModel(id: 'dc2', emoji: '🎨', title: 'Nghệ thuật & Đồ sưu tầm'),
     DrawerCategoryModel(id: 'dc3', emoji: '👜', title: 'Túi xách & Ví'),
     DrawerCategoryModel(id: 'dc4', emoji: '💄', title: 'Chăm sóc cơ thể & Sắc đẹp'),
@@ -80,7 +80,7 @@ class SubcategoryModel {
 
   // 1. Phụ kiện
   static const List<SubcategoryModel> mockPhuKien = [
-    SubcategoryModel(id: 'sub1', emoji: '📦', title: 'Yếm người lớn'),
+    SubcategoryModel(id: 'sub1', emoji: '📦', title: 'Yếm người lớn abcsdbshab'),
     SubcategoryModel(id: 'sub2', emoji: '📦', title: 'Tạp dề'),
     SubcategoryModel(id: 'sub3', emoji: '📦', title: 'Thắt lưng & Dây đeo quần'),
     SubcategoryModel(id: 'sub4', emoji: '📦', title: 'Hoa cài & Hoa cầm tay'),

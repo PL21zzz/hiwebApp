@@ -4,7 +4,7 @@ import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.dart';
 import 'package:hiweb_app_management/core/widgets/common/product/product_grid.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/product_card_skeleton.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 import 'package:hiweb_app_management/features/home/widgets/banner_slider.dart';
 import 'package:hiweb_app_management/features/home/widgets/category_grid.dart';
 import 'package:hiweb_app_management/features/home/widgets/flash_sale_section.dart';

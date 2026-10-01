@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'shimmer_box.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/shimmer_box.dart';
 
 class ProductCardSkeleton extends StatelessWidget {
   const ProductCardSkeleton({super.key});
@@ -66,7 +66,14 @@ class ProductGridSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cardWidth = (constraints.maxWidth - 8) / 2;
+        final crossAxisCount = constraints.maxWidth > 900
+            ? 4
+            : constraints.maxWidth > 600
+                ? 3
+                : 2;
+        const spacing = 8.0;
+        final totalSpacing = spacing * (crossAxisCount - 1);
+        final cardWidth = (constraints.maxWidth - totalSpacing) / crossAxisCount;
         const textSectionHeight = 104.0;
         final childAspectRatio = cardWidth / (cardWidth + textSectionHeight);
 
@@ -75,10 +82,10 @@ class ProductGridSkeleton extends StatelessWidget {
           physics: physics,
           itemCount: itemCount,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: crossAxisCount,
             childAspectRatio: childAspectRatio,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
+            crossAxisSpacing: spacing,
+            mainAxisSpacing: spacing,
           ),
           itemBuilder: (_, __) => const ProductCardSkeleton(),
         );

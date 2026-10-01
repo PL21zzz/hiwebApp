@@ -15,8 +15,7 @@ class CategoryService extends ChangeNotifier {
   );
 
   final CategoryRepository _repository;
-  List<DrawerCategoryModel> _rootCategories =
-      DrawerCategoryModel.mockDrawerCategories;
+  List<DrawerCategoryModel> _rootCategories = const [];
   final Map<String, List<SubcategoryModel>> _categoryTrees = {};
   AsyncState<List<DrawerCategoryModel>> _rootState =
       const AsyncState.initial();
@@ -36,8 +35,7 @@ class CategoryService extends ChangeNotifier {
           .firstWhere((message) => message != null, orElse: () => null);
 
   List<SubcategoryModel> getCategoryTreeFor(String rootId) => List.unmodifiable(
-        _categoryTrees[rootId] ??
-            SubcategoryModel.getSubcategoriesForCategory(rootId),
+        _categoryTrees[rootId] ?? const [],
       );
 
   Future<void> fetchRootCategories() async {
@@ -57,9 +55,9 @@ class CategoryService extends ChangeNotifier {
       }
     } catch (error) {
       debugPrint('Error fetching category tree: $error');
+      _rootCategories = const [];
       _rootState = _rootState.error(
-        'Không thể tải danh sách danh mục',
-        fallbackData: _rootCategories,
+        'Không thể tải danh sách danh mục: $error',
       );
     } finally {
       notifyListeners();

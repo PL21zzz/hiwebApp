@@ -6,6 +6,8 @@ import 'package:hiweb_app_management/features/product/screens/category_product_l
 
 import 'package:hiweb_app_management/features/category/services/category_service.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/shimmer_box.dart';
+
 class CategoryDrawer extends StatefulWidget {
   const CategoryDrawer({super.key});
 
@@ -17,11 +19,25 @@ class _CategoryDrawerState extends State<CategoryDrawer> {
   DrawerCategoryModel? _selectedCategory;
 
   @override
+  void initState() {
+    super.initState();
+    if (CategoryService.instance.rootCategories.isEmpty &&
+        !CategoryService.instance.rootState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        CategoryService.instance.fetchRootCategories();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: CategoryService.instance,
       builder: (context, _) {
         final categories = CategoryService.instance.rootCategories;
+        final rootState = CategoryService.instance.rootState;
+        final isLoading = rootState.isLoading ||
+            (categories.isEmpty && !rootState.hasError);
         final subcategories = _selectedCategory != null
             ? CategoryService.instance.getCategoryTreeFor(_selectedCategory!.id)
             : const <SubcategoryModel>[];
@@ -87,8 +103,53 @@ class _CategoryDrawerState extends State<CategoryDrawer> {
           Expanded(
             child: Container(
               color: Colors.white,
-              child: _selectedCategory == null
+              child: isLoading
                   ? ListView.separated(
+                      padding: EdgeInsets.zero,
+                      itemCount: 8,
+                      separatorBuilder: (context, index) => const Divider(
+                        height: 1,
+                        thickness: 0.5,
+                        color: Color(0xFFF1F5F9),
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          child: Row(
+                            children: [
+                              ShimmerBox(width: 24, height: 24, borderRadius: BorderRadius.all(Radius.circular(12))),
+                              SizedBox(width: 12),
+                              Expanded(child: ShimmerBox(height: 16)),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : rootState.hasError && categories.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                rootState.errorMessage ?? 'Không thể tải danh mục',
+                                style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                              ),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: CategoryService.instance.fetchRootCategories,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Thử lại'),
+                              ),
+                            ],
+                          ),
+                        )
+                      : _selectedCategory == null
+                          ? ListView.separated(
                       padding: EdgeInsets.zero,
                       itemCount: categories.length,
                       separatorBuilder: (context, index) => const Divider(

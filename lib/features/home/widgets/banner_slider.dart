@@ -4,6 +4,7 @@ import 'package:hiweb_app_management/core/services/app_lifecycle_service.dart';
 import 'package:hiweb_app_management/features/home/models/banner_model.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 
 class BannerSlider extends StatefulWidget {
   const BannerSlider({super.key});
@@ -74,7 +75,21 @@ class _BannerSliderState extends State<BannerSlider> {
             },
             itemCount: _banners.length,
             itemBuilder: (context, index) {
-              return Container(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const NotFoundScreen(
+                        title: 'Chương Trình Khuyến Mãi',
+                        message: 'Chương trình ưu đãi này hiện đã kết thúc\nhoặc chưa khả dụng...',
+                      ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
@@ -129,10 +144,11 @@ class _BannerSliderState extends State<BannerSlider> {
                           },
                         ),
                 ),
-              );
-            },
-          ),
-          Positioned(
+              ),
+            );
+          },
+        ),
+        Positioned(
             bottom: 10,
             left: 0,
             right: 0,

@@ -50,12 +50,14 @@ class VietMadeApp extends StatelessWidget {
         return Builder(
           builder: (innerContext) {
             final mediaQuery = MediaQuery.of(innerContext);
-            final constrainedScaler = mediaQuery.textScaler.clamp(
-              minScaleFactor: 0.85,
+            final screenWidth = mediaQuery.size.width;
+            final widthScaleFactor = (screenWidth / 375.0).clamp(1.0, 1.25);
+            final responsiveScaler = TextScaler.linear(widthScaleFactor).clamp(
+              minScaleFactor: 1.0,
               maxScaleFactor: 1.35,
             );
             return MediaQuery(
-              data: mediaQuery.copyWith(textScaler: constrainedScaler),
+              data: mediaQuery.copyWith(textScaler: responsiveScaler),
               child: OfflineBannerOverlay(child: previewChild),
             );
           },

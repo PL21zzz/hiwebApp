@@ -6,6 +6,8 @@ import 'package:hiweb_app_management/core/state/async_state.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -15,6 +17,21 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
 
     final AsyncState<List<String>> _quickTagsState =
       AsyncState.success(const StaticContentRepository().searchQuickTags);
@@ -144,7 +161,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
             // 3. Main Content (Scrollable)
             Expanded(
-              child: SingleChildScrollView(
+              child: _isLoading
+                  ? const SearchScreenSkeleton()
+                  : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

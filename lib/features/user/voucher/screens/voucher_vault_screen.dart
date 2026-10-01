@@ -6,6 +6,8 @@ import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.
 import 'package:hiweb_app_management/features/user/voucher/widgets/voucher_card.dart';
 import 'package:hiweb_app_management/features/user/voucher/repositories/voucher_repository.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+
 class VoucherVaultScreen extends StatefulWidget {
   const VoucherVaultScreen({super.key});
 
@@ -16,6 +18,7 @@ class VoucherVaultScreen extends StatefulWidget {
 class _VoucherVaultScreenState extends State<VoucherVaultScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _isLoading = true;
 
   final List<VoucherItemModel> _vouchers =
       MockVoucherRepository().getVouchers();
@@ -24,6 +27,15 @@ class _VoucherVaultScreenState extends State<VoucherVaultScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -154,8 +166,10 @@ class _VoucherVaultScreenState extends State<VoucherVaultScreen>
               ],
             ),
           ),
-          Expanded(
-            child: TabBarView(
+          _isLoading
+              ? const Expanded(child: VoucherVaultSkeleton())
+              : Expanded(
+                  child: TabBarView(
               controller: _tabController,
               children: List.generate(4, (tabIndex) {
                 final vouchers = _getFilteredVouchers(tabIndex);

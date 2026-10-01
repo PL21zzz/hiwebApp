@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/auth/models/user_model.dart';
 import 'package:hiweb_app_management/features/user/address/screens/address_screen.dart';
+import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'profile_user_avatar.dart';
@@ -98,10 +99,25 @@ class ProfileUserHeaderBanner extends StatelessWidget {
                 ),
               ),
               // Top right grid icon
-              const Icon(
-                LucideIcons.layoutGrid,
-                color: Color(0xFF64748B),
-                size: 22,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const NotFoundScreen(
+                        title: 'Tài Khoản & Cài Đặt',
+                        message: 'Trang quản lý cài đặt tài khoản\nhiện đang được nâng cấp...',
+                      ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+                child: const Icon(
+                  LucideIcons.layoutGrid,
+                  color: Color(0xFF64748B),
+                  size: 22,
+                ),
               ),
             ],
           ),
@@ -124,7 +140,19 @@ class ProfileUserHeaderBanner extends StatelessWidget {
               _buildPillButton(
                 icon: LucideIcons.shield,
                 label: 'Tài khoản & An toàn',
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const NotFoundScreen(
+                        title: 'Bảo Mật Tài Khoản',
+                        message: 'Tính năng thiết lập an toàn tài khoản\nhiện đang được nâng cấp...',
+                      ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
               ),
             ],
           ),

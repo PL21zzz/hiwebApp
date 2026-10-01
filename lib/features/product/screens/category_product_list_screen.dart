@@ -9,8 +9,9 @@ import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.
 import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_bottom_nav_bar.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/filter_drawer.dart';
-
-import 'package:hiweb_app_management/core/widgets/common/loading/product_card_skeleton.dart';
+import 'package:hiweb_app_management/features/product/models/product_model.dart';
+import 'package:hiweb_app_management/features/product/repositories/product_repository.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 
 class CategoryProductListScreen extends StatefulWidget {
   final String categoryTitle;
@@ -30,6 +31,28 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
   OverlayEntry? _sortOverlayEntry;
   bool _isSortMenuOpen = false;
   bool _isLoading = true;
+  ProductFilterResult? _activeFilter;
+
+  List<ProductModel> _getFilteredProducts() {
+    final allProducts = MockProductRepository().getProducts();
+    if (_activeFilter == null) return allProducts;
+
+    return allProducts.where((product) {
+      if (_activeFilter!.minPrice != null && product.price < _activeFilter!.minPrice!) {
+        return false;
+      }
+      if (_activeFilter!.maxPrice != null && product.price > _activeFilter!.maxPrice!) {
+        return false;
+      }
+      if (_activeFilter!.selectedRatings.isNotEmpty) {
+        final minRating = _activeFilter!.selectedRatings.reduce((a, b) => a < b ? a : b);
+        if (product.rating < minRating) {
+          return false;
+        }
+      }
+      return true;
+    }).toList();
+  }
 
   @override
   void initState() {
@@ -41,7 +64,7 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 450));
     if (mounted) {
       setState(() {
         _isLoading = false;
@@ -255,25 +278,51 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
                               border: Border.all(color: const Color(0xFFE2E8F0)),
                             ),
                             child: InkWell(
-                              onTap: () => FilterDrawer.show(context),
+                              onTap: () {
+                                FilterDrawer.show(
+                                  context,
+                                  initialFilter: _activeFilter,
+                                  onApply: (filter) {
+                                    setState(() {
+                                      _activeFilter = filter;
+                                    });
+                                    _simulateLoading();
+                                  },
+                                );
+                              },
                               borderRadius: BorderRadius.circular(6),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
                                     LucideIcons.slidersHorizontal,
                                     size: 15,
-                                    color: Color(0xFF475569),
+                                    color: _activeFilter?.isActive == true
+                                        ? const Color(0xFF0284C7)
+                                        : const Color(0xFF475569),
                                   ),
-                                  SizedBox(width: 6),
+                                  const SizedBox(width: 6),
                                   Text(
                                     'Bộ lọc',
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF1E293B),
+                                      color: _activeFilter?.isActive == true
+                                          ? const Color(0xFF0284C7)
+                                          : const Color(0xFF1E293B),
                                     ),
                                   ),
+                                  if (_activeFilter?.isActive == true) ...[
+                                    const SizedBox(width: 4),
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF0284C7),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -335,13 +384,45 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
                   child: Column(
                     children: [
                       // Product Grid 2 (6 items, blue box background #BCEDF4)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(6),
-                        color: AppColors.productBoxBg,
-                        child: _isLoading
-                            ? const ProductGridSkeleton(itemCount: 6)
-                            : const ProductGrid(itemCount: 6),
+                      Builder(
+                        builder: (context) {
+                          final filteredProducts = _getFilteredProducts();
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(6),
+                            color: AppColors.productBoxBg,
+                            child: _isLoading
+                                ? const ProductGridSkeleton(itemCount: 6)
+                                : filteredProducts.isEmpty
+                                    ? Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 40,
+                                          horizontal: 20,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: const Column(
+                                          children: [
+                                            Icon(
+                                              LucideIcons.packageX,
+                                              size: 48,
+                                              color: Color(0xFF94A3B8),
+                                            ),
+                                            SizedBox(height: 12),
+                                            Text(
+                                              'Không tìm thấy sản phẩm phù hợp với bộ lọc',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xFF64748B),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : ProductGrid(products: filteredProducts),
+                          );
+                        },
                       ),
 
                       // Grey spacer (60px) before footer

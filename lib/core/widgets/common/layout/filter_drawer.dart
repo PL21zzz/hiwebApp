@@ -1,12 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 
-class FilterDrawer extends StatefulWidget {
-  const FilterDrawer({super.key});
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  static String formatNumber(int number) {
+    final str = number.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) {
+        buffer.write('.');
+      }
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
+  }
 
-  static void show(BuildContext context) {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    final cleanStr = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
+    if (cleanStr.isEmpty) {
+      return const TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    final number = int.tryParse(cleanStr);
+    if (number == null) return oldValue;
+
+    final formatted = formatNumber(number);
+
+    final selectionFromRight = newValue.text.length - newValue.selection.end;
+    int selectionIndex = formatted.length - selectionFromRight;
+    if (selectionIndex < 0) selectionIndex = 0;
+    if (selectionIndex > formatted.length) selectionIndex = formatted.length;
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+}
+
+class ProductFilterResult {
+  final double? minPrice;
+  final double? maxPrice;
+  final Set<int> selectedRatings;
+
+  const ProductFilterResult({
+    this.minPrice,
+    this.maxPrice,
+    this.selectedRatings = const {},
+  });
+
+  bool get isActive =>
+      (minPrice != null && minPrice! > 0) ||
+      (maxPrice != null && maxPrice! < 5000000) ||
+      selectedRatings.isNotEmpty;
+}
+
+class FilterDrawer extends StatefulWidget {
+  final ProductFilterResult? initialFilter;
+  final Function(ProductFilterResult filter)? onApply;
+
+  const FilterDrawer({
+    super.key,
+    this.initialFilter,
+    this.onApply,
+  });
+
+  static void show(
+    BuildContext context, {
+    ProductFilterResult? initialFilter,
+    Function(ProductFilterResult filter)? onApply,
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -20,7 +96,10 @@ class FilterDrawer extends StatefulWidget {
             color: Colors.transparent,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.78,
-              child: const FilterDrawer(),
+              child: FilterDrawer(
+                initialFilter: initialFilter,
+                onApply: onApply,
+              ),
             ),
           ),
         );
@@ -51,6 +130,41 @@ class _FilterDrawerState extends State<FilterDrawer> {
 
   final TextEditingController _minPriceController = TextEditingController(text: '0');
   final TextEditingController _maxPriceController = TextEditingController(text: '5000000');
+
+  @override
+  void initState() {
+    super.initState();
+    final minVal = widget.initialFilter?.minPrice?.toInt() ?? 0;
+    final maxVal = widget.initialFilter?.maxPrice?.toInt() ?? 5000000;
+    _minPriceController.text = ThousandsSeparatorInputFormatter.formatNumber(minVal);
+    _maxPriceController.text = ThousandsSeparatorInputFormatter.formatNumber(maxVal);
+    if (widget.initialFilter != null) {
+      _selectedRatings.addAll(widget.initialFilter!.selectedRatings);
+    }
+  }
+
+  String _formatPrice(String rawText) {
+    final cleanStr = rawText.replaceAll(RegExp(r'[^\d]'), '');
+    if (cleanStr.isEmpty) return '0 đ';
+    final number = int.tryParse(cleanStr) ?? 0;
+    return '${ThousandsSeparatorInputFormatter.formatNumber(number)} đ';
+  }
+
+  void _applyFilter() {
+    final rawMinStr = _minPriceController.text.replaceAll(RegExp(r'[^\d]'), '');
+    final rawMaxStr = _maxPriceController.text.replaceAll(RegExp(r'[^\d]'), '');
+    final rawMin = double.tryParse(rawMinStr) ?? 0.0;
+    final rawMax = double.tryParse(rawMaxStr) ?? 5000000.0;
+
+    final filter = ProductFilterResult(
+      minPrice: rawMin,
+      maxPrice: rawMax,
+      selectedRatings: Set.from(_selectedRatings),
+    );
+
+    widget.onApply?.call(filter);
+    Navigator.of(context).pop();
+  }
 
   @override
   void dispose() {
@@ -401,7 +515,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                         children: [
                           Expanded(
                             child: Container(
-                              height: 36,
+                              height: 38,
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
                                 border: Border.all(color: const Color(0xFFCBD5E1)),
@@ -410,12 +524,23 @@ class _FilterDrawerState extends State<FilterDrawer> {
                               child: TextField(
                                 controller: _minPriceController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 style: const TextStyle(fontSize: 13),
                                 decoration: const InputDecoration(
+                                  suffixText: ' đ',
+                                  suffixStyle: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF64748B),
+                                  ),
                                   border: InputBorder.none,
                                   isDense: true,
                                   contentPadding: EdgeInsets.symmetric(vertical: 8),
                                 ),
+                                onChanged: (_) => setState(() {}),
                               ),
                             ),
                           ),
@@ -425,7 +550,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           ),
                           Expanded(
                             child: Container(
-                              height: 36,
+                              height: 38,
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
                                 border: Border.all(color: const Color(0xFFCBD5E1)),
@@ -434,25 +559,43 @@ class _FilterDrawerState extends State<FilterDrawer> {
                               child: TextField(
                                 controller: _maxPriceController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 style: const TextStyle(fontSize: 13),
                                 decoration: const InputDecoration(
+                                  suffixText: ' đ',
+                                  suffixStyle: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF64748B),
+                                  ),
                                   border: InputBorder.none,
                                   isDense: true,
                                   contentPadding: EdgeInsets.symmetric(vertical: 8),
                                 ),
+                                onChanged: (_) => setState(() {}),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Phạm vi: ${_formatPrice(_minPriceController.text)} — ${_formatPrice(_maxPriceController.text)}',
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          color: Color(0xFF64748B),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       SizedBox(
                         width: double.infinity,
                         height: 36,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: _applyFilter,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF17A2B8),
                             foregroundColor: Colors.white,

@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/chat/models/message_model.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
 import 'package:hiweb_app_management/features/chat/screens/chat_detail_screen.dart';
+import 'package:hiweb_app_management/features/product/screens/shop_detail_screen.dart';
 
 class ShopBannerHeader extends StatefulWidget {
   final ShopProfileModel shop;
@@ -234,27 +235,39 @@ class _ShopBannerHeaderState extends State<ShopBannerHeader> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                widget.shop.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) =>
+                                    ShopDetailScreen(shop: widget.shop),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
                               ),
-                            ),
-                            const SizedBox(width: 2),
-                            const Icon(
-                              Icons.chevron_right,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ],
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  widget.shop.name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 2),
+                              const Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Row(

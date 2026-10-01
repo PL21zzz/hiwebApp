@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/product/product_grid.dart';
+import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 
 class ProfileUserRecommendationsSection extends StatelessWidget {
   const ProfileUserRecommendationsSection({super.key});
@@ -26,7 +27,19 @@ class ProfileUserRecommendationsSection extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const NotFoundScreen(
+                        title: 'Tất Cả Gợi Ý',
+                        message: 'Danh sách tổng hợp gợi ý sản phẩm riêng cho bạn\nhiện đang được xây dựng...',
+                      ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
                 borderRadius: BorderRadius.circular(4),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'shimmer_box.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/shimmer_box.dart';
 
 class FlashSaleSkeleton extends StatelessWidget {
   final int itemCount;
@@ -54,7 +54,6 @@ class FlashSaleSkeleton extends StatelessWidget {
   }
 }
 
-/// Dedicated vertical card skeleton matching the exact layout of FlashSaleScreen list items
 class FlashSaleCardSkeleton extends StatelessWidget {
   const FlashSaleCardSkeleton({super.key});
 
@@ -71,15 +70,12 @@ class FlashSaleCardSkeleton extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left: 95x95 Image Skeleton
           const ShimmerBox(
             width: 95,
             height: 95,
             borderRadius: BorderRadius.all(Radius.circular(6)),
           ),
           const SizedBox(width: 10),
-
-          // Right: Content Section Skeleton
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,8 +88,6 @@ class FlashSaleCardSkeleton extends StatelessWidget {
                 const SizedBox(height: 6),
                 const ShimmerBox(height: 16, width: 90),
                 const SizedBox(height: 8),
-
-                // Bottom Row: Progress Bar & Button Skeleton
                 Row(
                   children: const [
                     Expanded(

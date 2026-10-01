@@ -5,6 +5,8 @@ import 'package:hiweb_app_management/core/theme/app_colors.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -14,6 +16,21 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   NotificationCategory _selectedCategory = NotificationCategory.order;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +54,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
           // Notifications List
           Expanded(
-            child: notifications.isEmpty
+            child: _isLoading
+                ? const NotificationSkeleton()
+                : notifications.isEmpty
                 ? const Center(
                     child: Text(
                       'Không có thông báo nào',

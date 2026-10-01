@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 
 class VietmadeFooter extends StatelessWidget {
   const VietmadeFooter({super.key});
@@ -123,7 +124,19 @@ class VietmadeFooter extends StatelessWidget {
           _buildSupportRow('Khiếu nại', '0911.888.300'),
           const SizedBox(height: 14),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const NotFoundScreen(
+                    title: 'Đăng Ký Gian Hàng',
+                    message: 'Cổng thông tin đăng ký bán hàng VietMade\nhiện đang chuẩn bị ra mắt...',
+                  ),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            },
             child: const Text(
               'Đăng ký gian hàng →',
               style: TextStyle(
@@ -181,7 +194,19 @@ class VietmadeFooter extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const NotFoundScreen(
+                        title: 'Đăng Ký Nhận Tin',
+                        message: 'Hệ thống nhận bản tin khuyến mãi qua Email\nhiện đang bảo trì...',
+                      ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE53935),
                   foregroundColor: Colors.white,
@@ -372,7 +397,19 @@ class _ExpandableFooterSectionState extends State<_ExpandableFooterSection> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.items.map((item) {
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            NotFoundScreen(
+                          title: item,
+                          message: 'Thông tin về "$item"\nhiện đang được biên soạn...',
+                        ),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 5),

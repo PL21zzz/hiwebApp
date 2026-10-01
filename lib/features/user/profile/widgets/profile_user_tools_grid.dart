@@ -3,6 +3,7 @@ import 'package:hiweb_app_management/features/user/profile/models/profile_option
 import 'package:hiweb_app_management/features/user/support/screens/support_request_screen.dart';
 import 'package:hiweb_app_management/features/user/voucher/screens/voucher_vault_screen.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
+import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 
 class ProfileUserToolsGrid extends StatelessWidget {
   const ProfileUserToolsGrid({super.key});
@@ -20,6 +21,18 @@ class ProfileUserToolsGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const VoucherVaultScreen(),
+            ),
+          );
+        } else {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  NotFoundScreen(
+                title: option.label.replaceAll('\n', ' '),
+                message: 'Tính năng "${option.label.replaceAll('\n', ' ')}"\nhiện đang được phát triển...',
+              ),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
             ),
           );
         }

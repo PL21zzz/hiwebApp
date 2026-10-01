@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
 import 'package:hiweb_app_management/features/product/models/product_model.dart';
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 import 'package:hiweb_app_management/features/product/widgets/shop_banner_header.dart';
 import 'package:hiweb_app_management/features/product/widgets/shop_product_card.dart';
 
@@ -25,10 +26,21 @@ class _ShopDetailScreenState extends State<ShopDetailScreen>
   final List<String> _rankBadges = ShopProfileModel.mockRankBadges;
   final List<String> _categoryNames = ShopProfileModel.mockCategoryNames;
 
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -46,8 +58,10 @@ class _ShopDetailScreenState extends State<ShopDetailScreen>
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
-        body: SafeArea(
-          top: false,
+        body: _isLoading
+            ? const SafeArea(child: ShopDetailSkeleton())
+            : SafeArea(
+                top: false,
           child: NestedScrollView(
             key: const PageStorageKey<String>('shop_detail_nested_scroll'),
             physics: const ClampingScrollPhysics(),

@@ -19,6 +19,7 @@ import 'package:hiweb_app_management/features/cart_checkout/screens/checkout_scr
 import 'package:hiweb_app_management/features/product/widgets/buy_now_bottom_sheet.dart';
 import 'package:hiweb_app_management/features/product/repositories/product_repository.dart';
 import 'package:hiweb_app_management/core/state/async_state.dart';
+import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -48,6 +49,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   late int _selectedTabIndex;
   bool _isProgrammaticScroll = false;
+  bool _isLoading = true;
   String? _selectedCapacity; // Initially null (unselected)
   String _customizationText = '';
   String? _customizationImagePath;
@@ -68,6 +70,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _detailState = AsyncState.success(_resolveDetail());
     _selectedTabIndex = widget.initialTabIndex;
     _mainScrollController.addListener(_onScroll);
+    _simulateLoading();
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -241,7 +252,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
-        body: Column(
+        body: _isLoading
+            ? const ProductDetailSkeleton()
+            : Column(
           children: [
             // 1. Fixed Header Bar (Teal Primary fixed at top)
             ProductDetailHeaderBar(
@@ -339,9 +352,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         );
                       },
                       child: ListenableBuilder(
-                        listenable: CartService.instance,
+                        listenable: Listenable.merge([
+                          CartService.instance,
+                          AuthService.instance,
+                        ]),
                         builder: (context, _) {
-                          final cartCount = CartService.instance.totalItemCount;
+                          final cartCount = AuthService.instance.isLoggedIn
+                              ? CartService.instance.totalItemCount
+                              : 0;
                           return Stack(
                             clipBehavior: Clip.none,
                             children: [

@@ -25,49 +25,50 @@ class CustomerReviewsSummarySection extends StatelessWidget {
               Text(
                 detail.rating.toStringAsFixed(1),
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF334155),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 6),
               ...List.generate(
                 5,
                 (index) => const Icon(
                   Icons.star,
-                  size: 11,
+                  size: 14,
                   color: Color(0xFFF59E0B),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 6),
               Text(
                 '(${detail.reviewCount})',
                 style: const TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
                   color: Color(0xFF0284C7),
                 ),
               ),
               const Spacer(),
               const Icon(
                 Icons.chevron_right,
-                size: 18,
+                size: 20,
                 color: Color(0xFF94A3B8),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
           const Row(
             children: [
-              Icon(Icons.check_circle, size: 11, color: Color(0xFF0284C7)),
-              SizedBox(width: 4),
+              Icon(Icons.check_circle, size: 13, color: Color(0xFF0284C7)),
+              SizedBox(width: 5),
               Text(
                 'Tất cả đánh giá đều từ người đã mua hàng',
-                style: TextStyle(fontSize: 9.5, color: Color(0xFF0284C7)),
+                style: TextStyle(fontSize: 11.5, color: Color(0xFF0284C7)),
               ),
             ],
           ),
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 9),
+            padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(height: 1, color: Color(0xFFE2E8F0)),
           ),
           Row(
@@ -76,7 +77,7 @@ class CustomerReviewsSummarySection extends StatelessWidget {
               const Text(
                 'Đánh giá mới nhất',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E293B),
                 ),
@@ -84,13 +85,13 @@ class CustomerReviewsSummarySection extends StatelessWidget {
               Text(
                 'Hiển thị 3 đánh giá',
                 style: const TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 11.5,
                   color: Color(0xFF94A3B8),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
 
           Column(
             children:
@@ -100,15 +101,15 @@ class CustomerReviewsSummarySection extends StatelessWidget {
                     .toList(),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            height: 32,
+            height: 36,
             child: OutlinedButton(
               onPressed: onViewAllReviews,
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.zero,
-                side: const BorderSide(color: Color(0xFFE2E8F0)),
+                side: const BorderSide(color: Color(0xFFCBD5E1)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -119,14 +120,15 @@ class CustomerReviewsSummarySection extends StatelessWidget {
                   Text(
                     'Xem tất cả ${detail.reviewCount} đánh giá',
                     style: const TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF0284C7),
                     ),
                   ),
                   const SizedBox(width: 4),
                   const Icon(
                     Icons.chevron_right,
-                    size: 14,
+                    size: 16,
                     color: Color(0xFF0284C7),
                   ),
                 ],

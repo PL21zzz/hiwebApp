@@ -7,6 +7,8 @@ import 'package:hiweb_app_management/core/widgets/common/dialogs/common_loading.
 import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
 import 'package:hiweb_app_management/features/product/screens/category_product_list_screen.dart';
 
+import 'package:hiweb_app_management/core/widgets/common/loading/shimmer_box.dart';
+
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
 
@@ -16,13 +18,23 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   int _selectedIndex = 0;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _simulateLoading();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       CategoryService.instance.fetchRootCategories();
     });
+  }
+
+  Future<void> _simulateLoading() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -32,34 +44,119 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       builder: (context, _) {
         final categories = CategoryService.instance.rootCategories;
         final rootState = CategoryService.instance.rootState;
-        if (rootState.isLoading && !rootState.hasData) {
-          return const Scaffold(
-            appBar: VietmadeHeader(showMenu: false),
-            body: CommonLoading(message: 'Đang tải danh mục...'),
+        if (_isLoading || rootState.isLoading || (categories.isEmpty && !rootState.hasError)) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: const VietmadeHeader(showMenu: false),
+            body: Row(
+              children: [
+                // Skeleton Sidebar
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    color: const Color(0xFFF8FAFC),
+                    child: ListView.separated(
+                      padding: EdgeInsets.zero,
+                      itemCount: 8,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (_, __) => const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            ShimmerBox(width: 20, height: 20, borderRadius: BorderRadius.all(Radius.circular(10))),
+                            SizedBox(width: 8),
+                            Expanded(child: ShimmerBox(height: 14)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const VerticalDivider(width: 1),
+                // Skeleton Subcategory Grid
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ShimmerBox(width: 140, height: 20),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: 0.8,
+                            ),
+                            itemCount: 6,
+                            itemBuilder: (_, __) => const Column(
+                              children: [
+                                ShimmerBox(width: 50, height: 50, borderRadius: BorderRadius.all(Radius.circular(25))),
+                                SizedBox(height: 8),
+                                ShimmerBox(width: 60, height: 12),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }
-        if (rootState.hasError) {
+
+        if (rootState.hasError && categories.isEmpty) {
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: const VietmadeHeader(showMenu: false),
+            drawer: const CategoryDrawer(),
             body: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(rootState.errorMessage ?? 'Không thể tải danh mục'),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: CategoryService.instance.fetchRootCategories,
-                    child: const Text('Thử lại'),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(LucideIcons.wifiOff, size: 48, color: Color(0xFF94A3B8)),
+                    const SizedBox(height: 12),
+                    Text(
+                      rootState.errorMessage ?? 'Không thể tải danh sách danh mục',
+                      style: const TextStyle(fontSize: 14, color: Color(0xFF475569)),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: CategoryService.instance.fetchRootCategories,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      icon: const Icon(LucideIcons.refreshCw, size: 16),
+                      label: const Text('Thử lại'),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         }
+
         if (categories.isEmpty) {
-          return const Scaffold(
-            appBar: VietmadeHeader(showMenu: false),
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: const VietmadeHeader(showMenu: false),
+            drawer: const CategoryDrawer(),
+            body: const Center(
+              child: Text(
+                'Không có dữ liệu danh mục',
+                style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+              ),
+            ),
           );
         }
 

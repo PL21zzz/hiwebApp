@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
 import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
+import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 import 'package:hiweb_app_management/features/search/screens/search_screen.dart';
 
 class VideoHeaderBar extends StatefulWidget {
@@ -23,6 +24,8 @@ class VideoHeaderBar extends StatefulWidget {
 
 class _VideoHeaderBarState extends State<VideoHeaderBar> {
   int _selectedTabIndex = 1; // Default: 'Video cho bạn'
+  final ScrollController _scrollController = ScrollController();
+  late final List<GlobalKey> _tabKeys;
 
   final List<String> _tabs = [
     'Theo dõi',
@@ -32,18 +35,68 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
     'Đã lưu',
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _tabKeys = List.generate(_tabs.length, (_) => GlobalKey());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToCenter(_selectedTabIndex);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToCenter(int index) {
+    if (!_scrollController.hasClients) return;
+    if (index < 0 || index >= _tabKeys.length) return;
+
+    final key = _tabKeys[index];
+    final currentContext = key.currentContext;
+    if (currentContext != null) {
+      final box = currentContext.findRenderObject() as RenderBox?;
+      final scrollBox =
+          _scrollController.position.context.notificationContext?.findRenderObject()
+              as RenderBox?;
+
+      if (box != null && scrollBox != null) {
+        final itemOffset = box.localToGlobal(Offset.zero, ancestor: scrollBox).dx;
+        final itemWidth = box.size.width;
+        final viewportWidth = scrollBox.size.width;
+
+        final targetOffset =
+            _scrollController.offset + itemOffset - (viewportWidth / 2) + (itemWidth / 2);
+        final clampedOffset =
+            targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+
+        _scrollController.animateTo(
+          clampedOffset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    }
+  }
+
+  void _selectTab(int index) {
+    setState(() {
+      _selectedTabIndex = index;
+    });
+    _scrollToCenter(index);
+    if (widget.onTabChanged != null) {
+      widget.onTabChanged!(index);
+    }
+  }
+
   Widget _buildTabItem(int index, String label) {
     final isActive = _selectedTabIndex == index;
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedTabIndex = index;
-        });
-        if (widget.onTabChanged != null) {
-          widget.onTabChanged!(index);
-        }
-      },
+      key: _tabKeys[index],
+      onTap: () => _selectTab(index),
       behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -78,8 +131,7 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
   }
 
   void _openFollowingTab() {
-    setState(() => _selectedTabIndex = 0);
-    widget.onTabChanged?.call(0);
+    _selectTab(0);
   }
 
   @override
@@ -124,6 +176,7 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
                   child: SizedBox(
                     height: headerContentHeight,
                     child: ListView.separated(
+                      controller: _scrollController,
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       itemCount: _tabs.length,
@@ -176,6 +229,14 @@ class _VideoHeaderBarState extends State<VideoHeaderBar> {
                                   : 0;
                           return GestureDetector(
                             onTap: () {
+                              if (!AuthService.instance.isLoggedIn) {
+                                TopNotification.show(
+                                  context,
+                                  message: 'Bạn chưa đăng nhập!',
+                                  isError: true,
+                                );
+                                return;
+                              }
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
