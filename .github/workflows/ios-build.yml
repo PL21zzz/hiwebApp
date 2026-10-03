@@ -1074,21 +1074,22 @@ jobs:
 
           if [ "$PROJECT_TYPE" = "flutter" ]; then
             cd "$GITHUB_WORKSPACE"
-            apply_build_number
             FLUTTER_VERSION_FLAGS=""
             if [ -n "$build_number" ]; then
               FLUTTER_VERSION_FLAGS="--build-number=$build_number${build_name:+ --build-name=$build_name}"
             fi
             if [ "$CONFIGURATION" = "Debug" ]; then
-              echo "Building Flutter iOS Debug..."
-              flutter build ios --debug --no-codesign $FLUTTER_VERSION_FLAGS
+              FLUTTER_MODE=--debug
             else
-              echo "Building Flutter iOS Release..."
-              flutter build ios --release --no-codesign $FLUTTER_VERSION_FLAGS
+              FLUTTER_MODE=--release
             fi
-            cd "$IOS_PATH"
 
             if [ "$USE_SIGNING" = "true" ]; then
+              apply_build_number
+              echo "Preparing Flutter iOS $CONFIGURATION..."
+              flutter build ios "$FLUTTER_MODE" --no-codesign $FLUTTER_VERSION_FLAGS
+              cd "$IOS_PATH"
+
               # 'flutter build ios' never signs, so archive the Runner project it
               # generated. The IPA step below exports build/App.xcarchive
               # whenever signing is on.
@@ -1118,6 +1119,30 @@ jobs:
               apply_signing_to_app_target "$PROFILE_BUNDLE_ID"
               echo "Running: $ARCHIVE_CMD"
               eval $ARCHIVE_CMD
+            else
+              echo "Configuring Flutter iOS $CONFIGURATION without signing..."
+              flutter build ios "$FLUTTER_MODE" --no-codesign --config-only $FLUTTER_VERSION_FLAGS
+              cd "$IOS_PATH"
+              apply_build_number "$TARGET_FLAG" "$TARGET_PATH" -scheme "${SCHEME:-Runner}"
+
+              BUILD_CMD="xcodebuild"
+              if [ -n "$WORKSPACE" ]; then
+                BUILD_CMD="$BUILD_CMD -workspace '$WORKSPACE'"
+              elif [ -n "$PROJECT" ]; then
+                BUILD_CMD="$BUILD_CMD -project '$PROJECT'"
+              else
+                echo "::error::No Runner workspace/project found in '$IOS_PATH'."
+                exit 1
+              fi
+              BUILD_CMD="$BUILD_CMD -scheme '${SCHEME:-Runner}'"
+              BUILD_CMD="$BUILD_CMD -configuration '$CONFIGURATION'"
+              BUILD_CMD="$BUILD_CMD -destination 'generic/platform=iOS'"
+              BUILD_CMD="$BUILD_CMD -derivedDataPath '$DERIVED_DATA_PATH'"
+              BUILD_CMD="$BUILD_CMD COMPILER_INDEX_STORE_ENABLE=NO $version_settings"
+              BUILD_CMD="$BUILD_CMD -quiet CODE_SIGNING_ALLOWED=NO build"
+
+              echo "Running unsigned Flutter build: $BUILD_CMD"
+              eval $BUILD_CMD
             fi
           elif [ "$PROJECT_TYPE" = "reactnative" ] || [ "$PROJECT_TYPE" = "expo" ] || [ "$PROJECT_TYPE" = "kmp" ]; then
             # Use xcodebuild directly for React Native/Expo and Kotlin Multiplatform.
@@ -1234,8 +1259,8 @@ jobs:
           else
             # For unsigned builds, find .app and create IPA
             if [ "$PROJECT_TYPE" = "flutter" ]; then
-              # Flutter outputs to build/ios/iphoneos/
-              APP_PATH=$(find "${GITHUB_WORKSPACE}/build/ios/iphoneos" -name "*.app" -type d | head -1)
+              # The unsigned Flutter build uses the custom DerivedData path.
+              APP_PATH=$(find "$DERIVED_DATA_PATH/Build/Products/${CONFIGURATION}-iphoneos" -maxdepth 1 -name "*.app" -type d -print -quit 2>/dev/null || true)
             else
               # Native and React Native/Expo use DerivedData. Ask the project
               # which bundle this scheme produces: the first .app under
