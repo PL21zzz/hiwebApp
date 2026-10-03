@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/auth/screens/account_screen.dart';
 import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
-import 'package:hiweb_app_management/features/notification/screens/notifications_screen.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
 import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
 
 class VietmadeBottomNavBar extends StatelessWidget {
   final int? selectedIndex;
@@ -32,40 +31,26 @@ class VietmadeBottomNavBar extends StatelessWidget {
             onTap!(index);
             return;
           }
-          if (index == 0) {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          } else if (index == 3) {
-            Navigator.of(context).push(
+          if (index == 4 && !AuthService.instance.isLoggedIn) {
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    const NotificationsScreen(),
+                    const LoginScreen(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),
+              (route) => false,
             );
-          } else if (index == 4) {
-            if (!AuthService.instance.isLoggedIn) {
-              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const LoginScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-                (route) => false,
-              );
-            } else {
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const AccountScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            }
           } else {
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    MainNavigationScreen(initialIndex: index),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+              (route) => false,
+            );
           }
         },
         child: Padding(

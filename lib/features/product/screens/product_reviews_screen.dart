@@ -76,7 +76,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
         foregroundColor: const Color(0xFF1E293B),
         elevation: 0,
         centerTitle: true,
-        title: const Text('Đánh giá sản phẩm', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        title: const Text('Đánh giá sản phẩm', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
       body: ListView(
         children: [
@@ -84,10 +84,10 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
           _buildFilters(),
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
             child: Text(
               _filterIndex == 0 ? 'Mới nhất' : _filterTitle,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
             ),
           ),
           Container(
@@ -106,42 +106,46 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     final counts = List.generate(5, (index) => detail.reviews.where((review) => review.rating == 5 - index).length);
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
       child: Column(children: [
         Row(children: [
-          Text(detail.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF0284C7))),
+          Text(detail.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF0284C7))),
           const SizedBox(width: 8),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: List.generate(5, (_) => const Icon(Icons.star, size: 12, color: Color(0xFFF59E0B)))),
-            Text('Trên 5', style: const TextStyle(fontSize: 9, color: Color(0xFF94A3B8))),
+            Row(children: List.generate(5, (_) => const Icon(Icons.star, size: 14, color: Color(0xFFF59E0B)))),
+            const SizedBox(height: 2),
+            const Text('Trên 5', style: TextStyle(fontSize: 11, color: Color(0xFF94A3B8))),
           ]),
           const SizedBox(width: 18),
           Expanded(child: Column(children: List.generate(5, (index) => _ratingBar(5 - index, counts[index], detail.reviews.length)))),
         ]),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(color: const Color(0xFFE0F2FE), borderRadius: BorderRadius.circular(4)),
-          child: const Row(children: [Icon(Icons.check_circle, size: 11, color: Color(0xFF0284C7)), SizedBox(width: 4), Text('Tất cả đánh giá đều từ người đã mua hàng', style: TextStyle(fontSize: 9.5, color: Color(0xFF0284C7)))]),
+          child: const Row(children: [Icon(Icons.check_circle, size: 13, color: Color(0xFF0284C7)), SizedBox(width: 6), Text('Tất cả đánh giá đều từ người đã mua hàng', style: TextStyle(fontSize: 11.5, color: Color(0xFF0284C7)))]),
         ),
       ]),
     );
   }
 
   Widget _ratingBar(int rating, int count, int total) {
-    return Row(children: [
-      SizedBox(width: 18, child: Text('$rating ★', style: const TextStyle(fontSize: 8, color: Color(0xFF64748B)))),
-      Expanded(child: LinearProgressIndicator(value: total == 0 ? 0 : count / total, minHeight: 4, borderRadius: BorderRadius.circular(4), backgroundColor: const Color(0xFFF1F5F9), color: const Color(0xFFF59E0B))),
-      SizedBox(width: 18, child: Text('$count', textAlign: TextAlign.right, style: const TextStyle(fontSize: 8, color: Color(0xFF94A3B8)))),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1.5),
+      child: Row(children: [
+        SizedBox(width: 24, child: Text('$rating ★', style: const TextStyle(fontSize: 10.5, color: Color(0xFF64748B)))),
+        Expanded(child: LinearProgressIndicator(value: total == 0 ? 0 : count / total, minHeight: 5, borderRadius: BorderRadius.circular(4), backgroundColor: const Color(0xFFF1F5F9), color: const Color(0xFFF59E0B))),
+        SizedBox(width: 24, child: Text('$count', textAlign: TextAlign.right, style: const TextStyle(fontSize: 10.5, color: Color(0xFF94A3B8)))),
+      ]),
+    );
   }
 
   Widget _buildFilters() {
     final labels = ['Mới nhất', 'Có hình ảnh', '5 sao', '4 sao', '3 sao'];
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(10, 9, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(children: List.generate(labels.length, (index) {
@@ -149,14 +153,21 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
           return Padding(
             padding: const EdgeInsets.only(right: 6),
             child: ChoiceChip(
-              label: Text('${labels[index]} (${_countFor(index)})', style: TextStyle(fontSize: 9, color: selected ? const Color(0xFF0284C7) : const Color(0xFF475569))),
+              label: Text(
+                '${labels[index]} (${_countFor(index)})',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+                  color: selected ? const Color(0xFF0284C7) : const Color(0xFF475569),
+                ),
+              ),
               selected: selected,
               onSelected: (_) => setState(() => _filterIndex = index),
               selectedColor: const Color(0xFFE0F2FE),
               backgroundColor: Colors.white,
-              side: BorderSide(color: selected ? const Color(0xFF38BDF8) : const Color(0xFFE2E8F0)),
+              side: BorderSide(color: selected ? const Color(0xFF38BDF8) : const Color(0xFFCBD5E1)),
               visualDensity: VisualDensity.compact,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             ),
           );
         })),
@@ -171,16 +182,17 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
       decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0)))),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          CircleAvatar(radius: 15, backgroundColor: const Color(0xFFE879F9), child: Text(review.userName.isEmpty ? 'U' : review.userName[0], style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+          CircleAvatar(radius: 16, backgroundColor: const Color(0xFFE879F9), child: Text(review.userName.isEmpty ? 'U' : review.userName[0], style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold))),
           const SizedBox(width: 8),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [Text(review.userName, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)), const SizedBox(width: 5), if (review.isVerifiedPurchase) const Text('Đã mua hàng', style: TextStyle(fontSize: 8.5, color: Color(0xFF0284C7)))]),
-            Row(children: [for (var i = 0; i < 5; i++) Icon(Icons.star, size: 10, color: i < review.rating ? const Color(0xFFF59E0B) : const Color(0xFFCBD5E1)), const SizedBox(width: 5), Text(review.variant, style: const TextStyle(fontSize: 9, color: Color(0xFF94A3B8)))]),
+            Row(children: [Text(review.userName, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold)), const SizedBox(width: 6), if (review.isVerifiedPurchase) const Text('Đã mua hàng', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFF0284C7)))]),
+            const SizedBox(height: 2),
+            Row(children: [for (var i = 0; i < 5; i++) Icon(Icons.star, size: 13, color: i < review.rating ? const Color(0xFFF59E0B) : const Color(0xFFCBD5E1)), const SizedBox(width: 6), Text(review.variant, style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)))]),
           ])),
-          Text(review.date, style: const TextStyle(fontSize: 8.5, color: Color(0xFF94A3B8))),
+          Text(review.date, style: const TextStyle(fontSize: 11.5, color: Color(0xFF94A3B8))),
         ]),
-        const SizedBox(height: 7),
-        Text(review.comment, style: const TextStyle(fontSize: 11, color: Color(0xFF334155), height: 1.35)),
+        const SizedBox(height: 8),
+        Text(review.comment, style: const TextStyle(fontSize: 13, color: Color(0xFF334155), height: 1.4)),
         if (media.isNotEmpty) ...[
           const SizedBox(height: 8),
           SizedBox(height: 64, child: ListView.separated(scrollDirection: Axis.horizontal, itemCount: media.length, separatorBuilder: (_, __) => const SizedBox(width: 6), itemBuilder: (_, index) {
@@ -208,7 +220,19 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
         ],
         if (review.shopResponse != null) ...[
           const SizedBox(height: 8),
-          Container(width: double.infinity, padding: const EdgeInsets.all(8), color: const Color(0xFFF8FAFC), child: Text('Phản hồi của Shop\n${review.shopResponse}', style: const TextStyle(fontSize: 9, color: Color(0xFF64748B), height: 1.35))),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+            ),
+            child: Text(
+              'Phản hồi của Shop:\n${review.shopResponse}',
+              style: const TextStyle(fontSize: 11.5, color: Color(0xFF475569), height: 1.4),
+            ),
+          ),
         ],
       ]),
     );

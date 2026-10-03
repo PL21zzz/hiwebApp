@@ -58,7 +58,12 @@ class VietMadeApp extends StatelessWidget {
             );
             return MediaQuery(
               data: mediaQuery.copyWith(textScaler: responsiveScaler),
-              child: OfflineBannerOverlay(child: previewChild),
+              child: IconTheme(
+                data: IconThemeData(
+                  size: 24.0 * widthScaleFactor,
+                ),
+                child: OfflineBannerOverlay(child: previewChild),
+              ),
             );
           },
         );

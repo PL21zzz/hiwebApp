@@ -222,14 +222,14 @@ class SimilarProductCard extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.star_rounded,
-                          size: 12,
+                          size: 13,
                           color: Color(0xFFEAB308),
                         ),
                         const SizedBox(width: 2),
                         Text(
                           product.rating.toStringAsFixed(1),
                           style: const TextStyle(
-                            fontSize: 11.5,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF334155),
                           ),
@@ -238,7 +238,7 @@ class SimilarProductCard extends StatelessWidget {
                         Text(
                           '| ${product.soldCount} Đã bán',
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 11.5,
                             color: Color(0xFF64748B),
                           ),
                         ),
@@ -250,7 +250,7 @@ class SimilarProductCard extends StatelessWidget {
                     // 1. Badge "Trong ngày" image (bigger size)
                     Image.asset(
                       'assets/images/badge_trong_ngay.webp',
-                      height: 21,
+                      height: 24,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) =>
                           const SizedBox.shrink(),
@@ -263,15 +263,15 @@ class SimilarProductCard extends StatelessWidget {
                       children: [
                         const Icon(
                           LucideIcons.mapPin,
-                          size: 9.5,
+                          size: 12,
                           color: Color(0xFF94A3B8),
                         ),
-                        const SizedBox(width: 2),
+                        const SizedBox(width: 3),
                         Expanded(
                           child: Text(
                             product.location,
                             style: const TextStyle(
-                              fontSize: 9,
+                              fontSize: 11.5,
                               color: Color(0xFF64748B),
                             ),
                             maxLines: 1,

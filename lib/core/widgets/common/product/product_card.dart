@@ -157,15 +157,15 @@ class ProductCard extends StatelessWidget {
                         children: [
                           const Icon(
                             Icons.star_rounded,
-                            size: 12,
+                            size: 13,
                             color: Color(0xFFFF9500),
                           ),
                           const SizedBox(width: 2),
                           Text(
                             '${product.rating}',
                             style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.normal,
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xFF475569),
                             ),
                           ),
@@ -173,7 +173,7 @@ class ProductCard extends StatelessWidget {
                           Text(
                             '| Đã bán ${product.soldCount}',
                             style: const TextStyle(
-                              fontSize: 9.5,
+                              fontSize: 11.5,
                               color: Color(0xFF64748B),
                             ),
                           ),
@@ -184,15 +184,15 @@ class ProductCard extends StatelessWidget {
                         children: [
                           const Icon(
                             LucideIcons.mapPin,
-                            size: 11,
+                            size: 12,
                             color: Color(0xFF94A3B8),
                           ),
-                          const SizedBox(width: 2),
+                          const SizedBox(width: 3),
                           Expanded(
                             child: Text(
                               product.location,
                               style: const TextStyle(
-                                fontSize: 9.5,
+                                fontSize: 11.5,
                                 color: Color(0xFF64748B),
                               ),
                               maxLines: 1,

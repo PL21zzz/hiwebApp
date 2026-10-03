@@ -104,19 +104,19 @@ class AddToCartButton extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Container(
-              width: 24,
-              height: 24,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: const Color(0xFF64748B),
-                  width: 0.9,
+                  width: 1.0,
                 ),
               ),
               child: const Center(
                 child: Icon(
                   LucideIcons.shoppingCart,
-                  size: 12,
+                  size: 15,
                   color: Color(0xFF475569),
                 ),
               ),
@@ -135,8 +135,8 @@ class AddToCartButton extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Container(
-              width: 25,
-              height: 25,
+              width: 31,
+              height: 31,
               decoration: const BoxDecoration(
                 color: Color(0xFFE0F2FE),
                 shape: BoxShape.circle,
@@ -144,7 +144,7 @@ class AddToCartButton extends StatelessWidget {
               child: const Center(
                 child: Icon(
                   LucideIcons.shoppingCart,
-                  size: 13,
+                  size: 16,
                   color: Color(0xFF0284C7),
                 ),
               ),
@@ -160,25 +160,25 @@ class AddToCartButton extends StatelessWidget {
 
       case CartButtonStyle.pillPlus:
         return SizedBox(
-          width: 46,
-          height: 30,
+          width: 48,
+          height: 32,
           child: Stack(
             alignment: Alignment.center,
             clipBehavior: Clip.none,
             children: [
               Container(
-                width: 46,
-                height: 30,
+                width: 48,
+                height: 32,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(16),
                   border:
-                      Border.all(color: const Color(0xFF1E293B), width: 1.1),
+                      Border.all(color: const Color(0xFF1E293B), width: 1.2),
                 ),
                 child: const Center(
                   child: Icon(
                     LucideIcons.shoppingCart,
-                    size: 16,
+                    size: 17,
                     color: Color(0xFF1E293B),
                   ),
                 ),
