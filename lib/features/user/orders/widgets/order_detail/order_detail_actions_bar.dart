@@ -6,6 +6,8 @@ import 'package:hiweb_app_management/features/user/support/screens/support_reque
 import 'package:hiweb_app_management/core/widgets/common/dialogs/confirm_dialog.dart';
 import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
 
+import 'package:hiweb_app_management/features/product/screens/write_review_screen.dart';
+
 class OrderDetailActionsBar extends StatelessWidget {
   final OrderDetailModel detail;
 
@@ -17,6 +19,18 @@ class OrderDetailActionsBar extends StatelessWidget {
   void _handleSupportTap(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const SupportRequestScreen()),
+    );
+  }
+
+  void _handleWriteReviewTap(BuildContext context) {
+    final firstItem = detail.items.first;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => WriteReviewScreen(
+          productName: firstItem.name,
+          productImage: firstItem.imageUrl,
+        ),
+      ),
     );
   }
 
@@ -60,7 +74,7 @@ class OrderDetailActionsBar extends StatelessWidget {
                   foregroundColor: const Color(0xFF0284C7),
                   side: const BorderSide(color: Color(0xFF38BDF8), width: 1),
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -70,14 +84,14 @@ class OrderDetailActionsBar extends StatelessWidget {
                   children: [
                     Icon(
                       LucideIcons.headphones,
-                      size: 16,
+                      size: 15,
                       color: Color(0xFF0284C7),
                     ),
-                    SizedBox(width: 6),
+                    SizedBox(width: 4),
                     Text(
                       'Hỗ trợ',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF0284C7),
                       ),
@@ -87,7 +101,44 @@ class OrderDetailActionsBar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
+          Expanded(
+            child: SizedBox(
+              height: 38,
+              child: ElevatedButton(
+                onPressed: () => _handleWriteReviewTap(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0284C7),
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      LucideIcons.star,
+                      size: 15,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'Đánh giá',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: SizedBox(
               height: 38,
@@ -98,7 +149,7 @@ class OrderDetailActionsBar extends StatelessWidget {
                   foregroundColor: const Color(0xFF475569),
                   side: const BorderSide(color: Color(0xFFCBD5E1), width: 1),
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -108,14 +159,14 @@ class OrderDetailActionsBar extends StatelessWidget {
                   children: [
                     Icon(
                       LucideIcons.xCircle,
-                      size: 16,
+                      size: 15,
                       color: Color(0xFF475569),
                     ),
-                    SizedBox(width: 6),
+                    SizedBox(width: 4),
                     Text(
                       'Hủy đơn',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF475569),
                       ),
