@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/core/core.dart';
 import '../auth_text_field.dart';
 import 'login_social_button.dart';
 
@@ -17,6 +17,7 @@ class LoginFormCard extends StatelessWidget {
   final VoidCallback onGoogleLoginPressed;
   final VoidCallback onRegisterTap;
   final VoidCallback? onForgotPasswordTap;
+  final bool isLoading;
 
   const LoginFormCard({
     super.key,
@@ -32,6 +33,7 @@ class LoginFormCard extends StatelessWidget {
     required this.onGoogleLoginPressed,
     required this.onRegisterTap,
     this.onForgotPasswordTap,
+    this.isLoading = false,
   });
 
   @override
@@ -145,27 +147,10 @@ class LoginFormCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Main Login Button
-          SizedBox(
-            width: double.infinity,
-            height: 44,
-            child: ElevatedButton(
-              onPressed: onLoginPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Đăng nhập',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          PrimaryButton(
+            text: 'Đăng nhập',
+            onPressed: onLoginPressed,
+            isLoading: isLoading,
           ),
           const SizedBox(height: 16),
 

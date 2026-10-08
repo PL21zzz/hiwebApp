@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hiweb_app_management/features/auth/models/user_model.dart';
-import 'package:hiweb_app_management/features/user/orders/screens/orders_screen.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
+import 'package:hiweb_app_management/features/auth/auth.dart';
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_header_banner.dart';
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_logout_button.dart';
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_orders_card.dart';
@@ -8,8 +9,7 @@ import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_recommendations_section.dart';
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_rewards_card.dart';
 import 'package:hiweb_app_management/features/user/profile/widgets/profile_user_tools_grid.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
+import 'package:hiweb_app_management/features/user/user.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final UserModel user;

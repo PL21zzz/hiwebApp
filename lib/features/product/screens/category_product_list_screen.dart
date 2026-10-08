@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/home/models/category_model.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
-import 'package:hiweb_app_management/core/widgets/common/product/product_grid.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_bottom_nav_bar.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/filter_drawer.dart';
-import 'package:hiweb_app_management/features/product/models/product_model.dart';
-import 'package:hiweb_app_management/features/product/repositories/product_repository.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
+import 'package:hiweb_app_management/features/home/home.dart';
+import 'package:hiweb_app_management/features/product/product.dart';
 
 class CategoryProductListScreen extends StatefulWidget {
   final String categoryTitle;

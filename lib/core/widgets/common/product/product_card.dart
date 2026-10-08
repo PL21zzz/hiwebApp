@@ -20,9 +20,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textScaler = MediaQuery.textScalerOf(context);
-    final titleReservedHeight = textScaler.scale(13.5) * 1.2 * 2;
-
     return Semantics(
       label: '${product.name}, giá ${product.price.toInt()} đồng',
       button: true,
@@ -53,6 +50,7 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 AspectRatio(
                   aspectRatio: 1.0,
@@ -91,68 +89,51 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(7, 4, 7, 4),
+                  padding: const EdgeInsets.fromLTRB(7, 6, 7, 6),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: titleReservedHeight,
-                          maxHeight: titleReservedHeight,
-                        ),
+                      SizedBox(
+                        height: 32,
                         child: Text(
                           product.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                            fontSize: 13.5,
+                            fontSize: 12.5,
                             letterSpacing: -0.15,
                             fontWeight: FontWeight.normal,
                             color: Color(0xFF334155),
-                            height: 1.2,
+                            height: 1.25,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Text(
+                            CurrencyFormatter.format(product.price),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFFE53935),
+                            ),
+                          ),
+                          if (product.discountPercent > 0) ...[
+                            const SizedBox(width: 4),
                             Text(
-                              CurrencyFormatter.format(product.price),
+                              CurrencyFormatter.format(product.originalPrice),
                               style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFFE53935),
+                                fontSize: 10,
+                                color: Color(0xFFA1A1AA),
+                                decoration: TextDecoration.lineThrough,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Text(
-                                  CurrencyFormatter.format(product.originalPrice),
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Color(0xFFA1A1AA),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    height: 1.0,
-                                    color: const Color(0xFFA1A1AA),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 3),
                       Row(
                         children: [
                           const Icon(
@@ -164,7 +145,7 @@ class ProductCard extends StatelessWidget {
                           Text(
                             '${product.rating}',
                             style: const TextStyle(
-                              fontSize: 11.5,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF475569),
                             ),
@@ -173,13 +154,13 @@ class ProductCard extends StatelessWidget {
                           Text(
                             '| Đã bán ${product.soldCount}',
                             style: const TextStyle(
-                              fontSize: 11.5,
+                              fontSize: 11,
                               color: Color(0xFF64748B),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 3),
                       Row(
                         children: [
                           const Icon(
@@ -192,7 +173,7 @@ class ProductCard extends StatelessWidget {
                             child: Text(
                               product.location,
                               style: const TextStyle(
-                                fontSize: 11.5,
+                                fontSize: 11,
                                 color: Color(0xFF64748B),
                               ),
                               maxLines: 1,

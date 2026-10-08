@@ -1,25 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/product/models/product_model.dart';
-import 'package:hiweb_app_management/features/product/models/product_detail_model.dart';
-import 'package:hiweb_app_management/features/cart_checkout/models/cart_item_model.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
 import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
-import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
-import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
-import 'package:hiweb_app_management/features/product/widgets/details/product_details_tab.dart';
-import 'package:hiweb_app_management/features/product/widgets/overview/product_overview_tab.dart';
-import 'package:hiweb_app_management/features/product/widgets/product_detail_bottom_bar.dart';
-import 'package:hiweb_app_management/features/product/widgets/product_detail_header_bar.dart';
-import 'package:hiweb_app_management/features/product/widgets/reviews/product_reviews_tab.dart';
-import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
-import 'product_reviews_screen.dart';
-import 'package:hiweb_app_management/features/cart_checkout/screens/checkout_screen.dart';
-import 'package:hiweb_app_management/features/product/widgets/buy_now_bottom_sheet.dart';
-import 'package:hiweb_app_management/features/product/repositories/product_repository.dart';
-import 'package:hiweb_app_management/core/state/async_state.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+import 'package:hiweb_app_management/features/cart_checkout/cart_checkout.dart';
+import 'package:hiweb_app_management/features/product/product.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -221,7 +207,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ? _detail.mediaList.first.thumb
               : _detail.mediaList.isNotEmpty
               ? _detail.mediaList.first.url
-              : 'https://res.cloudinary.com/dypm5avrx/image/upload/v1789549363/flash-sale1_wbuuhi.webp',
+              : 'assets/images/flash-sale1.webp',
       brand: 'VietMade',
       variantInfo:
           _selectedCapacity != null

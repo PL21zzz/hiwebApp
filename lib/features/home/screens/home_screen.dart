@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_header.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/category_drawer.dart';
-import 'package:hiweb_app_management/core/widgets/common/product/product_grid.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
 import 'package:hiweb_app_management/features/home/widgets/banner_slider.dart';
 import 'package:hiweb_app_management/features/home/widgets/category_grid.dart';
 import 'package:hiweb_app_management/features/home/widgets/flash_sale_section.dart';

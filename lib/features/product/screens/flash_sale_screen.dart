@@ -2,17 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/product/models/flash_sale_model.dart';
-import 'package:hiweb_app_management/features/product/models/product_model.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
-import 'package:hiweb_app_management/core/widgets/common/layout/vietmade_footer.dart';
-import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
-import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
-import 'package:hiweb_app_management/core/widgets/common/loading/skeletons.dart';
-import '../widgets/flash_sale/flash_sale_countdown_banner.dart';
-import '../widgets/flash_sale/flash_sale_time_slots.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
+import 'package:hiweb_app_management/features/auth/auth.dart';
+import 'package:hiweb_app_management/features/product/product.dart';
 import '../widgets/flash_sale/flash_sale_category_bar.dart';
+import '../widgets/flash_sale/flash_sale_countdown_banner.dart';
 import '../widgets/flash_sale/flash_sale_product_card.dart';
+import '../widgets/flash_sale/flash_sale_time_slots.dart';
 
 class FlashSaleScreen extends StatefulWidget {
   const FlashSaleScreen({super.key});

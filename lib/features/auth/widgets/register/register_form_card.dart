@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
+import 'package:hiweb_app_management/core/core.dart';
 import '../auth_text_field.dart';
 import 'register_name_row.dart';
 import 'register_password_note.dart';
@@ -31,6 +31,7 @@ class RegisterFormCard extends StatelessWidget {
   final VoidCallback onToggleConfirmPasswordVisibility;
   final VoidCallback onRegisterPressed;
   final VoidCallback onLoginTap;
+  final bool isLoading;
 
   final bool isCompact;
   final double fieldSpacing;
@@ -61,6 +62,7 @@ class RegisterFormCard extends StatelessWidget {
     required this.onToggleConfirmPasswordVisibility,
     required this.onRegisterPressed,
     required this.onLoginTap,
+    this.isLoading = false,
     required this.isCompact,
     required this.fieldSpacing,
     required this.verticalInputPadding,
@@ -220,27 +222,10 @@ class RegisterFormCard extends StatelessWidget {
           SizedBox(height: isCompact ? 10 : 14),
 
           // Primary Register Button
-          SizedBox(
-            width: double.infinity,
-            height: 44,
-            child: ElevatedButton(
-              onPressed: onRegisterPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Đăng ký',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          PrimaryButton(
+            text: 'Đăng ký',
+            onPressed: onRegisterPressed,
+            isLoading: isLoading,
           ),
           SizedBox(height: isCompact ? 10 : 14),
 

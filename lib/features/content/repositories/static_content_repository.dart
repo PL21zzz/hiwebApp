@@ -1,16 +1,11 @@
-import 'package:hiweb_app_management/features/cart_checkout/models/checkout_mock_data.dart';
-import 'package:hiweb_app_management/features/home/models/banner_model.dart';
-import 'package:hiweb_app_management/features/home/models/category_model.dart';
-import 'package:hiweb_app_management/features/product/models/filter_model.dart';
-import 'package:hiweb_app_management/features/notification/models/notification_model.dart';
+import 'package:hiweb_app_management/features/cart_checkout/cart_checkout.dart';
 import 'package:hiweb_app_management/features/cart_checkout/models/buy_now_mock_data.dart';
-import 'package:hiweb_app_management/features/product/models/flash_sale_model.dart';
-import 'package:hiweb_app_management/features/search/models/search_model.dart';
-import 'package:hiweb_app_management/features/search/models/top_search_model.dart';
-import 'package:hiweb_app_management/features/user/profile/models/profile_option_model.dart';
-import 'package:hiweb_app_management/features/video/models/video_product_sheet_model.dart';
-import 'package:hiweb_app_management/features/video/models/video_report_model.dart';
-import 'package:hiweb_app_management/features/video/models/video_model.dart';
+import 'package:hiweb_app_management/features/home/home.dart';
+import 'package:hiweb_app_management/features/notification/models/notification_model.dart';
+import 'package:hiweb_app_management/features/product/product.dart';
+import 'package:hiweb_app_management/features/search/search.dart';
+import 'package:hiweb_app_management/features/user/user.dart';
+import 'package:hiweb_app_management/features/video/video.dart';
 
 class StaticContentRepository {
   const StaticContentRepository();

@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _rememberMe = true;
+  bool _isLoading = false;
 
   String? _emailError;
   String? _passwordError;
@@ -96,6 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 600));
+
     final identifier = _emailController.text.trim();
     final password = _passwordController.text;
 
@@ -111,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       setState(() {
         _failedAttempts = 0;
+        _isLoading = false;
       });
       if (!mounted) return;
       TopNotification.show(
@@ -130,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         _failedAttempts++;
+        _isLoading = false;
         _passwordController.clear();
       });
 
@@ -195,6 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           emailError: _emailError,
                           passwordError: _passwordError,
+                          isLoading: _isLoading,
                           onLoginPressed: _handleLogin,
                           onGoogleLoginPressed: () {},
                           onRegisterTap: () {

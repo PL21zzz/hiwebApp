@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiweb_app_management/features/user/profile/models/profile_option_model.dart';
 import 'package:hiweb_app_management/features/content/repositories/static_content_repository.dart';
-import 'package:hiweb_app_management/features/user/saved/screens/wishlist_screen.dart';
-import 'package:hiweb_app_management/features/user/saved/screens/recently_viewed_screen.dart';
 import 'package:hiweb_app_management/features/navigation/screens/not_found_screen.dart';
 
 class ProfileUserQuickActionsCard extends StatelessWidget {
@@ -12,27 +10,18 @@ class ProfileUserQuickActionsCard extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          if (option.id == 'favorites') {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const WishlistScreen()),
-            );
-          } else if (option.id == 'viewed') {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const RecentlyViewedScreen()),
-            );
-          } else {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    NotFoundScreen(
-                  title: option.label.replaceAll('\n', ' '),
-                  message: 'Tính năng danh mục "${option.label.replaceAll('\n', ' ')}"\nhiện đang được xây dựng...',
-                ),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  NotFoundScreen(
+                title: option.label.replaceAll('\n', ' '),
+                message:
+                    'Tính năng danh mục "${option.label.replaceAll('\n', ' ')}"\nhiện đang được xây dựng...',
               ),
-            );
-          }
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          );
         },
         child: Column(
           children: [
@@ -41,7 +30,8 @@ class ProfileUserQuickActionsCard extends StatelessWidget {
               width: 32,
               height: 32,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Icon(option.icon, size: 28, color: const Color(0xFF0284C7)),
+              errorBuilder: (_, __, ___) =>
+                  Icon(option.icon, size: 28, color: const Color(0xFF0284C7)),
             ),
             const SizedBox(height: 5),
             Text(
@@ -77,7 +67,8 @@ class ProfileUserQuickActionsCard extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: const StaticContentRepository().quickActions
+        children: const StaticContentRepository()
+            .quickActions
             .map((action) => _buildQuickActionItem(context, action))
             .toList(),
       ),

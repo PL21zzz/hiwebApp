@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:hiweb_app_management/features/navigation/screens/main_navigation_screen.dart';
-import 'package:hiweb_app_management/features/auth/screens/login_screen.dart';
-import 'package:hiweb_app_management/features/cart_checkout/screens/cart_screen.dart';
-import 'package:hiweb_app_management/features/chat/screens/messages_screen.dart';
-import 'package:hiweb_app_management/features/search/screens/search_screen.dart';
-import 'package:hiweb_app_management/features/auth/services/auth_service.dart';
-import 'package:hiweb_app_management/features/cart_checkout/services/cart_service.dart';
-import 'package:hiweb_app_management/core/theme/app_colors.dart';
-import 'package:hiweb_app_management/core/widgets/common/dialogs/top_notification.dart';
+
+import 'package:hiweb_app_management/core/core.dart';
+import 'package:hiweb_app_management/features/auth/auth.dart';
+import 'package:hiweb_app_management/features/cart_checkout/cart_checkout.dart';
+import 'package:hiweb_app_management/features/chat/chat.dart';
+import 'package:hiweb_app_management/features/navigation/navigation.dart';
+import 'package:hiweb_app_management/features/search/search.dart';
 
 class VietmadeHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showMenu;

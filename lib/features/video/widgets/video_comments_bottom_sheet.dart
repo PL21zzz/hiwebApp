@@ -102,7 +102,7 @@ class _VideoCommentsBottomSheetState extends State<VideoCommentsBottomSheet> {
                       child: Text(
                         'Chưa có bình luận nào',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 15.5,
                           color: Color(0xFF64748B),
                         ),
                       ),
@@ -142,7 +142,7 @@ class _VideoCommentsBottomSheetState extends State<VideoCommentsBottomSheet> {
               child: Text(
                 'Bình luận ($_totalCommentCount)',
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF0F172A),
                 ),
@@ -180,7 +180,7 @@ class _VideoCommentsBottomSheetState extends State<VideoCommentsBottomSheet> {
             backgroundColor: Color(0xFF0EA5E9),
             child: Text(
               'B',
-              style: TextStyle(fontSize: 11, color: Colors.white),
+              style: TextStyle(fontSize: 13.5, color: Colors.white),
             ),
           ),
           const SizedBox(width: 8),
@@ -194,7 +194,7 @@ class _VideoCommentsBottomSheetState extends State<VideoCommentsBottomSheet> {
               decoration: InputDecoration(
                 hintText: 'Thêm bình luận...',
                 hintStyle: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 14.5,
                   color: Color(0xFF94A3B8),
                 ),
                 filled: true,
@@ -253,7 +253,7 @@ class _CommentTile extends StatelessWidget {
             child: Text(
               'Ẩn câu trả lời',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12.5,
                 color: Colors.grey.shade500,
                 fontWeight: FontWeight.w500,
               ),
@@ -309,7 +309,7 @@ class _CommentRow extends StatelessWidget {
               Text(
                 comment.authorName,
                 style: TextStyle(
-                  fontSize: isReply ? 10 : 10.5,
+                  fontSize: isReply ? 12.5 : 13.0,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF334155),
                 ),
@@ -318,7 +318,7 @@ class _CommentRow extends StatelessWidget {
               Text(
                 comment.content,
                 style: TextStyle(
-                  fontSize: isReply ? 10 : 11,
+                  fontSize: isReply ? 12.5 : 13.5,
                   height: 1.25,
                   color: const Color(0xFF334155),
                 ),
@@ -329,7 +329,7 @@ class _CommentRow extends StatelessWidget {
                   Text(
                     comment.timeLabel,
                     style: const TextStyle(
-                      fontSize: 8.5,
+                      fontSize: 11.0,
                       color: Color(0xFF94A3B8),
                     ),
                   ),
@@ -337,7 +337,7 @@ class _CommentRow extends StatelessWidget {
                   const Text(
                     'Trả lời',
                     style: TextStyle(
-                      fontSize: 8.5,
+                      fontSize: 11.0,
                       color: Color(0xFF64748B),
                       fontWeight: FontWeight.w600,
                     ),
@@ -361,7 +361,7 @@ class _CommentRow extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 '${comment.likeCount + (liked && !comment.isLiked ? 1 : 0)}',
-                style: const TextStyle(fontSize: 8, color: Color(0xFF94A3B8)),
+                style: const TextStyle(fontSize: 10.5, color: Color(0xFF94A3B8)),
               ),
             ],
           ),

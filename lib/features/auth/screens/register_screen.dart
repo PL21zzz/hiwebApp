@@ -21,10 +21,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool _isLoading = false;
 
   String? _userNameError;
   String? _lastNameError;
@@ -91,7 +93,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     // 3. Email
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
     if (email.isEmpty) {
       _emailError = 'Vui lòng nhập email';
       isValid = false;
@@ -126,8 +130,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (password.isEmpty) {
       _passwordError = 'Vui lòng nhập mật khẩu';
       isValid = false;
-    } else if (!hasMinLength || !hasLower || !hasUpper || !hasDigit || !hasSpecial) {
-      _passwordError = 'Ít nhất 8 ký tự, gồm chữ thường, chữ hoa, số và ký tự đặc biệt @\$%^*&.';
+    } else if (!hasMinLength ||
+        !hasLower ||
+        !hasUpper ||
+        !hasDigit ||
+        !hasSpecial) {
+      _passwordError =
+          'Ít nhất 8 ký tự, gồm chữ thường, chữ hoa, số và ký tự đặc biệt @\$%^*&.';
       isValid = false;
     }
 
@@ -153,10 +162,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return isValid;
   }
 
-  void _handleRegister() {
+  Future<void> _handleRegister() async {
     if (!_validateForm()) {
       return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 600));
 
     final result = AuthService.instance.register(
       userName: _userNameController.text,
@@ -167,7 +182,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: _emailController.text,
     );
 
+    if (!mounted) return;
+
     if (result.isSuccess) {
+      setState(() {
+        _isLoading = false;
+      });
       TopNotification.show(
         context,
         message: 'Đăng ký tài khoản thành công!',
@@ -175,19 +195,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
-          pageBuilder: (context, anim1, anim2) =>
-              const MainNavigationScreen(initialIndex: 4),
+          pageBuilder:
+              (context, anim1, anim2) =>
+                  const MainNavigationScreen(initialIndex: 4),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
         (route) => false,
       );
     } else {
-      TopNotification.show(
-        context,
-        message: result.message,
-        isError: true,
-      );
+      setState(() {
+        _isLoading = false;
+      });
+      TopNotification.show(context, message: result.message, isError: true);
     }
   }
 
@@ -252,67 +272,85 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isCompact = constraints.maxHeight < 650;
+                  final screenHeight = MediaQuery.sizeOf(context).height;
+                  final isCompact = screenHeight < 650;
                   final fieldSpacing = isCompact ? 5.0 : 9.0;
                   final verticalInputPadding = isCompact ? 5.0 : 8.5;
-                  final cardPadding = isCompact
-                      ? const EdgeInsets.fromLTRB(14, 10, 14, 10)
-                      : const EdgeInsets.fromLTRB(16, 14, 16, 14);
+                  final cardPadding =
+                      isCompact
+                          ? const EdgeInsets.fromLTRB(14, 10, 14, 10)
+                          : const EdgeInsets.fromLTRB(16, 14, 16, 14);
 
-                  return Container(
-                    height: constraints.maxHeight,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: constraints.maxWidth > 400 ? 380 : constraints.maxWidth - 28,
-                        child: RegisterFormCard(
-                          userNameController: _userNameController,
-                          lastNameController: _lastNameController,
-                          firstNameController: _firstNameController,
-                          emailController: _emailController,
-                          phoneController: _phoneController,
-                          passwordController: _passwordController,
-                          confirmPasswordController: _confirmPasswordController,
-                          isPasswordVisible: _isPasswordVisible,
-                          isConfirmPasswordVisible: _isConfirmPasswordVisible,
-                          userNameError: _userNameError,
-                          lastNameError: _lastNameError,
-                          firstNameError: _firstNameError,
-                          emailError: _emailError,
-                          phoneError: _phoneError,
-                          passwordError: _passwordError,
-                          confirmPasswordError: _confirmPasswordError,
-                          onClearError: _clearError,
-                          onValidateConfirmPasswordLive: _validateConfirmPasswordLive,
-                          onTogglePasswordVisibility: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                          onToggleConfirmPasswordVisibility: () {
-                            setState(() {
-                              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                            });
-                          },
-                          onRegisterPressed: _handleRegister,
-                          onLoginTap: () {
-                            Navigator.of(context).push(
-                              PageRouteBuilder(
-                                pageBuilder: (context, anim1, anim2) =>
-                                    const LoginScreen(),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
-                            );
-                          },
-                          isCompact: isCompact,
-                          fieldSpacing: fieldSpacing,
-                          verticalInputPadding: verticalInputPadding,
-                          cardPadding: cardPadding,
+                  return SingleChildScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: (constraints.maxHeight - 24).clamp(
+                          0,
+                          double.infinity,
+                        ),
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          width:
+                              constraints.maxWidth > 400
+                                  ? 380
+                                  : constraints.maxWidth - 28,
+                          child: RegisterFormCard(
+                            userNameController: _userNameController,
+                            lastNameController: _lastNameController,
+                            firstNameController: _firstNameController,
+                            emailController: _emailController,
+                            phoneController: _phoneController,
+                            passwordController: _passwordController,
+                            confirmPasswordController:
+                                _confirmPasswordController,
+                            isPasswordVisible: _isPasswordVisible,
+                            isConfirmPasswordVisible: _isConfirmPasswordVisible,
+                            userNameError: _userNameError,
+                            lastNameError: _lastNameError,
+                            firstNameError: _firstNameError,
+                            emailError: _emailError,
+                            phoneError: _phoneError,
+                            passwordError: _passwordError,
+                            confirmPasswordError: _confirmPasswordError,
+                            onClearError: _clearError,
+                            onValidateConfirmPasswordLive:
+                                _validateConfirmPasswordLive,
+                            onTogglePasswordVisibility: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                            onToggleConfirmPasswordVisibility: () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                    !_isConfirmPasswordVisible;
+                              });
+                            },
+                            onRegisterPressed: _handleRegister,
+                            isLoading: _isLoading,
+                            onLoginTap: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, anim1, anim2) =>
+                                          const LoginScreen(),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
+                            isCompact: isCompact,
+                            fieldSpacing: fieldSpacing,
+                            verticalInputPadding: verticalInputPadding,
+                            cardPadding: cardPadding,
+                          ),
                         ),
                       ),
                     ),

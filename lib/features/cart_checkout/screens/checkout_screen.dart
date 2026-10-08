@@ -216,6 +216,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     setState(() => _isPlacingOrder = true);
 
+    await Future.delayed(const Duration(milliseconds: 600));
+
     if (!AuthService.instance.isLoggedIn) {
       final names = _nameController.text.trim().split(' ');
       final email = _emailController.text.trim();
